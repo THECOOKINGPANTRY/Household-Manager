@@ -2548,3 +2548,62 @@ LARGER MOBILE
     max-width: 440px;
   }
 }
+
+.settings-household-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  background: var(--background);
+  border: 1px solid rgba(36, 36, 35, 0.08);
+  border-radius: 16px;
+  text-decoration: none;
+  color: var(--deep-dark);
+  box-sizing: border-box;
+}
+
+.settings-household-button-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--main);
+  border-radius: 12px;
+}
+
+.settings-household-button-icon img {
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+}
+
+.settings-household-button-content {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.settings-household-button-content strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--deep-dark);
+}
+
+.settings-household-button-content span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.settings-household-button-arrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
