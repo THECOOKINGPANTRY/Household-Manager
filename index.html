@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#333533">
   <title>Household Manager</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -23,14 +24,14 @@
       </div>
 
       <a href="settings.html" class="mobile-top-action" aria-label="Settings">
-        ⚙
+        <i data-lucide="settings"></i>
       </a>
     </div>
 
     <header class="page-header">
       <div>
         <div class="eyebrow">HOME</div>
-        <h1 class="page-title">Good afternoon 👋</h1>
+        <h1 class="page-title">Good afternoon</h1>
         <p class="page-subtitle">
           Here's what's happening around the house.
         </p>
@@ -42,8 +43,12 @@
 
       <a href="tasks.html" class="card yellow stat-card">
         <div class="stat-top">
-          <div class="stat-icon">✓</div>
-          <span class="stat-arrow">→</span>
+          <div class="stat-icon">
+            <i data-lucide="circle-check"></i>
+          </div>
+          <span class="stat-arrow">
+            <i data-lucide="arrow-right"></i>
+          </span>
         </div>
 
         <div>
@@ -54,8 +59,12 @@
 
       <a href="shopping.html" class="card stat-card">
         <div class="stat-top">
-          <div class="stat-icon">🛒</div>
-          <span class="stat-arrow">→</span>
+          <div class="stat-icon">
+            <i data-lucide="shopping-cart"></i>
+          </div>
+          <span class="stat-arrow">
+            <i data-lucide="arrow-right"></i>
+          </span>
         </div>
 
         <div>
@@ -66,8 +75,12 @@
 
       <a href="events.html" class="card stat-card">
         <div class="stat-top">
-          <div class="stat-icon">📅</div>
-          <span class="stat-arrow">→</span>
+          <div class="stat-icon">
+            <i data-lucide="calendar-days"></i>
+          </div>
+          <span class="stat-arrow">
+            <i data-lucide="arrow-right"></i>
+          </span>
         </div>
 
         <div>
@@ -78,8 +91,12 @@
 
       <a href="spending.html" class="card dark stat-card">
         <div class="stat-top">
-          <div class="stat-icon">💰</div>
-          <span class="stat-arrow">→</span>
+          <div class="stat-icon">
+            <i data-lucide="wallet"></i>
+          </div>
+          <span class="stat-arrow">
+            <i data-lucide="arrow-right"></i>
+          </span>
         </div>
 
         <div>
@@ -106,7 +123,9 @@
           class="quick-action yellow-action"
           onclick="openSheet('dashboardTaskSheet')"
         >
-          <span class="quick-action-icon">✓</span>
+          <span class="quick-action-icon">
+            <i data-lucide="circle-check"></i>
+          </span>
           <span>Add Task</span>
         </button>
 
@@ -114,7 +133,9 @@
           class="quick-action"
           onclick="openSheet('dashboardShoppingSheet')"
         >
-          <span class="quick-action-icon">🛒</span>
+          <span class="quick-action-icon">
+            <i data-lucide="shopping-cart"></i>
+          </span>
           <span>Add Shopping</span>
         </button>
 
@@ -122,7 +143,9 @@
           class="quick-action"
           onclick="openSheet('dashboardEventSheet')"
         >
-          <span class="quick-action-icon">📅</span>
+          <span class="quick-action-icon">
+            <i data-lucide="calendar-plus"></i>
+          </span>
           <span>Add Event</span>
         </button>
 
@@ -130,7 +153,9 @@
           class="quick-action"
           onclick="openSheet('dashboardExpenseSheet')"
         >
-          <span class="quick-action-icon">💰</span>
+          <span class="quick-action-icon">
+            <i data-lucide="wallet"></i>
+          </span>
           <span>Add Expense</span>
         </button>
 
@@ -150,7 +175,10 @@
       <div class="today-card">
 
         <div class="today-item">
-          <div class="today-item-icon">✓</div>
+          <div class="today-item-icon">
+            <i data-lucide="circle-check"></i>
+          </div>
+
           <div class="today-item-content">
             <span class="today-item-label">Tasks to finish</span>
             <strong id="todayTaskCount">0</strong>
@@ -160,7 +188,10 @@
         <div class="today-divider"></div>
 
         <div class="today-item">
-          <div class="today-item-icon">🛒</div>
+          <div class="today-item-icon">
+            <i data-lucide="shopping-cart"></i>
+          </div>
+
           <div class="today-item-content">
             <span class="today-item-label">Shopping items</span>
             <strong id="todayShoppingCount">0</strong>
@@ -224,8 +255,9 @@
       <button
         class="sheet-close"
         onclick="closeSheet('dashboardTaskSheet')"
+        aria-label="Close"
       >
-        ×
+        <i data-lucide="x"></i>
       </button>
     </div>
 
@@ -282,7 +314,8 @@
       class="btn btn-primary btn-large"
       onclick="addDashboardTask()"
     >
-      Add Task
+      <i data-lucide="plus"></i>
+      <span>Add Task</span>
     </button>
 
   </div>
@@ -307,8 +340,9 @@
       <button
         class="sheet-close"
         onclick="closeSheet('dashboardShoppingSheet')"
+        aria-label="Close"
       >
-        ×
+        <i data-lucide="x"></i>
       </button>
     </div>
 
@@ -358,7 +392,8 @@
       class="btn btn-primary btn-large"
       onclick="addDashboardShopping()"
     >
-      Add to Shopping List
+      <i data-lucide="shopping-cart"></i>
+      <span>Add to Shopping List</span>
     </button>
 
   </div>
@@ -383,8 +418,9 @@
       <button
         class="sheet-close"
         onclick="closeSheet('dashboardEventSheet')"
+        aria-label="Close"
       >
-        ×
+        <i data-lucide="x"></i>
       </button>
     </div>
 
@@ -438,7 +474,8 @@
       class="btn btn-primary btn-large"
       onclick="addDashboardEvent()"
     >
-      Add Event
+      <i data-lucide="calendar-plus"></i>
+      <span>Add Event</span>
     </button>
 
   </div>
@@ -463,8 +500,9 @@
       <button
         class="sheet-close"
         onclick="closeSheet('dashboardExpenseSheet')"
+        aria-label="Close"
       >
-        ×
+        <i data-lucide="x"></i>
       </button>
     </div>
 
@@ -526,7 +564,8 @@
       class="btn btn-primary btn-large"
       onclick="addDashboardExpense()"
     >
-      Add Expense
+      <i data-lucide="wallet"></i>
+      <span>Add Expense</span>
     </button>
 
   </div>
@@ -536,37 +575,50 @@
 <nav class="mobile-header">
 
   <a href="index.html" data-page="index.html">
-    <span class="mobile-icon">⌂</span>
+    <i data-lucide="house" class="mobile-icon"></i>
     <span>Home</span>
   </a>
 
   <a href="shopping.html" data-page="shopping.html">
-    <span class="mobile-icon">🛒</span>
+    <i data-lucide="shopping-cart" class="mobile-icon"></i>
     <span>Shopping</span>
   </a>
 
   <a href="tasks.html" data-page="tasks.html">
-    <span class="mobile-icon">✓</span>
+    <i data-lucide="circle-check" class="mobile-icon"></i>
     <span>Tasks</span>
   </a>
 
   <a href="events.html" data-page="events.html">
-    <span class="mobile-icon">📅</span>
+    <i data-lucide="calendar-days" class="mobile-icon"></i>
     <span>Events</span>
   </a>
 
   <a href="spending.html" data-page="spending.html">
-    <span class="mobile-icon">💰</span>
+    <i data-lucide="wallet" class="mobile-icon"></i>
     <span>Spending</span>
   </a>
 
   <a href="settings.html" data-page="settings.html">
-    <span class="mobile-icon">⚙</span>
+    <i data-lucide="settings" class="mobile-icon"></i>
     <span>Settings</span>
   </a>
 
 </nav>
 
 <script src="script.js"></script>
+
+<script>
+  if (window.lucide) {
+    lucide.createIcons({
+      attrs: {
+        "stroke-width": 2,
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round"
+      }
+    });
+  }
+</script>
+
 </body>
 </html>
