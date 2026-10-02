@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Spending | Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
@@ -265,7 +277,7 @@
       <button
         type="button"
         class="btn btn-primary btn-large"
-        onclick="addExpense(); closeSheet('expenseSheet')"
+        onclick="addExpense(event)"
       >
         <img src="expenses_dark_thin.png" alt="">
         <span>Add Expense</span>
@@ -286,9 +298,7 @@
         <img src="home_light_thick.png" alt="">
       </span>
 
-      <span>
-        Home
-      </span>
+      <span>Home</span>
     </a>
 
     <a
@@ -300,9 +310,7 @@
         <img src="shopping_light_thick.png" alt="">
       </span>
 
-      <span>
-        Shopping
-      </span>
+      <span>Shopping</span>
     </a>
 
     <a
@@ -314,9 +322,7 @@
         <img src="checkbox_light_thick.png" alt="">
       </span>
 
-      <span>
-        Tasks
-      </span>
+      <span>Tasks</span>
     </a>
 
     <a
@@ -328,9 +334,7 @@
         <img src="calendar_light_thick.png" alt="">
       </span>
 
-      <span>
-        Events
-      </span>
+      <span>Events</span>
     </a>
 
     <a
@@ -342,9 +346,7 @@
         <img src="wallet_light_thick.png" alt="">
       </span>
 
-      <span>
-        Spending
-      </span>
+      <span>Spending</span>
     </a>
 
     <a
@@ -356,9 +358,7 @@
         <img src="settings_light_thick.png" alt="">
       </span>
 
-      <span>
-        Settings
-      </span>
+      <span>Settings</span>
     </a>
 
   </nav>
