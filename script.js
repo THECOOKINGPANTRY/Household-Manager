@@ -12,11 +12,6 @@ const defaultData = {
 let currentTaskFilter = "all";
 let currentShoppingFilter = "all";
 let currentShoppingCategory = "all";
-let currentEventFilter = "all";
-
-/* =========================
-   DATA
-========================= */
 
 function getData() {
   const saved = localStorage.getItem("householdManager");
@@ -40,7 +35,7 @@ function getData() {
         ...(data.settings || {})
       }
     };
-  } catch {
+  } catch (error) {
     const freshData = JSON.parse(JSON.stringify(defaultData));
     localStorage.setItem("householdManager", JSON.stringify(freshData));
     return freshData;
@@ -55,70 +50,11 @@ function createId() {
   return Date.now().toString() + Math.random().toString(16).slice(2);
 }
 
-/* =========================
-   NAVIGATION / UI
-========================= */
-
-function setActiveNavigation() {
-  const currentPage =
-    window.location.pathname.split("/").pop() || "index.html";
-
-  document.querySelectorAll("[data-page]").forEach(link => {
-    if (link.getAttribute("data-page") === currentPage) {
-      link.classList.add("active");
-    } else {
-      link.classList.remove("active");
-    }
-  });
+function escapeHTML(value) {
+  const div = document.createElement("div");
+  div.textContent = value ?? "";
+  return div.innerHTML;
 }
-
-function updateHouseholdName() {
-  const data = getData();
-
-  document.querySelectorAll(".household-name").forEach(element => {
-    element.textContent =
-      data.settings.householdName || "My Household";
-  });
-}
-
-function openSheet(id) {
-  const sheet = document.getElementById(id);
-
-  if (!sheet) return;
-
-  sheet.classList.add("open");
-  document.body.classList.add("sheet-open");
-}
-
-function closeSheet(id) {
-  const sheet = document.getElementById(id);
-
-  if (!sheet) return;
-
-  sheet.classList.remove("open");
-
-  if (!document.querySelector(".sheet-overlay.open")) {
-    document.body.classList.remove("sheet-open");
-  }
-}
-
-function setupSheets() {
-  document.querySelectorAll(".sheet-overlay").forEach(overlay => {
-    overlay.addEventListener("click", event => {
-      if (event.target === overlay) {
-        overlay.classList.remove("open");
-
-        if (!document.querySelector(".sheet-overlay.open")) {
-          document.body.classList.remove("sheet-open");
-        }
-      }
-    });
-  });
-}
-
-/* =========================
-   DATE / FORMAT HELPERS
-========================= */
 
 function getTodayString() {
   const today = new Date();
@@ -141,27 +77,13 @@ function getTomorrowString() {
   return `${year}-${month}-${day}`;
 }
 
-function getDateFromString(dateString) {
-  if (!dateString) return null;
-
-  const parts = dateString.split("-");
-
-  if (parts.length !== 3) return null;
-
-  const year = Number(parts[0]);
-  const month = Number(parts[1]) - 1;
-  const day = Number(parts[2]);
-
-  return new Date(year, month, day);
-}
-
 function formatDate(date) {
   if (!date) return "";
 
-  const parsed = getDateFromString(date);
+  const parsed = new Date(date + "T00:00:00");
 
-  if (!parsed || isNaN(parsed.getTime())) {
-    return "";
+  if (isNaN(parsed.getTime())) {
+    return date;
   }
 
   return parsed.toLocaleDateString("en-AU", {
@@ -169,48 +91,6 @@ function formatDate(date) {
     month: "short",
     year: "numeric"
   });
-}
-
-function formatShortDate(date) {
-  if (!date) return "";
-
-  const parsed = getDateFromString(date);
-
-  if (!parsed || isNaN(parsed.getTime())) {
-    return "";
-  }
-
-  return parsed.toLocaleDateString("en-AU", {
-    day: "numeric",
-    month: "short"
-  });
-}
-
-function formatTime(time) {
-  if (!time) return "";
-
-  const parts = time.split(":");
-
-  if (parts.length < 2) {
-    return time;
-  }
-
-  let hour = Number(parts[0]);
-  const minute = parts[1];
-
-  if (isNaN(hour)) {
-    return time;
-  }
-
-  const suffix = hour >= 12 ? "PM" : "AM";
-
-  hour = hour % 12;
-
-  if (hour === 0) {
-    hour = 12;
-  }
-
-  return `${hour}:${minute} ${suffix}`;
 }
 
 function formatMoney(amount) {
@@ -222,10 +102,68 @@ function formatMoney(amount) {
   }).format(Number(amount) || 0);
 }
 
-function escapeHTML(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
+function setActiveNavigation() {
+  const currentPage =
+    window.location.pathname.split("/").pop() || "index.html";
+
+  document.querySelectorAll("[data-page]").forEach(link => {
+    if (link.getAttribute("data-page") === currentPage) {
+      link.classList.add("active");
+    }
+  });
+}
+
+function updateHouseholdName() {
+  const data = getData();
+
+  document.querySelectorAll(".household-name").forEach(element => {
+    element.textContent = data.settings.householdName;
+  });
+}
+
+function openSheet(id) {
+  const sheet = document.getElementById(id);
+
+  if (!sheet) {
+    return;
+  }
+
+  sheet.classList.add("open");
+  document.body.classList.add("sheet-open");
+}
+
+function closeSheet(id) {
+  const sheet = document.getElementById(id);
+
+  if (!sheet) {
+    return;
+  }
+
+  sheet.classList.remove("open");
+  document.body.classList.remove("sheet-open");
+}
+
+function setupSheets() {
+  document.querySelectorAll(".sheet-overlay").forEach(overlay => {
+    overlay.addEventListener("click", event => {
+      if (event.target === overlay) {
+        overlay.classList.remove("open");
+        document.body.classList.remove("sheet-open");
+      }
+    });
+  });
+
+  document.querySelectorAll(".sheet-close, [data-close-sheet]").forEach(button => {
+    button.addEventListener("click", () => {
+      const sheetId =
+        button.getAttribute("data-close-sheet") ||
+        button.closest(".sheet-overlay")?.id;
+
+      if (sheetId) {
+        closeSheet(sheetId);
+      }
+    });
+  });
 }
 
 /* =========================
@@ -233,25 +171,22 @@ function escapeHTML(value) {
 ========================= */
 
 function addShoppingItem() {
-  const nameElement =
-    document.getElementById("shoppingName");
-
-  const quantityElement =
-    document.getElementById("shoppingQuantity");
-
-  const categoryElement =
-    document.getElementById("shoppingCategory");
+  const nameElement = document.getElementById("shoppingName");
+  const quantityElement = document.getElementById("shoppingQuantity");
+  const categoryElement = document.getElementById("shoppingCategory");
 
   if (!nameElement || !quantityElement || !categoryElement) {
+    console.error("Shopping form elements could not be found.");
     return;
   }
 
   const name = nameElement.value.trim();
   const quantity = quantityElement.value.trim();
-  const category = categoryElement.value;
+  const category = categoryElement.value || "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
+    nameElement.focus();
     return;
   }
 
@@ -259,9 +194,9 @@ function addShoppingItem() {
 
   data.shopping.push({
     id: createId(),
-    name,
+    name: name,
     quantity: quantity || "1",
-    category: category || "Groceries",
+    category: category,
     completed: false
   });
 
@@ -278,26 +213,27 @@ function addShoppingItem() {
   updateToday();
 }
 
+function addTaskShoppingItem() {
+  addShoppingItem();
+}
+
 function addDashboardShopping() {
-  const nameElement =
-    document.getElementById("dashboardShoppingName");
-
-  const quantityElement =
-    document.getElementById("dashboardShoppingQuantity");
-
-  const categoryElement =
-    document.getElementById("dashboardShoppingCategory");
+  const nameElement = document.getElementById("dashboardShoppingName");
+  const quantityElement = document.getElementById("dashboardShoppingQuantity");
+  const categoryElement = document.getElementById("dashboardShoppingCategory");
 
   if (!nameElement || !quantityElement || !categoryElement) {
+    console.error("Dashboard shopping form elements could not be found.");
     return;
   }
 
   const name = nameElement.value.trim();
   const quantity = quantityElement.value.trim();
-  const category = categoryElement.value;
+  const category = categoryElement.value || "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
+    nameElement.focus();
     return;
   }
 
@@ -305,9 +241,9 @@ function addDashboardShopping() {
 
   data.shopping.push({
     id: createId(),
-    name,
+    name: name,
     quantity: quantity || "1",
-    category: category || "Groceries",
+    category: category,
     completed: false
   });
 
@@ -322,18 +258,14 @@ function addDashboardShopping() {
   updateToday();
 }
 
-function addTaskShoppingItem() {
-  addShoppingItem();
-}
-
 function toggleShopping(id) {
   const data = getData();
 
-  const item = data.shopping.find(
-    item => item.id === id
-  );
+  const item = data.shopping.find(item => item.id === id);
 
-  if (!item) return;
+  if (!item) {
+    return;
+  }
 
   item.completed = !item.completed;
 
@@ -347,9 +279,7 @@ function toggleShopping(id) {
 function deleteShopping(id) {
   const data = getData();
 
-  data.shopping = data.shopping.filter(
-    item => item.id !== id
-  );
+  data.shopping = data.shopping.filter(item => item.id !== id);
 
   saveData(data);
 
@@ -377,11 +307,9 @@ function filterShopping(filter, button) {
 function filterShoppingCategory(category, button) {
   currentShoppingCategory = category;
 
-  document
-    .querySelectorAll(".category-button")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
+  document.querySelectorAll(".category-button").forEach(item => {
+    item.classList.remove("active");
+  });
 
   if (button) {
     button.classList.add("active");
@@ -403,11 +331,60 @@ function getShoppingCategoryIcon(category) {
   return icons[category] || "📦";
 }
 
-function renderShopping() {
-  const container =
-    document.getElementById("shoppingList");
+function createShoppingHTML(item) {
+  const icon = getShoppingCategoryIcon(item.category);
 
-  if (!container) return;
+  return `
+    <div class="shopping-card ${item.completed ? "completed" : ""}">
+      <input
+        class="shopping-checkbox"
+        type="checkbox"
+        ${item.completed ? "checked" : ""}
+        onchange="toggleShopping('${item.id}')"
+        aria-label="Complete ${escapeHTML(item.name)}"
+      >
+
+      <div class="shopping-item-content">
+        <div class="shopping-item-name">
+          ${escapeHTML(item.name)}
+        </div>
+
+        <div class="shopping-item-details">
+          <span class="shopping-item-detail">
+            ${escapeHTML(item.quantity || "1")}
+          </span>
+
+          <span class="shopping-item-dot">•</span>
+
+          <span class="shopping-item-detail">
+            ${icon}
+            ${escapeHTML(item.category || "Other")}
+          </span>
+        </div>
+      </div>
+
+      <span class="shopping-category-badge">
+        ${escapeHTML(item.category || "Other")}
+      </span>
+
+      <button
+        class="shopping-delete"
+        type="button"
+        onclick="deleteShopping('${item.id}')"
+        aria-label="Delete ${escapeHTML(item.name)}"
+      >
+        ×
+      </button>
+    </div>
+  `;
+}
+
+function renderShopping() {
+  const container = document.getElementById("shoppingList");
+
+  if (!container) {
+    return;
+  }
 
   const data = getData();
 
@@ -419,14 +396,9 @@ function renderShopping() {
 
   const remaining = total - completed;
 
-  const countElement =
-    document.getElementById("shoppingCount");
-
-  const remainingElement =
-    document.getElementById("shoppingRemaining");
-
-  const completedElement =
-    document.getElementById("shoppingCompleted");
+  const countElement = document.getElementById("shoppingCount");
+  const remainingElement = document.getElementById("shoppingRemaining");
+  const completedElement = document.getElementById("shoppingCompleted");
 
   if (countElement) {
     countElement.textContent = total;
@@ -455,6 +427,14 @@ function renderShopping() {
       item => item.category === currentShoppingCategory
     );
   }
+
+  items.sort((a, b) => {
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    return 0;
+  });
 
   const visibleElement =
     document.getElementById("shoppingVisibleCount");
@@ -509,62 +489,9 @@ function renderShopping() {
     return;
   }
 
-  items.sort((a, b) => {
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1;
-    }
-
-    return 0;
-  });
-
-  container.innerHTML = items.map(item => {
-    const icon = getShoppingCategoryIcon(item.category);
-
-    return `
-      <div class="shopping-card ${item.completed ? "completed" : ""}">
-
-        <input
-          class="shopping-checkbox"
-          type="checkbox"
-          ${item.completed ? "checked" : ""}
-          onchange="toggleShopping('${item.id}')"
-          aria-label="Complete ${escapeHTML(item.name)}"
-        >
-
-        <div class="shopping-item-content">
-          <div class="shopping-item-name">
-            ${escapeHTML(item.name)}
-          </div>
-
-          <div class="shopping-item-details">
-            <span class="shopping-item-detail">
-              ${escapeHTML(item.quantity || "1")}
-            </span>
-
-            <span class="shopping-item-dot">•</span>
-
-            <span class="shopping-item-detail">
-              ${icon}
-              ${escapeHTML(item.category || "Other")}
-            </span>
-          </div>
-        </div>
-
-        <span class="shopping-category-badge">
-          ${escapeHTML(item.category || "Other")}
-        </span>
-
-        <button
-          class="shopping-delete"
-          onclick="deleteShopping('${item.id}')"
-          aria-label="Delete ${escapeHTML(item.name)}"
-        >
-          ×
-        </button>
-
-      </div>
-    `;
-  }).join("");
+  container.innerHTML = items
+    .map(item => createShoppingHTML(item))
+    .join("");
 
   updateClearCompletedButton(completed);
 }
@@ -572,16 +499,21 @@ function renderShopping() {
 function clearCompletedShopping() {
   const data = getData();
 
-  const completed =
-    data.shopping.filter(item => item.completed).length;
+  const completed = data.shopping.filter(
+    item => item.completed
+  ).length;
 
-  if (completed === 0) return;
+  if (completed === 0) {
+    return;
+  }
 
   const confirmed = confirm(
     `Remove ${completed} completed shopping item${completed === 1 ? "" : "s"}?`
   );
 
-  if (!confirmed) return;
+  if (!confirmed) {
+    return;
+  }
 
   data.shopping = data.shopping.filter(
     item => !item.completed
@@ -595,13 +527,13 @@ function clearCompletedShopping() {
 }
 
 function updateClearCompletedButton(count) {
-  const button =
-    document.getElementById("clearCompletedButton");
+  const button = document.getElementById("clearCompletedButton");
 
-  if (!button) return;
+  if (!button) {
+    return;
+  }
 
-  button.style.display =
-    count > 0 ? "block" : "none";
+  button.style.display = count > 0 ? "block" : "none";
 }
 
 /* =========================
@@ -609,17 +541,10 @@ function updateClearCompletedButton(count) {
 ========================= */
 
 function addTask() {
-  const nameElement =
-    document.getElementById("taskName");
-
-  const personElement =
-    document.getElementById("taskPerson");
-
-  const dueElement =
-    document.getElementById("taskDue");
-
-  const priorityElement =
-    document.getElementById("taskPriority");
+  const nameElement = document.getElementById("taskName");
+  const personElement = document.getElementById("taskPerson");
+  const dueElement = document.getElementById("taskDue");
+  const priorityElement = document.getElementById("taskPriority");
 
   if (!nameElement || !personElement || !dueElement || !priorityElement) {
     return;
@@ -628,7 +553,7 @@ function addTask() {
   const name = nameElement.value.trim();
   const person = personElement.value.trim();
   const due = dueElement.value;
-  const priority = priorityElement.value;
+  const priority = priorityElement.value || "Medium";
 
   if (!name) {
     alert("Please enter a task.");
@@ -642,7 +567,7 @@ function addTask() {
     name,
     person: person || "Anyone",
     due,
-    priority: priority || "Medium",
+    priority,
     completed: false
   });
 
@@ -661,17 +586,10 @@ function addTask() {
 }
 
 function addDashboardTask() {
-  const nameElement =
-    document.getElementById("dashboardTaskName");
-
-  const personElement =
-    document.getElementById("dashboardTaskPerson");
-
-  const dueElement =
-    document.getElementById("dashboardTaskDue");
-
-  const priorityElement =
-    document.getElementById("dashboardTaskPriority");
+  const nameElement = document.getElementById("dashboardTaskName");
+  const personElement = document.getElementById("dashboardTaskPerson");
+  const dueElement = document.getElementById("dashboardTaskDue");
+  const priorityElement = document.getElementById("dashboardTaskPriority");
 
   if (!nameElement || !personElement || !dueElement || !priorityElement) {
     return;
@@ -680,7 +598,7 @@ function addDashboardTask() {
   const name = nameElement.value.trim();
   const person = personElement.value.trim();
   const due = dueElement.value;
-  const priority = priorityElement.value;
+  const priority = priorityElement.value || "Medium";
 
   if (!name) {
     alert("Please enter a task.");
@@ -694,7 +612,7 @@ function addDashboardTask() {
     name,
     person: person || "Anyone",
     due,
-    priority: priority || "Medium",
+    priority,
     completed: false
   });
 
@@ -703,7 +621,6 @@ function addDashboardTask() {
   nameElement.value = "";
   personElement.value = "";
   dueElement.value = "";
-  priorityElement.value = "Medium";
 
   closeSheet("dashboardTaskSheet");
 
@@ -714,11 +631,11 @@ function addDashboardTask() {
 function toggleTask(id) {
   const data = getData();
 
-  const task = data.tasks.find(
-    task => task.id === id
-  );
+  const task = data.tasks.find(task => task.id === id);
 
-  if (!task) return;
+  if (!task) {
+    return;
+  }
 
   task.completed = !task.completed;
 
@@ -746,11 +663,9 @@ function deleteTask(id) {
 function filterTasks(filter, button) {
   currentTaskFilter = filter;
 
-  document
-    .querySelectorAll(".filter-button")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
+  document.querySelectorAll(".filter-button").forEach(item => {
+    item.classList.remove("active");
+  });
 
   if (button) {
     button.classList.add("active");
@@ -800,12 +715,11 @@ function getTaskDateLabel(task) {
 }
 
 function createTaskHTML(task) {
-  const dateClass =
-    isOverdue(task)
-      ? "overdue"
-      : isToday(task)
-      ? "due-today"
-      : "";
+  const dateClass = isOverdue(task)
+    ? "overdue"
+    : isToday(task)
+    ? "due-today"
+    : "";
 
   const priorityClass =
     task.priority === "High"
@@ -816,7 +730,6 @@ function createTaskHTML(task) {
 
   return `
     <div class="task-card ${task.completed ? "completed" : ""} ${dateClass}">
-
       <input
         class="task-checkbox"
         type="checkbox"
@@ -849,23 +762,20 @@ function createTaskHTML(task) {
 
       <button
         class="task-delete"
+        type="button"
         onclick="deleteTask('${task.id}')"
         aria-label="Delete ${escapeHTML(task.name)}"
       >
         ×
       </button>
-
     </div>
   `;
 }
 
-function renderTaskList(
-  container,
-  tasks,
-  emptyTitle,
-  emptyText
-) {
-  if (!container) return;
+function renderTaskList(container, tasks, emptyTitle, emptyText) {
+  if (!container) {
+    return;
+  }
 
   if (tasks.length === 0) {
     container.innerHTML = `
@@ -944,7 +854,8 @@ function updateTaskProgress(data) {
         "You're making good progress.";
     } else {
       messageElement.textContent =
-        active + " task" +
+        active +
+        " task" +
         (active === 1 ? "" : "s") +
         " still to go.";
     }
@@ -992,7 +903,9 @@ function renderTasks() {
   const mainContainer =
     document.getElementById("taskList");
 
-  if (!mainContainer) return;
+  if (!mainContainer) {
+    return;
+  }
 
   const data = getData();
 
@@ -1017,25 +930,23 @@ function renderTasks() {
   const upcomingCount =
     document.getElementById("upcomingTaskSectionCount");
 
-  const mainTitle =
-    document.getElementById("mainTaskTitle");
+  const activeTasks = data.tasks.filter(
+    task => !task.completed
+  );
 
-  const activeTasks =
-    data.tasks.filter(task => !task.completed);
+  const todayTasks = activeTasks.filter(
+    task => isToday(task)
+  );
 
-  const todayTasks =
-    activeTasks.filter(task => isToday(task));
+  const upcomingTasks = activeTasks
+    .filter(task => isUpcoming(task))
+    .sort((a, b) => {
+      if (!a.due) return 1;
+      if (!b.due) return -1;
 
-  const upcomingTasks =
-    activeTasks
-      .filter(task => isUpcoming(task))
-      .sort((a, b) => {
-        if (!a.due) return 1;
-        if (!b.due) return -1;
-
-        return a.due.localeCompare(b.due);
-      })
-      .slice(0, 5);
+      return new Date(a.due) - new Date(b.due);
+    })
+    .slice(0, 5);
 
   if (todayCount) {
     todayCount.textContent = todayTasks.length;
@@ -1059,29 +970,19 @@ function renderTasks() {
     "Future tasks will appear here."
   );
 
-  if (todaySection) {
-    todaySection.classList.remove("hidden");
-  }
-
-  if (upcomingSection) {
-    upcomingSection.classList.remove("hidden");
-  }
-
   if (currentTaskFilter === "today") {
-    if (mainTitle) {
-      mainTitle.textContent = "Today's Tasks";
+    const title = document.getElementById("mainTaskTitle");
+
+    if (title) {
+      title.textContent = "Today's Tasks";
     }
 
-    if (todaySection) {
-      todaySection.classList.add("hidden");
-    }
+    if (todaySection) todaySection.classList.add("hidden");
+    if (upcomingSection) upcomingSection.classList.add("hidden");
 
-    if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
-    }
-
-    const todayOnly =
-      data.tasks.filter(task => isToday(task));
+    const todayOnly = data.tasks.filter(
+      task => isToday(task)
+    );
 
     renderTaskList(
       mainContainer,
@@ -1094,20 +995,18 @@ function renderTasks() {
   }
 
   if (currentTaskFilter === "active") {
-    if (mainTitle) {
-      mainTitle.textContent = "Active Tasks";
+    const title = document.getElementById("mainTaskTitle");
+
+    if (title) {
+      title.textContent = "Active Tasks";
     }
 
-    if (todaySection) {
-      todaySection.classList.add("hidden");
-    }
+    if (todaySection) todaySection.classList.add("hidden");
+    if (upcomingSection) upcomingSection.classList.add("hidden");
 
-    if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
-    }
-
-    const activeOnly =
-      data.tasks.filter(task => !task.completed);
+    const activeOnly = data.tasks.filter(
+      task => !task.completed
+    );
 
     renderTaskList(
       mainContainer,
@@ -1120,20 +1019,18 @@ function renderTasks() {
   }
 
   if (currentTaskFilter === "completed") {
-    if (mainTitle) {
-      mainTitle.textContent = "Completed Tasks";
+    const title = document.getElementById("mainTaskTitle");
+
+    if (title) {
+      title.textContent = "Completed Tasks";
     }
 
-    if (todaySection) {
-      todaySection.classList.add("hidden");
-    }
+    if (todaySection) todaySection.classList.add("hidden");
+    if (upcomingSection) upcomingSection.classList.add("hidden");
 
-    if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
-    }
-
-    const completedOnly =
-      data.tasks.filter(task => task.completed);
+    const completedOnly = data.tasks.filter(
+      task => task.completed
+    );
 
     renderTaskList(
       mainContainer,
@@ -1145,22 +1042,34 @@ function renderTasks() {
     return;
   }
 
-  if (mainTitle) {
-    mainTitle.textContent = "All Tasks";
+  const title = document.getElementById("mainTaskTitle");
+
+  if (title) {
+    title.textContent = "All Tasks";
   }
 
-  const allTasks =
-    [...data.tasks].sort((a, b) => {
-      if (a.completed !== b.completed) {
-        return a.completed ? 1 : -1;
-      }
+  if (todaySection) todaySection.classList.remove("hidden");
+  if (upcomingSection) upcomingSection.classList.remove("hidden");
 
-      if (!a.due && !b.due) return 0;
-      if (!a.due) return 1;
-      if (!b.due) return -1;
+  const allTasks = [...data.tasks].sort((a, b) => {
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
 
-      return a.due.localeCompare(b.due);
-    });
+    if (!a.due && !b.due) {
+      return 0;
+    }
+
+    if (!a.due) {
+      return 1;
+    }
+
+    if (!b.due) {
+      return -1;
+    }
+
+    return new Date(a.due) - new Date(b.due);
+  });
 
   renderTaskList(
     mainContainer,
@@ -1175,17 +1084,10 @@ function renderTasks() {
 ========================= */
 
 function addEvent() {
-  const nameElement =
-    document.getElementById("eventName");
-
-  const dateElement =
-    document.getElementById("eventDate");
-
-  const timeElement =
-    document.getElementById("eventTime");
-
-  const locationElement =
-    document.getElementById("eventLocation");
+  const nameElement = document.getElementById("eventName");
+  const dateElement = document.getElementById("eventDate");
+  const timeElement = document.getElementById("eventTime");
+  const locationElement = document.getElementById("eventLocation");
 
   if (!nameElement || !dateElement || !timeElement || !locationElement) {
     return;
@@ -1225,17 +1127,10 @@ function addEvent() {
 }
 
 function addDashboardEvent() {
-  const nameElement =
-    document.getElementById("dashboardEventName");
-
-  const dateElement =
-    document.getElementById("dashboardEventDate");
-
-  const timeElement =
-    document.getElementById("dashboardEventTime");
-
-  const locationElement =
-    document.getElementById("dashboardEventLocation");
+  const nameElement = document.getElementById("dashboardEventName");
+  const dateElement = document.getElementById("dashboardEventDate");
+  const timeElement = document.getElementById("dashboardEventTime");
+  const locationElement = document.getElementById("dashboardEventLocation");
 
   if (!nameElement || !dateElement || !timeElement || !locationElement) {
     return;
@@ -1286,177 +1181,36 @@ function deleteEvent(id) {
   loadDashboard();
 }
 
-function filterEvents(filter, button) {
-  currentEventFilter = filter;
+function renderEvents() {
+  const container = document.getElementById("eventList");
 
-  document
-    .querySelectorAll(".event-filters .filter-button")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
-
-  if (button) {
-    button.classList.add("active");
+  if (!container) {
+    return;
   }
 
-  renderEvents();
-}
+  const data = getData();
 
-function isEventToday(event) {
-  return event.date === getTodayString();
-}
+  const events = [...data.events].sort(
+    (a, b) => {
+      const dateA = new Date(
+        `${a.date}T${a.time || "00:00"}`
+      );
 
-function isEventPast(event) {
-  return event.date < getTodayString();
-}
+      const dateB = new Date(
+        `${b.date}T${b.time || "00:00"}`
+      );
 
-function isEventThisWeek(event) {
-  if (!event.date) return false;
-
-  const today = getDateFromString(getTodayString());
-  const eventDate = getDateFromString(event.date);
-
-  if (!today || !eventDate) return false;
-
-  const day = today.getDay();
-
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - day);
-
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-  return eventDate >= startOfWeek &&
-         eventDate <= endOfWeek;
-}
-
-function getEventDateLabel(event) {
-  if (!event.date) {
-    return "No date";
-  }
-
-  if (event.date === getTodayString()) {
-    return "Today";
-  }
-
-  if (event.date === getTomorrowString()) {
-    return "Tomorrow";
-  }
-
-  return formatDate(event.date);
-}
-
-function getEventDay(event) {
-  const date = getDateFromString(event.date);
-
-  if (!date) {
-    return "--";
-  }
-
-  return date.getDate();
-}
-
-function getEventMonth(event) {
-  const date = getDateFromString(event.date);
-
-  if (!date) {
-    return "";
-  }
-
-  return date.toLocaleDateString("en-AU", {
-    month: "short"
-  }).toUpperCase();
-}
-
-function getEventWeekday(event) {
-  const date = getDateFromString(event.date);
-
-  if (!date) {
-    return "";
-  }
-
-  return date.toLocaleDateString("en-AU", {
-    weekday: "short"
-  });
-}
-
-function createEventHTML(event) {
-  const pastClass =
-    isEventPast(event) ? "past" : "";
-
-  const timeHTML =
-    event.time
-      ? `<span class="event-detail">🕐 ${escapeHTML(formatTime(event.time))}</span>`
-      : "";
-
-  const locationHTML =
-    event.location
-      ? `<span class="event-detail">📍 ${escapeHTML(event.location)}</span>`
-      : "";
-
-  return `
-    <div class="event-card ${pastClass}">
-
-      <div class="event-date-block">
-        <div class="event-date-weekday">
-          ${escapeHTML(getEventWeekday(event))}
-        </div>
-
-        <div class="event-date-day">
-          ${escapeHTML(getEventDay(event))}
-        </div>
-
-        <div class="event-date-month">
-          ${escapeHTML(getEventMonth(event))}
-        </div>
-      </div>
-
-      <div class="event-content">
-
-        <div class="event-name">
-          ${escapeHTML(event.name)}
-        </div>
-
-        <div class="event-date-label">
-          ${escapeHTML(getEventDateLabel(event))}
-        </div>
-
-        <div class="event-details">
-          ${timeHTML}
-          ${locationHTML}
-        </div>
-
-      </div>
-
-      <button
-        class="event-delete"
-        onclick="deleteEvent('${event.id}')"
-        aria-label="Delete ${escapeHTML(event.name)}"
-      >
-        ×
-      </button>
-
-    </div>
-  `;
-}
-
-function renderEventList(
-  container,
-  events,
-  emptyTitle,
-  emptyText
-) {
-  if (!container) return;
+      return dateA - dateB;
+    }
+  );
 
   if (events.length === 0) {
     container.innerHTML = `
-      <div class="event-empty">
-        <div class="event-empty-icon">📅</div>
-        <div class="event-empty-title">
-          ${escapeHTML(emptyTitle)}
-        </div>
-        <div class="event-empty-text">
-          ${escapeHTML(emptyText)}
+      <div class="empty-state">
+        <div class="empty-icon">📅</div>
+        <div class="empty-title">No upcoming events</div>
+        <div class="empty-text">
+          Add an event to your household calendar.
         </div>
       </div>
     `;
@@ -1465,254 +1219,32 @@ function renderEventList(
   }
 
   container.innerHTML = events
-    .map(event => createEventHTML(event))
+    .map(event => `
+      <div class="data-row">
+        <div class="data-main">
+          <div>
+            <div class="data-name">
+              ${escapeHTML(event.name)}
+            </div>
+
+            <div class="data-info">
+              ${formatDate(event.date)}
+              ${event.time ? " · " + escapeHTML(event.time) : ""}
+              ${event.location ? " · " + escapeHTML(event.location) : ""}
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-danger btn-small"
+          type="button"
+          onclick="deleteEvent('${event.id}')"
+        >
+          Delete
+        </button>
+      </div>
+    `)
     .join("");
-}
-
-function updateEventSummary(data) {
-  const today = getTodayString();
-
-  const upcoming =
-    data.events.filter(event => event.date >= today);
-
-  const thisWeek =
-    data.events.filter(event =>
-      event.date >= today &&
-      isEventThisWeek(event)
-    );
-
-  const upcomingElement =
-    document.getElementById("eventUpcomingCount");
-
-  const weekElement =
-    document.getElementById("eventWeekCount");
-
-  const totalElement =
-    document.getElementById("eventTotalCount");
-
-  if (upcomingElement) {
-    upcomingElement.textContent = upcoming.length;
-  }
-
-  if (weekElement) {
-    weekElement.textContent = thisWeek.length;
-  }
-
-  if (totalElement) {
-    totalElement.textContent = data.events.length;
-  }
-}
-
-function updateNextEvent(data) {
-  const nextEventName =
-    document.getElementById("nextEventName");
-
-  const nextEventDate =
-    document.getElementById("nextEventDate");
-
-  const nextEventTime =
-    document.getElementById("nextEventTime");
-
-  const nextEventLocation =
-    document.getElementById("nextEventLocation");
-
-  const nextEventDay =
-    document.getElementById("nextEventDay");
-
-  const nextEventMonth =
-    document.getElementById("nextEventMonth");
-
-  const nextEventCard =
-    document.getElementById("nextEventCard");
-
-  const today = getTodayString();
-
-  const upcoming =
-    data.events
-      .filter(event => event.date >= today)
-      .sort((a, b) => {
-        if (a.date !== b.date) {
-          return a.date.localeCompare(b.date);
-        }
-
-        const timeA = a.time || "99:99";
-        const timeB = b.time || "99:99";
-
-        return timeA.localeCompare(timeB);
-      });
-
-  const event = upcoming[0];
-
-  if (!event) {
-    if (nextEventCard) {
-      nextEventCard.classList.add("empty");
-    }
-
-    if (nextEventName) {
-      nextEventName.textContent = "No upcoming events";
-    }
-
-    if (nextEventDate) {
-      nextEventDate.textContent = "Add an event to get started.";
-    }
-
-    if (nextEventTime) {
-      nextEventTime.textContent = "";
-    }
-
-    if (nextEventLocation) {
-      nextEventLocation.textContent = "";
-    }
-
-    if (nextEventDay) {
-      nextEventDay.textContent = "—";
-    }
-
-    if (nextEventMonth) {
-      nextEventMonth.textContent = "";
-    }
-
-    return;
-  }
-
-  if (nextEventCard) {
-    nextEventCard.classList.remove("empty");
-  }
-
-  if (nextEventName) {
-    nextEventName.textContent = event.name;
-  }
-
-  if (nextEventDate) {
-    nextEventDate.textContent =
-      getEventDateLabel(event);
-  }
-
-  if (nextEventTime) {
-    nextEventTime.textContent =
-      event.time ? formatTime(event.time) : "";
-  }
-
-  if (nextEventLocation) {
-    nextEventLocation.textContent =
-      event.location || "";
-  }
-
-  if (nextEventDay) {
-    nextEventDay.textContent =
-      getEventDay(event);
-  }
-
-  if (nextEventMonth) {
-    nextEventMonth.textContent =
-      getEventMonth(event);
-  }
-}
-
-function renderEvents() {
-  const container =
-    document.getElementById("eventList");
-
-  if (!container) return;
-
-  const data = getData();
-
-  updateEventSummary(data);
-  updateNextEvent(data);
-
-  let events = [...data.events];
-
-  if (currentEventFilter === "today") {
-    events = events.filter(event =>
-      isEventToday(event)
-    );
-  }
-
-  if (currentEventFilter === "week") {
-    events = events.filter(event =>
-      !isEventPast(event) &&
-      isEventThisWeek(event)
-    );
-  }
-
-  if (currentEventFilter === "past") {
-    events = events.filter(event =>
-      isEventPast(event)
-    );
-  }
-
-  events.sort((a, b) => {
-    if (a.date !== b.date) {
-      return a.date.localeCompare(b.date);
-    }
-
-    const timeA = a.time || "99:99";
-    const timeB = b.time || "99:99";
-
-    return timeA.localeCompare(timeB);
-  });
-
-  if (currentEventFilter === "past") {
-    events.reverse();
-  }
-
-  const visibleElement =
-    document.getElementById("eventVisibleCount");
-
-  if (visibleElement) {
-    visibleElement.textContent = events.length;
-  }
-
-  const titleElement =
-    document.getElementById("eventSectionTitle");
-
-  if (titleElement) {
-    if (currentEventFilter === "today") {
-      titleElement.textContent = "Today's Events";
-    } else if (currentEventFilter === "week") {
-      titleElement.textContent = "This Week";
-    } else if (currentEventFilter === "past") {
-      titleElement.textContent = "Past Events";
-    } else {
-      titleElement.textContent = "Upcoming Events";
-    }
-  }
-
-  if (events.length === 0) {
-    let title = "No upcoming events";
-    let text = "Add an event to your household calendar.";
-
-    if (currentEventFilter === "today") {
-      title = "Nothing today";
-      text = "You don't have any events scheduled today.";
-    }
-
-    if (currentEventFilter === "week") {
-      title = "Nothing this week";
-      text = "You don't have any events scheduled this week.";
-    }
-
-    if (currentEventFilter === "past") {
-      title = "No past events";
-      text = "Past events will appear here.";
-    }
-
-    renderEventList(
-      container,
-      [],
-      title,
-      text
-    );
-
-    return;
-  }
-
-  renderEventList(
-    container,
-    events,
-    "No upcoming events",
-    "Add an event to your household calendar."
-  );
 }
 
 /* =========================
@@ -1720,17 +1252,10 @@ function renderEvents() {
 ========================= */
 
 function addExpense() {
-  const nameElement =
-    document.getElementById("expenseName");
-
-  const amountElement =
-    document.getElementById("expenseAmount");
-
-  const categoryElement =
-    document.getElementById("expenseCategory");
-
-  const dateElement =
-    document.getElementById("expenseDate");
+  const nameElement = document.getElementById("expenseName");
+  const amountElement = document.getElementById("expenseAmount");
+  const categoryElement = document.getElementById("expenseCategory");
+  const dateElement = document.getElementById("expenseDate");
 
   if (!nameElement || !amountElement || !categoryElement || !dateElement) {
     return;
@@ -1769,17 +1294,10 @@ function addExpense() {
 }
 
 function addDashboardExpense() {
-  const nameElement =
-    document.getElementById("dashboardExpenseName");
-
-  const amountElement =
-    document.getElementById("dashboardExpenseAmount");
-
-  const categoryElement =
-    document.getElementById("dashboardExpenseCategory");
-
-  const dateElement =
-    document.getElementById("dashboardExpenseDate");
+  const nameElement = document.getElementById("dashboardExpenseName");
+  const amountElement = document.getElementById("dashboardExpenseAmount");
+  const categoryElement = document.getElementById("dashboardExpenseCategory");
+  const dateElement = document.getElementById("dashboardExpenseDate");
 
   if (!nameElement || !amountElement || !categoryElement || !dateElement) {
     return;
@@ -1830,47 +1348,40 @@ function deleteExpense(id) {
 }
 
 function renderSpending() {
-  const container =
-    document.getElementById("spendingList");
+  const container = document.getElementById("spendingList");
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   const data = getData();
 
-  const total =
-    data.spending.reduce(
-      (sum, expense) =>
-        sum + Number(expense.amount),
+  const total = data.spending.reduce(
+    (sum, expense) => sum + Number(expense.amount),
+    0
+  );
+
+  const now = new Date();
+
+  const thisMonth = data.spending
+    .filter(expense => {
+      const date = new Date(
+        expense.date + "T00:00:00"
+      );
+
+      return (
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+      );
+    })
+    .reduce(
+      (sum, expense) => sum + Number(expense.amount),
       0
     );
 
-  const today = getData();
-
-  const currentDate = new Date();
-
-  const thisMonth =
-    data.spending
-      .filter(expense => {
-        const date =
-          getDateFromString(expense.date);
-
-        if (!date) return false;
-
-        return (
-          date.getMonth() === currentDate.getMonth() &&
-          date.getFullYear() === currentDate.getFullYear()
-        );
-      })
-      .reduce(
-        (sum, expense) =>
-          sum + Number(expense.amount),
-        0
-      );
-
-  const average =
-    data.spending.length
-      ? total / data.spending.length
-      : 0;
+  const average = data.spending.length
+    ? total / data.spending.length
+    : 0;
 
   const totalElement =
     document.getElementById("totalSpending");
@@ -1882,18 +1393,15 @@ function renderSpending() {
     document.getElementById("averageSpending");
 
   if (totalElement) {
-    totalElement.textContent =
-      formatMoney(total);
+    totalElement.textContent = formatMoney(total);
   }
 
   if (monthElement) {
-    monthElement.textContent =
-      formatMoney(thisMonth);
+    monthElement.textContent = formatMoney(thisMonth);
   }
 
   if (averageElement) {
-    averageElement.textContent =
-      formatMoney(average);
+    averageElement.textContent = formatMoney(average);
   }
 
   if (data.spending.length === 0) {
@@ -1901,26 +1409,20 @@ function renderSpending() {
       <div class="empty-state">
         <div class="empty-icon">💰</div>
         <div class="empty-title">No spending recorded</div>
-        <div class="empty-text">Add your first household expense.</div>
+        <div class="empty-text">
+          Add your first household expense.
+        </div>
       </div>
     `;
 
     return;
   }
 
-  const expenses =
-    [...data.spending].sort((a, b) => {
-      if (a.date !== b.date) {
-        return b.date.localeCompare(a.date);
-      }
+  const expenses = [...data.spending].reverse();
 
-      return 0;
-    });
-
-  container.innerHTML =
-    expenses.map(expense => `
+  container.innerHTML = expenses
+    .map(expense => `
       <div class="data-row">
-
         <div class="data-main">
           <div>
             <div class="data-name">
@@ -1928,7 +1430,7 @@ function renderSpending() {
             </div>
 
             <div class="expense-category">
-              ${escapeHTML(expense.category || "Other")}
+              ${escapeHTML(expense.category)}
               ·
               ${formatDate(expense.date)}
             </div>
@@ -1936,22 +1438,21 @@ function renderSpending() {
         </div>
 
         <div class="data-actions">
-
           <span class="expense-amount">
             ${formatMoney(expense.amount)}
           </span>
 
           <button
             class="btn btn-danger btn-small"
+            type="button"
             onclick="deleteExpense('${expense.id}')"
           >
             Delete
           </button>
-
         </div>
-
       </div>
-    `).join("");
+    `)
+    .join("");
 }
 
 /* =========================
@@ -1966,7 +1467,7 @@ function loadSettings() {
 
   if (nameInput) {
     nameInput.value =
-      data.settings.householdName || "My Household";
+      data.settings.householdName;
   }
 
   const currencyInput =
@@ -1974,7 +1475,7 @@ function loadSettings() {
 
   if (currencyInput) {
     currencyInput.value =
-      data.settings.currency || "AUD";
+      data.settings.currency;
   }
 }
 
@@ -2014,7 +1515,9 @@ function resetData() {
     "Are you sure you want to delete all Household Manager data?"
   );
 
-  if (!confirmed) return;
+  if (!confirmed) {
+    return;
+  }
 
   localStorage.removeItem("householdManager");
   location.reload();
@@ -2027,23 +1530,18 @@ function resetData() {
 function updateToday() {
   const data = getData();
 
-  const todayString =
-    getTodayString();
+  const today = new Date();
+  const todayString = getTodayString();
 
-  const today =
-    getDateFromString(todayString);
+  const todayTasks = data.tasks.filter(
+    task =>
+      !task.completed &&
+      task.due === todayString
+  ).length;
 
-  const todayTasks =
-    data.tasks.filter(
-      task =>
-        !task.completed &&
-        task.due === todayString
-    ).length;
-
-  const shoppingItems =
-    data.shopping.filter(
-      item => !item.completed
-    ).length;
+  const shoppingItems = data.shopping.filter(
+    item => !item.completed
+  ).length;
 
   const todayDateElement =
     document.getElementById("todayDate");
@@ -2054,7 +1552,7 @@ function updateToday() {
   const todayShoppingElement =
     document.getElementById("todayShoppingCount");
 
-  if (todayDateElement && today) {
+  if (todayDateElement) {
     todayDateElement.textContent =
       today.toLocaleDateString("en-AU", {
         weekday: "long",
@@ -2077,30 +1575,21 @@ function updateToday() {
 function loadDashboard() {
   const data = getData();
 
-  const taskCount =
-    data.tasks.filter(
-      task => !task.completed
-    ).length;
+  const taskCount = data.tasks.filter(
+    task => !task.completed
+  ).length;
 
-  const shoppingCount =
-    data.shopping.filter(
-      item => !item.completed
-    ).length;
+  const shoppingCount = data.shopping.filter(
+    item => !item.completed
+  ).length;
 
-  const todayString =
-    getTodayString();
+  const eventCount = data.events.length;
 
-  const eventCount =
-    data.events.filter(
-      event => event.date >= todayString
-    ).length;
-
-  const spending =
-    data.spending.reduce(
-      (sum, expense) =>
-        sum + Number(expense.amount),
-      0
-    );
+  const spending = data.spending.reduce(
+    (sum, expense) =>
+      sum + Number(expense.amount),
+    0
+  );
 
   const taskElement =
     document.getElementById("dashboardTasks");
@@ -2115,18 +1604,15 @@ function loadDashboard() {
     document.getElementById("dashboardSpending");
 
   if (taskElement) {
-    taskElement.textContent =
-      taskCount;
+    taskElement.textContent = taskCount;
   }
 
   if (shoppingElement) {
-    shoppingElement.textContent =
-      shoppingCount;
+    shoppingElement.textContent = shoppingCount;
   }
 
   if (eventElement) {
-    eventElement.textContent =
-      eventCount;
+    eventElement.textContent = eventCount;
   }
 
   if (spendingElement) {
@@ -2138,17 +1624,9 @@ function loadDashboard() {
     document.getElementById("dashboardTaskList");
 
   if (taskList) {
-    const tasks =
-      data.tasks
-        .filter(task => !task.completed)
-        .sort((a, b) => {
-          if (!a.due && !b.due) return 0;
-          if (!a.due) return 1;
-          if (!b.due) return -1;
-
-          return a.due.localeCompare(b.due);
-        })
-        .slice(0, 4);
+    const tasks = data.tasks
+      .filter(task => !task.completed)
+      .slice(0, 4);
 
     if (tasks.length === 0) {
       taskList.innerHTML = `
@@ -2157,10 +1635,9 @@ function loadDashboard() {
         </div>
       `;
     } else {
-      taskList.innerHTML =
-        tasks.map(task => `
+      taskList.innerHTML = tasks
+        .map(task => `
           <div class="list-item">
-
             <div class="item-left">
               <span>✓</span>
 
@@ -2178,9 +1655,9 @@ function loadDashboard() {
             <span class="badge ${task.priority === "High" ? "yellow" : ""}">
               ${escapeHTML(task.priority || "Medium")}
             </span>
-
           </div>
-        `).join("");
+        `)
+        .join("");
     }
   }
 
@@ -2188,18 +1665,19 @@ function loadDashboard() {
     document.getElementById("dashboardEventList");
 
   if (eventList) {
-    const events =
-      data.events
-        .filter(event => event.date >= todayString)
-        .sort((a, b) => {
-          if (a.date !== b.date) {
-            return a.date.localeCompare(b.date);
-          }
+    const events = [...data.events]
+      .sort((a, b) => {
+        const dateA = new Date(
+          `${a.date}T${a.time || "00:00"}`
+        );
 
-          return (a.time || "99:99")
-            .localeCompare(a.time || "99:99");
-        })
-        .slice(0, 4);
+        const dateB = new Date(
+          `${b.date}T${b.time || "00:00"}`
+        );
+
+        return dateA - dateB;
+      })
+      .slice(0, 4);
 
     if (events.length === 0) {
       eventList.innerHTML = `
@@ -2208,10 +1686,9 @@ function loadDashboard() {
         </div>
       `;
     } else {
-      eventList.innerHTML =
-        events.map(event => `
+      eventList.innerHTML = events
+        .map(event => `
           <div class="list-item">
-
             <div class="item-left">
               <span>📅</span>
 
@@ -2221,38 +1698,115 @@ function loadDashboard() {
                 </div>
 
                 <div class="item-meta">
-                  ${escapeHTML(getEventDateLabel(event))}
-                  ${event.time ? " · " + escapeHTML(formatTime(event.time)) : ""}
+                  ${formatDate(event.date)}
                 </div>
               </div>
             </div>
-
           </div>
-        `).join("");
+        `)
+        .join("");
     }
   }
 }
 
 /* =========================
-   DOM READY
+   FORM SUBMIT SUPPORT
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   setActiveNavigation();
   updateHouseholdName();
   loadSettings();
-
-  currentTaskFilter = "all";
-  currentShoppingFilter = "all";
-  currentShoppingCategory = "all";
-  currentEventFilter = "all";
-
   loadDashboard();
   updateToday();
+
   renderShopping();
   renderTasks();
   renderEvents();
   renderSpending();
 
   setupSheets();
+
+  /*
+    This makes the shopping form work even if the HTML
+    button uses a form submit instead of onclick.
+  */
+  const shoppingForm = document.getElementById("shoppingForm");
+
+  if (shoppingForm) {
+    shoppingForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addShoppingItem();
+    });
+  }
+
+  const dashboardShoppingForm =
+    document.getElementById("dashboardShoppingForm");
+
+  if (dashboardShoppingForm) {
+    dashboardShoppingForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addDashboardShopping();
+    });
+  }
+
+  const taskForm =
+    document.getElementById("taskForm");
+
+  if (taskForm) {
+    taskForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addTask();
+    });
+  }
+
+  const eventForm =
+    document.getElementById("eventForm");
+
+  if (eventForm) {
+    eventForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addEvent();
+    });
+  }
+
+  const expenseForm =
+    document.getElementById("expenseForm");
+
+  if (expenseForm) {
+    expenseForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addExpense();
+    });
+  }
+
+  const dashboardTaskForm =
+    document.getElementById("dashboardTaskForm");
+
+  if (dashboardTaskForm) {
+    dashboardTaskForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addDashboardTask();
+    });
+  }
+
+  const dashboardEventForm =
+    document.getElementById("dashboardEventForm");
+
+  if (dashboardEventForm) {
+    dashboardEventForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addDashboardEvent();
+    });
+  }
+
+  const dashboardExpenseForm =
+    document.getElementById("dashboardExpenseForm");
+
+  if (dashboardExpenseForm) {
+    dashboardExpenseForm.addEventListener("submit", event => {
+      event.preventDefault();
+      addDashboardExpense();
+    });
+  }
 });
