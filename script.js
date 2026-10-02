@@ -13,6 +13,10 @@ let currentTaskFilter = "all";
 let currentShoppingFilter = "all";
 let currentShoppingCategory = "all";
 
+/* =========================
+   DATA
+========================= */
+
 function getData() {
   const saved = localStorage.getItem("householdManager");
 
@@ -102,6 +106,10 @@ function formatMoney(amount) {
   }).format(Number(amount) || 0);
 }
 
+/* =========================
+   NAVIGATION / SHEETS
+========================= */
+
 function setActiveNavigation() {
   const currentPage =
     window.location.pathname.split("/").pop() || "index.html";
@@ -186,6 +194,7 @@ function addShoppingItem(event) {
   const quantity = quantityElement
     ? quantityElement.value.trim()
     : "1";
+
   const category = categoryElement
     ? categoryElement.value || "Groceries"
     : "Groceries";
@@ -250,6 +259,7 @@ function addDashboardShopping(event) {
   }
 
   const name = nameElement.value.trim();
+
   const quantity = quantityElement
     ? quantityElement.value.trim()
     : "1";
@@ -288,9 +298,9 @@ function addDashboardShopping(event) {
 
   closeSheet("dashboardShoppingSheet");
 
+  renderShopping();
   loadDashboard();
   updateToday();
-  renderShopping();
 
   return false;
 }
@@ -329,6 +339,10 @@ function deleteShoppingItem(id) {
 
 function deleteShopping(id) {
   deleteShoppingItem(id);
+}
+
+function toggleShopping(id) {
+  toggleShoppingItem(id);
 }
 
 function filterShopping(filter, button) {
@@ -378,6 +392,7 @@ function getShoppingCategoryIcon(category) {
 
 function renderShopping() {
   const data = getData();
+
   const items = Array.isArray(data.shopping)
     ? data.shopping
     : [];
@@ -574,10 +589,13 @@ function addTask(event) {
   if (!nameElement) return false;
 
   const name = nameElement.value.trim();
+
   const person = personElement
     ? personElement.value.trim()
     : "";
+
   const due = dueElement ? dueElement.value : "";
+
   const priority = priorityElement
     ? priorityElement.value || "Medium"
     : "Medium";
@@ -636,10 +654,13 @@ function addDashboardTask(event) {
   if (!nameElement) return false;
 
   const name = nameElement.value.trim();
+
   const person = personElement
     ? personElement.value.trim()
     : "";
+
   const due = dueElement ? dueElement.value : "";
+
   const priority = priorityElement
     ? priorityElement.value || "Medium"
     : "Medium";
@@ -1149,6 +1170,7 @@ function addEvent(event) {
   const name = nameElement.value.trim();
   const date = dateElement.value;
   const time = timeElement ? timeElement.value : "";
+
   const location = locationElement
     ? locationElement.value.trim()
     : "";
@@ -1208,6 +1230,7 @@ function addDashboardEvent(event) {
   const name = nameElement.value.trim();
   const date = dateElement.value;
   const time = timeElement ? timeElement.value : "";
+
   const location = locationElement
     ? locationElement.value.trim()
     : "";
@@ -1847,6 +1870,10 @@ function setupForms() {
   });
 }
 
+/* =========================
+   INITIALIZATION
+========================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   setActiveNavigation();
   updateHouseholdName();
@@ -1862,21 +1889,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupSheets();
   setupForms();
-
-  document.addEventListener("submit", event => {
-    const form = event.target;
-
-    if (!form) return;
-
-    if (
-      form.id === "shoppingForm" ||
-      form.querySelector("#shoppingName")
-    ) {
-      event.preventDefault();
-
-      if (form.id !== "shoppingForm") {
-        addShoppingItem(event);
-      }
-    }
-  });
 });
