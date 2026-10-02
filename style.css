@@ -15,10 +15,6 @@
   --shadow: 0 8px 24px rgba(36, 36, 35, 0.08);
 }
 
-/* ================================
-RESET
-================================ */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -166,13 +162,6 @@ PNG ICON SYSTEM
 .event-delete img {
   width: 15px;
   height: 15px;
-}
-
-.shopping-category-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
 }
 
 .shopping-category-badge img {
@@ -582,12 +571,7 @@ DASHBOARD
 GENERAL LISTS
 ================================ */
 
-.section-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
+.section-list,
 .data-list {
   display: flex;
   flex-direction: column;
@@ -595,13 +579,16 @@ GENERAL LISTS
 }
 
 .list-item {
-  background: rgba(232, 237, 223, 0.68);
+  width: 100%;
+  min-height: 58px;
+  background: var(--supporting);
   padding: 13px;
-  border-radius: 13px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  box-shadow: var(--shadow);
 }
 
 .item-left {
@@ -609,13 +596,14 @@ GENERAL LISTS
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1;
 }
 
 .item-left > span {
   width: 30px;
   height: 30px;
   border-radius: 10px;
-  background: var(--supporting);
+  background: var(--background);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -628,18 +616,25 @@ GENERAL LISTS
 }
 
 .dashboard-list-icon {
-  display: none !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 10px;
+  background: var(--background);
+  display: grid !important;
+  place-items: center;
+  flex-shrink: 0;
 }
 
-.data-row.completed {
-  opacity: 0.52;
-}
-
-.data-row.completed .data-name {
-  text-decoration: line-through;
+.dashboard-list-icon::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  background: var(--supporting);
 }
 
 .data-row {
+  width: 100%;
   background: var(--supporting);
   border-radius: 16px;
   padding: 14px;
@@ -648,6 +643,14 @@ GENERAL LISTS
   justify-content: space-between;
   gap: 10px;
   box-shadow: var(--shadow);
+}
+
+.data-row.completed {
+  opacity: 0.52;
+}
+
+.data-row.completed .data-name {
+  text-decoration: line-through;
 }
 
 .data-main {
@@ -676,6 +679,20 @@ GENERAL LISTS
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+}
+
+.item-title {
+  font-weight: 700;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
 }
 
 /* ================================
@@ -742,6 +759,7 @@ EMPTY STATES
   padding: 42px 18px;
   background: var(--supporting);
   border-radius: 18px;
+  box-shadow: var(--shadow);
 }
 
 .empty-icon {
@@ -776,18 +794,28 @@ FILTERS
 ================================ */
 
 .task-filters,
-.shopping-filters {
+.shopping-filters,
+.event-filters {
   display: flex;
   gap: 7px;
-  margin-bottom: 13px;
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 2px;
 }
 
 .task-filters::-webkit-scrollbar,
-.shopping-filters::-webkit-scrollbar {
+.shopping-filters::-webkit-scrollbar,
+.event-filters::-webkit-scrollbar {
   display: none;
+}
+
+.task-filters,
+.shopping-filters {
+  margin-bottom: 13px;
+}
+
+.event-filters {
+  margin-bottom: 18px;
 }
 
 .filter-button {
@@ -895,13 +923,14 @@ TASKS
   align-items: center;
   gap: 8px;
   min-width: 0;
+  box-shadow: var(--shadow);
 }
 
 .task-summary-icon {
   width: 28px;
   height: 28px;
   border-radius: 9px;
-  background: rgba(232, 237, 223, 0.8);
+  background: var(--background);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -1086,16 +1115,11 @@ TASKS
   flex-shrink: 0;
 }
 
-.task-delete .icon,
 .task-delete img,
-.shopping-delete .icon,
 .shopping-delete img,
-.event-delete .icon,
 .event-delete img {
   width: 15px;
   height: 15px;
-  object-fit: contain;
-  display: block;
 }
 
 .task-empty {
@@ -1103,6 +1127,7 @@ TASKS
   border-radius: 16px;
   padding: 25px 16px;
   text-align: center;
+  box-shadow: var(--shadow);
 }
 
 .task-empty-icon {
@@ -1407,6 +1432,7 @@ SHOPPING
   border-radius: 16px;
   padding: 30px 16px;
   text-align: center;
+  box-shadow: var(--shadow);
 }
 
 .shopping-empty-icon {
@@ -1681,19 +1707,6 @@ EVENTS
   margin: 0 12px;
 }
 
-.event-filters {
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  margin-bottom: 18px;
-  scrollbar-width: none;
-  padding-bottom: 2px;
-}
-
-.event-filters::-webkit-scrollbar {
-  display: none;
-}
-
 .event-section {
   margin-bottom: 20px;
 }
@@ -1843,6 +1856,7 @@ EVENTS
   border-radius: 17px;
   padding: 32px 17px;
   text-align: center;
+  box-shadow: var(--shadow);
 }
 
 .event-empty-icon {
