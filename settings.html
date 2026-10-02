@@ -7,92 +7,138 @@
   <title>Settings | Household Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="app">
-  <main class="main">
+  <div class="app">
+    <main class="main">
 
-    <div class="mobile-topbar">
-      <div class="mobile-brand">
-        <img src="House_Manager_Logo.png" alt="Household Manager">
-        <span class="mobile-brand-name">Household Manager</span>
-      </div>
-      <a href="index.html" class="mobile-top-action">⌂</a>
-    </div>
-
-    <header class="page-header">
-      <div>
-        <h1 class="page-title">Settings</h1>
-        <p class="page-subtitle">Manage your household preferences.</p>
-      </div>
-    </header>
-
-    <section class="settings-grid">
-
-      <div class="card">
-        <div class="card-title">Household</div>
-
-        <div class="setting-block">
-          <label class="form-label">Household Name</label>
-          <input
-            id="householdName"
-            class="form-control"
-            type="text"
-            placeholder="My Household"
-          >
+      <div class="mobile-topbar">
+        <div class="mobile-brand">
+          <img src="House_Manager_Logo.png" alt="Household Manager">
+          <span class="mobile-brand-name">Household Manager</span>
         </div>
 
-        <div class="setting-block">
-          <label class="form-label">Currency</label>
-          <select id="currency" class="form-control">
-            <option value="AUD">Australian Dollar (AUD)</option>
-            <option value="USD">US Dollar (USD)</option>
-            <option value="GBP">British Pound (GBP)</option>
-            <option value="EUR">Euro (EUR)</option>
-          </select>
-        </div>
-
-        <button class="btn btn-primary btn-large" onclick="saveSettings()">
-          Save Changes
-        </button>
+        <a href="index.html" class="mobile-top-action">⌂</a>
       </div>
 
-      <div class="card">
-        <div class="card-title">Data</div>
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Settings</h1>
+          <p class="page-subtitle">Manage your household preferences.</p>
+        </div>
+      </header>
 
-        <div class="setting-row">
-          <div>
-            <div class="setting-title">Reset Household Manager</div>
-            <div class="setting-description">
-              Permanently delete all tasks, shopping items, events and spending.
-            </div>
+      <section class="settings-grid">
+
+        <div class="card">
+          <div class="card-title">Household</div>
+
+          <div class="setting-block">
+            <label class="form-label" for="householdName">
+              Household Name
+            </label>
+
+            <input
+              id="householdName"
+              class="form-control"
+              type="text"
+              placeholder="My Household"
+              autocomplete="off"
+            >
           </div>
-          <button class="btn btn-danger" onclick="resetData()">Reset</button>
+
+          <div class="setting-block">
+            <label class="form-label" for="currency">
+              Currency
+            </label>
+
+            <select id="currency" class="form-control">
+              <option value="AUD">Australian Dollar (AUD)</option>
+              <option value="USD">US Dollar (USD)</option>
+              <option value="GBP">British Pound (GBP)</option>
+              <option value="EUR">Euro (EUR)</option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-large"
+            onclick="saveSettings()"
+          >
+            Save Changes
+          </button>
         </div>
-      </div>
 
-      <div class="card dark">
-        <div class="card-title">Household Manager</div>
-        <p class="about-text">
-          A simple way to organise your household, manage tasks,
-          shopping, events and spending in one place.
-        </p>
-        <div class="version">Version 1.0</div>
-      </div>
+        <div class="card">
+          <div class="card-title">Data</div>
 
-    </section>
+          <div class="setting-row">
+            <div>
+              <div class="setting-title">Reset Household Manager</div>
 
-  </main>
-</div>
+              <div class="setting-description">
+                Permanently delete all tasks, shopping items, events and spending.
+              </div>
+            </div>
 
-<nav class="mobile-header">
-  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
-  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
-  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
-  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
-  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
-  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
-</nav>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="resetData()"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
 
-<script src="script.js"></script>
+        <div class="card dark">
+          <div class="card-title">Household Manager</div>
+
+          <p class="about-text">
+            A simple way to organise your household, manage tasks,
+            shopping, events and spending in one place.
+          </p>
+
+          <div class="version">Version 1.0</div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="mobile-header">
+    <a href="index.html" data-page="index.html">
+      <span class="mobile-icon">⌂</span>
+      <span>Home</span>
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+      <span class="mobile-icon">🛒</span>
+      <span>Shopping</span>
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+      <span class="mobile-icon">✓</span>
+      <span>Tasks</span>
+    </a>
+
+    <a href="events.html" data-page="events.html">
+      <span class="mobile-icon">📅</span>
+      <span>Events</span>
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+      <span class="mobile-icon">💰</span>
+      <span>Spending</span>
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+      <span class="mobile-icon">⚙</span>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+  <script src="script.js"></script>
 </body>
 </html>
