@@ -1,1 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | Household Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="House_Manager_Logo.png" alt="Household Manager">
+            <div class="brand-name">Household Manager</div>
+        </div>
+
+        <nav class="nav">
+
+            <a href="index.html" data-page="index.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="shopping.html" data-page="shopping.html">
+                <span class="nav-icon">🛒</span>
+                Shopping
+            </a>
+
+            <a href="tasks.html" data-page="tasks.html">
+                <span class="nav-icon">✓</span>
+                Tasks
+            </a>
+
+            <a href="events.html" data-page="events.html">
+                <span class="nav-icon">📅</span>
+                Events
+            </a>
+
+            <a href="spending.html" data-page="spending.html">
+                <span class="nav-icon">💰</span>
+                Spending
+            </a>
+
+            <a href="settings.html" data-page="settings.html">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Settings
+                </h1>
+
+                <p class="page-subtitle">
+                    Manage your Household Manager preferences.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <div class="settings-grid">
+
+
+            <!-- HOUSEHOLD -->
+
+            <section class="card">
+
+                <div class="card-title">
+                    Household
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <div class="setting-title">
+                            Household Name
+                        </div>
+
+                        <div class="setting-description">
+                            The name displayed throughout the app.
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        id="householdName"
+                        class="form-control"
+                        type="text"
+                        style="max-width:260px"
+                        placeholder="My Household"
+                    >
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <div class="setting-title">
+                            Currency
+                        </div>
+
+                        <div class="setting-description">
+                            Used when displaying spending.
+                        </div>
+
+                    </div>
+
+
+                    <select
+                        id="currency"
+                        class="form-control"
+                        style="max-width:260px"
+                    >
+                        <option value="AUD">
+                            AUD — Australian Dollar
+                        </option>
+
+                        <option value="USD">
+                            USD — US Dollar
+                        </option>
+
+                        <option value="GBP">
+                            GBP — British Pound
+                        </option>
+
+                        <option value="EUR">
+                            EUR — Euro
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div style="margin-top:20px">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="saveSettings()"
+                    >
+                        Save Settings
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- DATA -->
+
+            <section class="card">
+
+                <div class="card-title">
+                    Data
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <div class="setting-title">
+                            Reset Household Manager
+                        </div>
+
+                        <div class="setting-description">
+                            Delete all shopping items, tasks,
+                            events and spending data.
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="resetData()"
+                    >
+                        Reset Data
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ABOUT -->
+
+            <section class="card dark">
+
+                <div class="card-title">
+                    Household Manager
+                </div>
+
+                <p style="font-size:13px; opacity:.75; line-height:1.6">
+                    A simple household management app for
+                    organising everyday life in one place.
+                </p>
+
+                <div style="margin-top:18px; font-size:12px; opacity:.6">
+                    Version 1.0
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+        <span class="mobile-icon">⌂</span>
+        Home
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+        <span class="mobile-icon">🛒</span>
+        Shopping
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+        <span class="mobile-icon">✓</span>
+        Tasks
+    </a>
+
+    <a href="events.html" data-page="events.html">
+        <span class="mobile-icon">📅</span>
+        Events
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+        <span class="mobile-icon">💰</span>
+        Spending
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+        <span class="mobile-icon">⚙</span>
+        Settings
+    </a>
+
+</nav>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
