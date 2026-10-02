@@ -1,215 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Events | Household Manager</title>
-
-    <link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#333533">
+  <title>Events | Household Manager</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="app">
+  <main class="main">
 
-    <aside class="sidebar">
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <img src="House_Manager_Logo.png" alt="Household Manager">
+        <span class="mobile-brand-name">Household Manager</span>
+      </div>
+      <a href="settings.html" class="mobile-top-action">⚙</a>
+    </div>
 
-        <div class="brand">
-            <img src="House_Manager_Logo.png" alt="Household Manager">
-            <div class="brand-name">Household Manager</div>
-        </div>
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Events</h1>
+        <p class="page-subtitle">Keep track of important household dates.</p>
+      </div>
+    </header>
 
-        <nav class="nav">
+    <button class="mobile-add-button" onclick="openSheet('eventSheet')">
+      <span>+</span> Add Event
+    </button>
 
-            <a href="index.html" data-page="index.html">
-                <span class="nav-icon">⌂</span>
-                Dashboard
-            </a>
+    <section class="data-list" id="eventList"></section>
 
-            <a href="shopping.html" data-page="shopping.html">
-                <span class="nav-icon">🛒</span>
-                Shopping
-            </a>
-
-            <a href="tasks.html" data-page="tasks.html">
-                <span class="nav-icon">✓</span>
-                Tasks
-            </a>
-
-            <a href="events.html" data-page="events.html">
-                <span class="nav-icon">📅</span>
-                Events
-            </a>
-
-            <a href="spending.html" data-page="spending.html">
-                <span class="nav-icon">💰</span>
-                Spending
-            </a>
-
-            <a href="settings.html" data-page="settings.html">
-                <span class="nav-icon">⚙</span>
-                Settings
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-    <main class="main">
-
-        <header class="page-header">
-
-            <div>
-
-                <h1 class="page-title">
-                    Events
-                </h1>
-
-                <p class="page-subtitle">
-                    Keep track of important household dates.
-                </p>
-
-            </div>
-
-        </header>
-
-
-        <section class="card form-card">
-
-            <div class="card-title">
-                Add Event
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Event Name
-                    </label>
-
-                    <input
-                        id="eventName"
-                        class="form-control"
-                        type="text"
-                        placeholder="e.g. Family dinner"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Location
-                    </label>
-
-                    <input
-                        id="eventLocation"
-                        class="form-control"
-                        type="text"
-                        placeholder="e.g. Home"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Date
-                    </label>
-
-                    <input
-                        id="eventDate"
-                        class="form-control"
-                        type="date"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Time
-                    </label>
-
-                    <input
-                        id="eventTime"
-                        class="form-control"
-                        type="time"
-                    >
-
-                </div>
-
-
-                <div class="form-group full">
-
-                    <button
-                        class="btn btn-primary"
-                        onclick="addEvent()"
-                    >
-                        + Add Event
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <section
-            class="data-list"
-            id="eventList"
-        ></section>
-
-    </main>
-
+  </main>
 </div>
 
+<div class="sheet-overlay" id="eventSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Event</div>
+        <div class="sheet-subtitle">Add an important household date.</div>
+      </div>
+      <button class="sheet-close" onclick="closeSheet('eventSheet')">×</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Event Name</label>
+      <input id="eventName" class="form-control" type="text" placeholder="e.g. Family dinner">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input id="eventLocation" class="form-control" type="text" placeholder="e.g. Home">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input id="eventDate" class="form-control" type="date">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Time</label>
+        <input id="eventTime" class="form-control" type="time">
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-large" onclick="addEvent(); closeSheet('eventSheet')">
+      Add Event
+    </button>
+  </div>
+</div>
 
 <nav class="mobile-header">
-
-    <a href="index.html" data-page="index.html">
-        <span class="mobile-icon">⌂</span>
-        Home
-    </a>
-
-    <a href="shopping.html" data-page="shopping.html">
-        <span class="mobile-icon">🛒</span>
-        Shopping
-    </a>
-
-    <a href="tasks.html" data-page="tasks.html">
-        <span class="mobile-icon">✓</span>
-        Tasks
-    </a>
-
-    <a href="events.html" data-page="events.html">
-        <span class="mobile-icon">📅</span>
-        Events
-    </a>
-
-    <a href="spending.html" data-page="spending.html">
-        <span class="mobile-icon">💰</span>
-        Spending
-    </a>
-
-    <a href="settings.html" data-page="settings.html">
-        <span class="mobile-icon">⚙</span>
-        Settings
-    </a>
-
+  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
+  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
+  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
+  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
+  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
+  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
 </nav>
 
-
 <script src="script.js"></script>
-
 </body>
 </html>
