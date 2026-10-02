@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Events | Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
@@ -17,9 +29,15 @@
         <div class="mobile-brand">
           <img src="House_Manager_Logo.png" alt="Household Manager">
 
-          <span class="mobile-brand-name">
-            Household Manager
-          </span>
+          <div>
+            <div class="mobile-brand-name">
+              Household Manager
+            </div>
+
+            <div class="mobile-brand-subtitle household-name">
+              My Household
+            </div>
+          </div>
         </div>
 
         <a
@@ -33,7 +51,13 @@
 
       <header class="page-header">
         <div>
-          <h1 class="page-title">Events</h1>
+          <div class="eyebrow">
+            HOUSEHOLD
+          </div>
+
+          <h1 class="page-title">
+            Events
+          </h1>
 
           <p class="page-subtitle">
             Keep track of important household dates.
@@ -170,7 +194,7 @@
       <button
         type="button"
         class="btn btn-primary btn-large"
-        onclick="addEvent(); closeSheet('eventSheet')"
+        onclick="addEvent(event)"
       >
         <img src="calendar_dark_thin.png" alt="">
         <span>Add Event</span>
