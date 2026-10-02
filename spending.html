@@ -7,107 +7,273 @@
   <title>Spending | Household Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="app">
-  <main class="main">
+  <div class="app">
+    <main class="main">
 
-    <div class="mobile-topbar">
-      <div class="mobile-brand">
-        <img src="House_Manager_Logo.png" alt="Household Manager">
-        <span class="mobile-brand-name">Household Manager</span>
+      <div class="mobile-topbar">
+        <div class="mobile-brand">
+          <img src="House_Manager_Logo.png" alt="Household Manager">
+
+          <div>
+            <div class="mobile-brand-name">Household Manager</div>
+            <div class="mobile-brand-subtitle household-name">My Household</div>
+          </div>
+        </div>
+
+        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.4 1.4-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-2v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.4-1.4.06-.06A1.7 1.7 0 0 0 9.46 15a1.7 1.7 0 0 0-1.56-1.03H7v-2h.9A1.7 1.7 0 0 0 9.46 11a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.4-1.4.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.43 6.5V6h2v.5A1.7 1.7 0 0 0 16.46 8a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.4 1.4-.06.06A1.7 1.7 0 0 0 19.4 11c.2.58.75.97 1.36.97H21v2h-.24c-.61 0-1.16.39-1.36 1.03Z"></path>
+          </svg>
+        </a>
       </div>
-      <a href="settings.html" class="mobile-top-action">⚙</a>
-    </div>
 
-    <header class="page-header">
-      <div>
+      <header class="page-header">
+        <div class="eyebrow">HOUSEHOLD</div>
+
         <h1 class="page-title">Spending</h1>
-        <p class="page-subtitle">Keep track of household expenses.</p>
-      </div>
-    </header>
 
-    <section class="spending-summary">
-      <div class="card yellow summary-card">
-        <span class="summary-label">Total Spending</span>
-        <strong class="money" id="totalSpending">$0.00</strong>
-      </div>
+        <p class="page-subtitle">
+          Keep track of household expenses.
+        </p>
+      </header>
 
-      <div class="card summary-card">
-        <span class="summary-label">This Month</span>
-        <strong class="money" id="monthSpending">$0.00</strong>
-      </div>
+      <section class="spending-summary">
 
-      <div class="card dark summary-card">
-        <span class="summary-label">Average Expense</span>
-        <strong class="money" id="averageSpending">$0.00</strong>
-      </div>
-    </section>
+        <div class="card yellow summary-card">
+          <span class="summary-label">Total Spending</span>
 
-    <button class="mobile-add-button" onclick="openSheet('expenseSheet')">
-      <span>+</span> Add Expense
-    </button>
+          <strong class="money" id="totalSpending">
+            $0.00
+          </strong>
+        </div>
 
-    <section class="data-list" id="spendingList"></section>
+        <div class="card summary-card">
+          <span class="summary-label">This Month</span>
 
-  </main>
-</div>
+          <strong class="money" id="monthSpending">
+            $0.00
+          </strong>
+        </div>
 
-<div class="sheet-overlay" id="expenseSheet">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
+        <div class="card dark summary-card">
+          <span class="summary-label">Average Expense</span>
 
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title">Add Expense</div>
-        <div class="sheet-subtitle">Record a household expense.</div>
-      </div>
-      <button class="sheet-close" onclick="closeSheet('expenseSheet')">×</button>
-    </div>
+          <strong class="money" id="averageSpending">
+            $0.00
+          </strong>
+        </div>
 
-    <div class="form-group">
-      <label class="form-label">Expense</label>
-      <input id="expenseName" class="form-control" type="text" placeholder="e.g. Weekly groceries">
-    </div>
+      </section>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Amount</label>
-        <input id="expenseAmount" class="form-control" type="number" step="0.01" min="0" placeholder="0.00">
-      </div>
+      <button
+        type="button"
+        class="mobile-add-button"
+        onclick="openSheet('expenseSheet')"
+      >
+        <span class="button-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
+        </span>
 
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <select id="expenseCategory" class="form-control">
-          <option>Groceries</option>
-          <option>Bills</option>
-          <option>Transport</option>
-          <option>Entertainment</option>
-          <option>Home</option>
-          <option>Other</option>
-        </select>
-      </div>
-    </div>
+        <span>Add Expense</span>
+      </button>
 
-    <div class="form-group">
-      <label class="form-label">Date</label>
-      <input id="expenseDate" class="form-control" type="date">
-    </div>
+      <section class="data-list" id="spendingList"></section>
 
-    <button class="btn btn-primary btn-large" onclick="addExpense(); closeSheet('expenseSheet')">
-      Add Expense
-    </button>
+    </main>
   </div>
-</div>
 
-<nav class="mobile-header">
-  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
-  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
-  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
-  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
-  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
-  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
-</nav>
+  <div class="sheet-overlay" id="expenseSheet">
+    <div class="sheet">
 
-<script src="script.js"></script>
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+
+        <div>
+          <div class="sheet-title">
+            Add Expense
+          </div>
+
+          <div class="sheet-subtitle">
+            Record a household expense.
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="sheet-close"
+          onclick="closeSheet('expenseSheet')"
+          aria-label="Close"
+        >
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m6 6 12 12"></path>
+            <path d="m18 6-12 12"></path>
+          </svg>
+        </button>
+
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="expenseName">
+          Expense
+        </label>
+
+        <input
+          id="expenseName"
+          class="form-control"
+          type="text"
+          placeholder="e.g. Weekly groceries"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label class="form-label" for="expenseAmount">
+            Amount
+          </label>
+
+          <input
+            id="expenseAmount"
+            class="form-control"
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            inputmode="decimal"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="expenseCategory">
+            Category
+          </label>
+
+          <select
+            id="expenseCategory"
+            class="form-control"
+          >
+            <option>Groceries</option>
+            <option>Bills</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Home</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="expenseDate">
+          Date
+        </label>
+
+        <input
+          id="expenseDate"
+          class="form-control"
+          type="date"
+        >
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary btn-large"
+        onclick="addExpense(); closeSheet('expenseSheet')"
+      >
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+
+        <span>Add Expense</span>
+      </button>
+
+    </div>
+  </div>
+
+  <nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 11 9-8 9 8"></path>
+          <path d="M5 10v10h14V10"></path>
+          <path d="M9 20v-6h6v6"></path>
+        </svg>
+      </span>
+
+      <span>Home</span>
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+        </svg>
+      </span>
+
+      <span>Shopping</span>
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m8 12 2.5 2.5L16 9"></path>
+        </svg>
+      </span>
+
+      <span>Tasks</span>
+    </a>
+
+    <a href="events.html" data-page="events.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+          <path d="M16 2v4"></path>
+          <path d="M8 2v4"></path>
+          <path d="M3 9h18"></path>
+        </svg>
+      </span>
+
+      <span>Events</span>
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 7h16v13H4z"></path>
+          <path d="M16 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"></path>
+          <path d="M20 12h-5a2 2 0 0 0 0 4h5"></path>
+        </svg>
+      </span>
+
+      <span>Spending</span>
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.4 1.4-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-2v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.4-1.4.06-.06A1.7 1.7 0 0 0 9.46 15a1.7 1.7 0 0 0-1.56-1.03H7v-2h.9A1.7 1.7 0 0 0 9.46 11a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.4-1.4.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.43 6.5V6h2v.5A1.7 1.7 0 0 0 16.46 8a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.4 1.4-.06.06A1.7 1.7 0 0 0 19.4 11c.2.58.75.97 1.36.97H21v2h-.24c-.61 0-1.16.39-1.36 1.03Z"></path>
+        </svg>
+      </span>
+
+      <span>Settings</span>
+    </a>
+
+  </nav>
+
+  <script src="script.js"></script>
 </body>
 </html>
