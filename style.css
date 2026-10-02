@@ -15,9 +15,8 @@
   --shadow: 0 8px 24px rgba(36, 36, 35, 0.08);
 }
 
-
 /* ================================
-   RESET
+RESET
 ================================ */
 
 * {
@@ -57,9 +56,93 @@ a {
   min-height: 100vh;
 }
 
+/* ================================
+GLOBAL SVG ICON SYSTEM
+================================ */
+
+.icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-lg {
+  width: 24px;
+  height: 24px;
+}
+
+.button-icon,
+.quick-action-icon,
+.stat-icon,
+.today-item-icon,
+.shopping-summary-icon,
+.task-summary-icon,
+.task-empty-icon,
+.shopping-empty-icon,
+.event-empty-icon,
+.mobile-icon,
+.event-detail-icon {
+  display: grid;
+  place-items: center;
+}
+
+.button-icon .icon,
+.quick-action-icon .icon,
+.stat-icon .icon,
+.today-item-icon .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.mobile-icon .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.sheet-close .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.mobile-top-action .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.category-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.category-button .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.clear-completed-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
 
 /* ================================
-   MAIN MOBILE LAYOUT
+MAIN MOBILE LAYOUT
 ================================ */
 
 .sidebar {
@@ -115,12 +198,10 @@ a {
   display: grid;
   place-items: center;
   text-decoration: none;
-  font-size: 18px;
 }
 
-
 /* ================================
-   PAGE HEADERS
+PAGE HEADERS
 ================================ */
 
 .page-header {
@@ -149,9 +230,8 @@ a {
   line-height: 1.45;
 }
 
-
 /* ================================
-   CARDS
+CARDS
 ================================ */
 
 .card {
@@ -183,9 +263,8 @@ a {
   gap: 12px;
 }
 
-
 /* ================================
-   BUTTONS
+BUTTONS
 ================================ */
 
 .btn {
@@ -240,21 +319,28 @@ a {
   font-weight: 800;
   margin-bottom: 12px;
   box-shadow: 0 7px 16px rgba(36, 36, 35, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .mobile-add-button:active {
   transform: scale(0.98);
 }
 
-.mobile-add-button span {
-  font-size: 22px;
-  vertical-align: -2px;
-  margin-right: 5px;
+.mobile-add-button .button-icon {
+  width: 24px;
+  height: 24px;
 }
 
+.mobile-add-button .button-icon .icon {
+  width: 19px;
+  height: 19px;
+}
 
 /* ================================
-   LINKS
+LINKS
 ================================ */
 
 .text-link {
@@ -265,9 +351,8 @@ a {
   white-space: nowrap;
 }
 
-
 /* ================================
-   DASHBOARD
+DASHBOARD
 ================================ */
 
 .dashboard-grid {
@@ -301,10 +386,7 @@ a {
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  display: grid;
-  place-items: center;
   background: rgba(36, 36, 35, 0.08);
-  font-size: 15px;
 }
 
 .card.dark .stat-icon {
@@ -395,10 +477,7 @@ a {
   height: 34px;
   border-radius: 10px;
   background: rgba(36, 36, 35, 0.08);
-  display: grid;
-  place-items: center;
   flex-shrink: 0;
-  font-size: 15px;
 }
 
 .today-card {
@@ -423,9 +502,6 @@ a {
   height: 34px;
   border-radius: 10px;
   background: rgba(232, 237, 223, 0.1);
-  display: grid;
-  place-items: center;
-  font-size: 15px;
 }
 
 .today-item-content {
@@ -452,9 +528,8 @@ a {
   margin: 0 12px;
 }
 
-
 /* ================================
-   GENERAL LISTS
+GENERAL LISTS
 ================================ */
 
 .section-list {
@@ -510,6 +585,14 @@ a {
   margin-top: 3px;
 }
 
+.data-row.completed {
+  opacity: 0.52;
+}
+
+.data-row.completed .data-name {
+  text-decoration: line-through;
+}
+
 .data-row {
   background: var(--supporting);
   border-radius: 16px;
@@ -519,14 +602,6 @@ a {
   justify-content: space-between;
   gap: 10px;
   box-shadow: var(--shadow);
-}
-
-.data-row.completed {
-  opacity: 0.52;
-}
-
-.data-row.completed .data-name {
-  text-decoration: line-through;
 }
 
 .data-main {
@@ -557,9 +632,8 @@ a {
   flex-shrink: 0;
 }
 
-
 /* ================================
-   CHECKBOX
+CHECKBOX
 ================================ */
 
 .check {
@@ -571,6 +645,7 @@ a {
   background: var(--background);
   flex-shrink: 0;
   position: relative;
+  cursor: pointer;
 }
 
 .check:checked {
@@ -579,19 +654,19 @@ a {
 }
 
 .check:checked::after {
-  content: "✓";
+  content: "";
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: var(--deep-dark);
-  font-size: 14px;
-  font-weight: 900;
+  width: 9px;
+  height: 5px;
+  left: 5px;
+  top: 5px;
+  border-left: 2px solid var(--deep-dark);
+  border-bottom: 2px solid var(--deep-dark);
+  transform: rotate(-45deg);
 }
 
-
 /* ================================
-   BADGES
+BADGES
 ================================ */
 
 .badge {
@@ -612,9 +687,8 @@ a {
   color: var(--deep-dark);
 }
 
-
 /* ================================
-   EMPTY STATES
+EMPTY STATES
 ================================ */
 
 .empty-state {
@@ -625,8 +699,11 @@ a {
 }
 
 .empty-icon {
-  font-size: 34px;
-  margin-bottom: 10px;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 10px;
+  border-radius: 13px;
+  background: var(--background);
 }
 
 .empty-title {
@@ -641,9 +718,8 @@ a {
   line-height: 1.4;
 }
 
-
 /* ================================
-   FILTERS
+FILTERS
 ================================ */
 
 .task-filters,
@@ -678,9 +754,8 @@ a {
   color: var(--background);
 }
 
-
 /* ================================
-   TASKS
+TASKS
 ================================ */
 
 .task-progress-card {
@@ -774,9 +849,6 @@ a {
   height: 28px;
   border-radius: 9px;
   background: rgba(232, 237, 223, 0.8);
-  display: grid;
-  place-items: center;
-  font-size: 12px;
   flex-shrink: 0;
 }
 
@@ -874,6 +946,7 @@ a {
   position: relative;
   flex-shrink: 0;
   margin: 0;
+  cursor: pointer;
 }
 
 .task-checkbox:checked {
@@ -882,14 +955,15 @@ a {
 }
 
 .task-checkbox:checked::after {
-  content: "✓";
+  content: "";
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: var(--deep-dark);
-  font-size: 14px;
-  font-weight: 900;
+  width: 9px;
+  height: 5px;
+  left: 5px;
+  top: 5px;
+  border-left: 2px solid var(--deep-dark);
+  border-bottom: 2px solid var(--deep-dark);
+  transform: rotate(-45deg);
 }
 
 .task-content {
@@ -952,9 +1026,14 @@ a {
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
   color: var(--danger);
-  font-size: 13px;
-  font-weight: 800;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
+}
+
+.task-delete .icon {
+  width: 15px;
+  height: 15px;
 }
 
 .task-empty {
@@ -970,9 +1049,6 @@ a {
   margin: 0 auto 9px;
   border-radius: 13px;
   background: var(--background);
-  display: grid;
-  place-items: center;
-  font-size: 18px;
 }
 
 .task-empty-title {
@@ -999,9 +1075,8 @@ a {
     var(--shadow);
 }
 
-
 /* ================================
-   SHOPPING
+SHOPPING
 ================================ */
 
 .shopping-summary {
@@ -1038,9 +1113,6 @@ a {
   border-radius: 15px;
   background: var(--yellow);
   color: var(--deep-dark);
-  display: grid;
-  place-items: center;
-  font-size: 21px;
 }
 
 .shopping-summary-stats {
@@ -1180,9 +1252,7 @@ a {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  color: var(--deep-dark);
-  font-size: 14px;
-  font-weight: 900;
+  cursor: pointer;
 }
 
 .shopping-checkbox:active {
@@ -1192,6 +1262,18 @@ a {
 .shopping-card.completed .shopping-checkbox {
   background: var(--yellow);
   border-color: var(--yellow);
+}
+
+.shopping-card.completed .shopping-checkbox::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 5px;
+  left: 5px;
+  top: 5px;
+  border-left: 2px solid var(--deep-dark);
+  border-bottom: 2px solid var(--deep-dark);
+  transform: rotate(-45deg);
 }
 
 .shopping-item-content {
@@ -1245,9 +1327,14 @@ a {
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
   color: var(--danger);
-  font-size: 13px;
-  font-weight: 800;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
+}
+
+.shopping-delete .icon {
+  width: 15px;
+  height: 15px;
 }
 
 .shopping-empty {
@@ -1263,9 +1350,6 @@ a {
   margin: 0 auto 10px;
   border-radius: 14px;
   background: var(--background);
-  display: grid;
-  place-items: center;
-  font-size: 19px;
 }
 
 .shopping-empty-title {
@@ -1296,9 +1380,8 @@ a {
   transform: scale(0.98);
 }
 
-
 /* ================================
-   SPENDING
+SPENDING
 ================================ */
 
 .spending-summary {
@@ -1339,9 +1422,8 @@ a {
   color: var(--muted);
 }
 
-
 /* ================================
-   FORMS
+FORMS
 ================================ */
 
 .form-group {
@@ -1389,9 +1471,8 @@ textarea.form-control {
   min-height: 90px;
 }
 
-
 /* ================================
-   SETTINGS
+SETTINGS
 ================================ */
 
 .settings-grid {
@@ -1437,9 +1518,8 @@ textarea.form-control {
   opacity: 0.65;
 }
 
-
 /* ================================
-   EVENTS
+EVENTS
 ================================ */
 
 .event-overview {
@@ -1667,7 +1747,8 @@ textarea.form-control {
 }
 
 .event-detail-icon {
-  font-size: 10px;
+  width: 14px;
+  height: 14px;
 }
 
 .event-delete {
@@ -1677,10 +1758,15 @@ textarea.form-control {
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
   color: var(--danger);
-  font-size: 13px;
-  font-weight: 800;
+  display: grid;
+  place-items: center;
   align-self: center;
   flex-shrink: 0;
+}
+
+.event-delete .icon {
+  width: 15px;
+  height: 15px;
 }
 
 .event-empty {
@@ -1696,9 +1782,6 @@ textarea.form-control {
   margin: 0 auto 10px;
   border-radius: 14px;
   background: var(--background);
-  display: grid;
-  place-items: center;
-  font-size: 19px;
 }
 
 .event-empty-title {
@@ -1713,9 +1796,8 @@ textarea.form-control {
   margin-top: 4px;
 }
 
-
 /* ================================
-   BOTTOM SHEETS
+BOTTOM SHEETS
 ================================ */
 
 .sheet-overlay {
@@ -1781,19 +1863,19 @@ textarea.form-control {
 }
 
 .sheet-close {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 12px;
   background: var(--background);
   color: var(--deep-dark);
-  font-size: 22px;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
 
-
 /* ================================
-   MOBILE BOTTOM NAV
+MOBILE BOTTOM NAV
 ================================ */
 
 .mobile-header {
@@ -1833,17 +1915,18 @@ textarea.form-control {
 }
 
 .mobile-icon {
-  font-size: 17px;
+  width: 24px;
+  height: 24px;
   line-height: 1;
+  display: grid;
+  place-items: center;
 }
 
-
 /* ================================
-   RESPONSIVE
+RESPONSIVE
 ================================ */
 
 @media (max-width: 370px) {
-
   .task-summary {
     gap: 5px;
   }
@@ -1906,9 +1989,7 @@ textarea.form-control {
   }
 }
 
-
 @media (min-width: 600px) {
-
   .main {
     max-width: 600px;
     margin: 0 auto;
