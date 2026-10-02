@@ -380,120 +380,129 @@ function createShoppingHTML(item) {
 }
 
 function renderShopping() {
-  const container = document.getElementById("shoppingList");
-
-  if (!container) {
-    return;
-  }
-
   const data = getData();
+  const items = Array.isArray(data.shopping) ? data.shopping : [];
 
-  const total = data.shopping.length;
+  const list = document.getElementById("shoppingList");
+  const remainingCount = document.getElementById("shoppingRemainingCount");
+  const totalCount = document.getElementById("shoppingTotalCount");
+  const completedCount = document.getElementById("shoppingCompletedCount");
+  const visibleCount = document.getElementById("visibleShoppingCount");
+  const sectionTitle = document.getElementById("shoppingSectionTitle");
+  const clearButton = document.getElementById("clearCompletedButton");
 
-  const completed = data.shopping.filter(
-    item => item.completed
-  ).length;
-
+  const total = items.length;
+  const completed = items.filter(item => item.completed).length;
   const remaining = total - completed;
 
-  const countElement = document.getElementById("shoppingCount");
-  const remainingElement = document.getElementById("shoppingRemaining");
-  const completedElement = document.getElementById("shoppingCompleted");
-
-  if (countElement) {
-    countElement.textContent = total;
+  if (remainingCount) {
+    remainingCount.textContent = remaining;
   }
 
-  if (remainingElement) {
-    remainingElement.textContent = remaining;
+  if (totalCount) {
+    totalCount.textContent = total;
   }
 
-  if (completedElement) {
-    completedElement.textContent = completed;
+  if (completedCount) {
+    completedCount.textContent = completed;
   }
 
-  let items = [...data.shopping];
+  let filteredItems = [...items];
 
   if (currentShoppingFilter === "remaining") {
-    items = items.filter(item => !item.completed);
+    filteredItems = filteredItems.filter(item => !item.completed);
   }
 
   if (currentShoppingFilter === "completed") {
-    items = items.filter(item => item.completed);
+    filteredItems = filteredItems.filter(item => item.completed);
   }
 
   if (currentShoppingCategory !== "all") {
-    items = items.filter(
+    filteredItems = filteredItems.filter(
       item => item.category === currentShoppingCategory
     );
   }
 
-  items.sort((a, b) => {
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1;
-    }
-
-    return 0;
-  });
-
-  const visibleElement =
-    document.getElementById("shoppingVisibleCount");
-
-  if (visibleElement) {
-    visibleElement.textContent = items.length;
+  if (visibleCount) {
+    visibleCount.textContent = filteredItems.length;
   }
 
-  const titleElement =
-    document.getElementById("shoppingSectionTitle");
-
-  if (titleElement) {
-    if (currentShoppingFilter === "completed") {
-      titleElement.textContent = "Completed Items";
-    } else if (currentShoppingFilter === "remaining") {
-      titleElement.textContent = "Items to Buy";
-    } else if (currentShoppingCategory !== "all") {
-      titleElement.textContent = currentShoppingCategory;
-    } else {
-      titleElement.textContent = "Shopping List";
-    }
-  }
-
-  if (items.length === 0) {
-    let title = "Your shopping list is empty";
-    let text = "Add your first shopping item to get started.";
-
-    if (currentShoppingFilter === "completed") {
-      title = "No completed items";
-      text = "Bought items will appear here.";
-    }
-
+  if (sectionTitle) {
     if (currentShoppingFilter === "remaining") {
-      title = "Nothing left to buy";
-      text = "Everything on your list is completed.";
+      sectionTitle.textContent = "Items to Buy";
+    } else if (currentShoppingFilter === "completed") {
+      sectionTitle.textContent = "Completed Items";
+    } else if (currentShoppingCategory !== "all") {
+      sectionTitle.textContent = currentShoppingCategory;
+    } else {
+      sectionTitle.textContent = "Shopping List";
     }
+  }
 
-    if (currentShoppingCategory !== "all") {
-      title = "No items in this category";
-      text = "Add something to this category.";
-    }
+  if (clearButton) {
+    clearButton.style.display = completed > 0 ? "block" : "none";
+  }
 
-    container.innerHTML = `
+  if (!list) return;
+
+  if (filteredItems.length === 0) {
+    list.innerHTML = `
       <div class="shopping-empty">
         <div class="shopping-empty-icon">🛒</div>
-        <div class="shopping-empty-title">${title}</div>
-        <div class="shopping-empty-text">${text}</div>
+        <div class="shopping-empty-title">Nothing here yet</div>
+        <div class="shopping-empty-text">
+          Add something your household needs.
+        </div>
       </div>
     `;
-
-    updateClearCompletedButton(completed);
     return;
   }
 
-  container.innerHTML = items
-    .map(item => createShoppingHTML(item))
-    .join("");
+  list.innerHTML = filteredItems.map(item => {
+    const icon = getShoppingCategoryIcon(item.category);
 
-  updateClearCompletedButton(completed);
+    return `
+      <div class="shopping-card ${item.completed ? "completed" : ""}">
+        
+        <button
+          type="button"
+          class="shopping-checkbox ${item.completed ? "checked" : ""}"
+          onclick="toggleShoppingItem('${item.id}')"
+          aria-label="Complete ${escapeHTML(item.name)}"
+        >
+          ${item.completed ? "✓" : ""}
+        </button>
+
+        <div class="shopping-item-content">
+          <div class="shopping-item-name">
+            ${escapeHTML(item.name)}
+          </div>
+
+          <div class="shopping-item-details">
+            <span class="shopping-item-detail">
+              ${escapeHTML(item.quantity || "1")}
+            </span>
+
+            <span class="shopping-item-dot">•</span>
+
+            <span class="shopping-category-badge">
+              ${icon} ${escapeHTML(item.category || "Other")}
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="shopping-delete"
+          onclick="deleteShoppingItem('${item.id}')"
+          aria-label="Delete ${escapeHTML(item.name)}"
+        >
+          ×
+        </button>
+
+      </div>
+    `;
+  }).join("");
 }
 
 function clearCompletedShopping() {
