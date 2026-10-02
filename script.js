@@ -380,15 +380,15 @@ function filterShoppingCategory(category, button) {
 
 function getShoppingCategoryIcon(category) {
   const icons = {
-    Groceries: "🛒",
-    Household: "🏠",
-    Cleaning: "🧹",
-    Bathroom: "🛁",
-    Pet: "🐾",
-    Other: "📦"
+    Groceries: "shopping_dark_thin.png",
+    Household: "home_dark_thin.png",
+    Cleaning: "checkbox_dark_thin.png",
+    Bathroom: "home_dark_thin.png",
+    Pet: "checkbox_dark_thin.png",
+    Other: "shopping_dark_thin.png"
   };
 
-  return icons[category] || "📦";
+  return icons[category] || "shopping_dark_thin.png";
 }
 
 function renderShopping() {
@@ -484,7 +484,9 @@ function renderShopping() {
   if (filteredItems.length === 0) {
     list.innerHTML = `
       <div class="shopping-empty">
-        <div class="shopping-empty-icon">🛒</div>
+        <div class="shopping-empty-icon">
+          <img src="shopping_dark_thin.png" alt="">
+        </div>
         <div class="shopping-empty-title">Nothing here yet</div>
         <div class="shopping-empty-text">
           Add something your household needs.
@@ -523,7 +525,12 @@ function renderShopping() {
               <span class="shopping-item-dot">•</span>
 
               <span class="shopping-category-badge">
-                ${icon} ${escapeHTML(item.category || "Other")}
+                <img
+                  src="${icon}"
+                  alt=""
+                  class="shopping-category-icon"
+                >
+                <span>${escapeHTML(item.category || "Other")}</span>
               </span>
             </div>
           </div>
