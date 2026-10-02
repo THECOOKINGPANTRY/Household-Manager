@@ -1049,3 +1049,574 @@ function addDashboardExpense() {
 document.addEventListener("DOMContentLoaded", () => {
   updateToday();
 });
+
+/* TASK PAGE FUNCTIONS */
+
+/* Replace the existing task-related functions in script.js
+   with these versions. */
+
+let currentTaskFilter = "all";
+
+
+function getTodayString() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function getTomorrowString() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const year = tomorrow.getFullYear();
+  const month = String(tomorrow.getMonth() + 1).padStart(2, "0");
+  const day = String(tomorrow.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function addTask() {
+  const nameElement = document.getElementById("taskName");
+  const personElement = document.getElementById("taskPerson");
+  const dueElement = document.getElementById("taskDue");
+  const priorityElement = document.getElementById("taskPriority");
+
+  if (!nameElement || !personElement || !dueElement || !priorityElement) {
+    return;
+  }
+
+  const name = nameElement.value.trim();
+  const person = personElement.value.trim();
+  const due = dueElement.value;
+  const priority = priorityElement.value;
+
+  if (!name) {
+    alert("Please enter a task.");
+    return;
+  }
+
+  const data = getData();
+
+  data.tasks.push({
+    id: createId(),
+    name,
+    person: person || "Anyone",
+    due,
+    priority,
+    completed: false
+  });
+
+  saveData(data);
+
+  nameElement.value = "";
+  personElement.value = "";
+  dueElement.value = "";
+  priorityElement.value = "Medium";
+
+  closeSheet("taskSheet");
+
+  renderTasks();
+  loadDashboard();
+  updateToday();
+}
+
+
+function toggleTask(id) {
+  const data = getData();
+
+  const task = data.tasks.find(
+    task => task.id === id
+  );
+
+  if (!task) {
+    return;
+  }
+
+  task.completed = !task.completed;
+
+  saveData(data);
+
+  renderTasks();
+  loadDashboard();
+  updateToday();
+}
+
+
+function deleteTask(id) {
+  const data = getData();
+
+  data.tasks = data.tasks.filter(
+    task => task.id !== id
+  );
+
+  saveData(data);
+
+  renderTasks();
+  loadDashboard();
+  updateToday();
+}
+
+
+function filterTasks(filter, button) {
+  currentTaskFilter = filter;
+
+  document.querySelectorAll(".filter-button").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  renderTasks();
+}
+
+
+function isToday(task) {
+  return task.due === getTodayString();
+}
+
+
+function isOverdue(task) {
+  if (!task.due || task.completed) {
+    return false;
+  }
+
+  return task.due < getTodayString();
+}
+
+
+function isUpcoming(task) {
+  if (!task.due || task.completed) {
+    return false;
+  }
+
+  return task.due > getTodayString();
+}
+
+
+function getTaskDateLabel(task) {
+  if (!task.due) {
+    return "No due date";
+  }
+
+  if (task.due === getTodayString()) {
+    return "Today";
+  }
+
+  if (task.due === getTomorrowString()) {
+    return "Tomorrow";
+  }
+
+  if (isOverdue(task)) {
+    return "Overdue · " + formatDate(task.due);
+  }
+
+  return "Due " + formatDate(task.due);
+}
+
+
+function createTaskHTML(task) {
+  const dateClass =
+    isOverdue(task)
+      ? "overdue"
+      : isToday(task)
+      ? "due-today"
+      : "";
+
+  const priorityClass =
+    task.priority === "High"
+      ? "high"
+      : task.priority === "Low"
+      ? "low"
+      : "";
+
+  return `
+    <div class="task-card ${task.completed ? "completed" : ""} ${dateClass}">
+
+      <input
+        class="task-checkbox"
+        type="checkbox"
+        ${task.completed ? "checked" : ""}
+        onchange="toggleTask('${task.id}')"
+        aria-label="Complete ${escapeHTML(task.name)}"
+      >
+
+      <div class="task-content">
+
+        <div class="task-name">
+          ${escapeHTML(task.name)}
+        </div>
+
+        <div class="task-details">
+
+          <span class="task-detail">
+            ${escapeHTML(task.person || "Anyone")}
+          </span>
+
+          <span class="task-detail-dot">•</span>
+
+          <span class="task-detail">
+            ${escapeHTML(getTaskDateLabel(task))}
+          </span>
+
+        </div>
+
+      </div>
+
+      <span class="task-priority ${priorityClass}">
+        ${escapeHTML(task.priority)}
+      </span>
+
+      <button
+        class="task-delete"
+        onclick="deleteTask('${task.id}')"
+        aria-label="Delete ${escapeHTML(task.name)}"
+      >
+        ×
+      </button>
+
+    </div>
+  `;
+}
+
+
+function renderTaskList(container, tasks, emptyTitle, emptyText) {
+  if (!container) {
+    return;
+  }
+
+  if (tasks.length === 0) {
+
+    container.innerHTML = `
+      <div class="task-empty">
+
+        <div class="task-empty-icon">
+          ✓
+        </div>
+
+        <div class="task-empty-title">
+          ${emptyTitle}
+        </div>
+
+        <div class="task-empty-text">
+          ${emptyText}
+        </div>
+
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = tasks
+    .map(task => createTaskHTML(task))
+    .join("");
+}
+
+
+function updateTaskProgress(data) {
+  const total = data.tasks.length;
+
+  const completed = data.tasks.filter(
+    task => task.completed
+  ).length;
+
+  const active = total - completed;
+
+  const percentage =
+    total === 0
+      ? 0
+      : Math.round((completed / total) * 100);
+
+  const completedElement =
+    document.getElementById("taskProgressCompleted");
+
+  const totalElement =
+    document.getElementById("taskProgressTotal");
+
+  const percentElement =
+    document.getElementById("taskProgressPercent");
+
+  const fillElement =
+    document.getElementById("taskProgressFill");
+
+  const messageElement =
+    document.getElementById("taskProgressMessage");
+
+  if (completedElement) {
+    completedElement.textContent = completed;
+  }
+
+  if (totalElement) {
+    totalElement.textContent = total;
+  }
+
+  if (percentElement) {
+    percentElement.textContent = percentage + "%";
+  }
+
+  if (fillElement) {
+    fillElement.style.width = percentage + "%";
+  }
+
+  if (messageElement) {
+
+    if (total === 0) {
+      messageElement.textContent =
+        "Add your first task to get started.";
+    } else if (percentage === 100) {
+      messageElement.textContent =
+        "Everything is done. Great work! 🎉";
+    } else if (percentage >= 75) {
+      messageElement.textContent =
+        "Almost there. Keep going!";
+    } else if (percentage >= 50) {
+      messageElement.textContent =
+        "You're making good progress.";
+    } else {
+      messageElement.textContent =
+        active + " task" + (active === 1 ? "" : "s") + " still to go.";
+    }
+  }
+}
+
+
+function updateTaskSummary(data) {
+  const active = data.tasks.filter(
+    task => !task.completed
+  ).length;
+
+  const completed = data.tasks.filter(
+    task => task.completed
+  ).length;
+
+  const highPriority = data.tasks.filter(
+    task =>
+      !task.completed &&
+      task.priority === "High"
+  ).length;
+
+  const activeElement =
+    document.getElementById("taskCount");
+
+  const completedElement =
+    document.getElementById("completedTaskCount");
+
+  const highElement =
+    document.getElementById("highPriorityCount");
+
+  if (activeElement) {
+    activeElement.textContent = active;
+  }
+
+  if (completedElement) {
+    completedElement.textContent = completed;
+  }
+
+  if (highElement) {
+    highElement.textContent = highPriority;
+  }
+}
+
+
+function renderTasks() {
+  const mainContainer =
+    document.getElementById("taskList");
+
+  if (!mainContainer) {
+    return;
+  }
+
+  const data = getData();
+
+  updateTaskProgress(data);
+  updateTaskSummary(data);
+
+
+  const todayContainer =
+    document.getElementById("todayTaskList");
+
+  const upcomingContainer =
+    document.getElementById("upcomingTaskList");
+
+  const todaySection =
+    document.getElementById("todayTaskSection");
+
+  const upcomingSection =
+    document.getElementById("upcomingTaskSection");
+
+  const todayCount =
+    document.getElementById("todayTaskSectionCount");
+
+  const upcomingCount =
+    document.getElementById("upcomingTaskSectionCount");
+
+
+  const activeTasks = data.tasks.filter(
+    task => !task.completed
+  );
+
+  const todayTasks = activeTasks.filter(
+    task => isToday(task)
+  );
+
+  const upcomingTasks = activeTasks
+    .filter(task => isUpcoming(task))
+    .sort((a, b) => {
+      if (!a.due) return 1;
+      if (!b.due) return -1;
+
+      return new Date(a.due) - new Date(b.due);
+    })
+    .slice(0, 5);
+
+
+  if (todayCount) {
+    todayCount.textContent = todayTasks.length;
+  }
+
+  if (upcomingCount) {
+    upcomingCount.textContent = upcomingTasks.length;
+  }
+
+
+  renderTaskList(
+    todayContainer,
+    todayTasks,
+    "Nothing due today",
+    "You're all caught up for today."
+  );
+
+
+  renderTaskList(
+    upcomingContainer,
+    upcomingTasks,
+    "Nothing coming up",
+    "Future tasks will appear here."
+  );
+
+
+  if (currentTaskFilter === "today") {
+
+    document.getElementById("mainTaskTitle").textContent =
+      "Today's Tasks";
+
+    todaySection.classList.add("hidden");
+    upcomingSection.classList.add("hidden");
+
+    const todayOnly = data.tasks.filter(
+      task => isToday(task)
+    );
+
+    renderTaskList(
+      mainContainer,
+      todayOnly,
+      "No tasks today",
+      "You don't have any tasks due today."
+    );
+
+    return;
+  }
+
+
+  if (currentTaskFilter === "active") {
+
+    document.getElementById("mainTaskTitle").textContent =
+      "Active Tasks";
+
+    todaySection.classList.add("hidden");
+    upcomingSection.classList.add("hidden");
+
+    const activeOnly = data.tasks.filter(
+      task => !task.completed
+    );
+
+    renderTaskList(
+      mainContainer,
+      activeOnly,
+      "No active tasks",
+      "Everything is completed. 🎉"
+    );
+
+    return;
+  }
+
+
+  if (currentTaskFilter === "completed") {
+
+    document.getElementById("mainTaskTitle").textContent =
+      "Completed Tasks";
+
+    todaySection.classList.add("hidden");
+    upcomingSection.classList.add("hidden");
+
+    const completedOnly = data.tasks.filter(
+      task => task.completed
+    );
+
+    renderTaskList(
+      mainContainer,
+      completedOnly,
+      "No completed tasks",
+      "Completed tasks will appear here."
+    );
+
+    return;
+  }
+
+
+  document.getElementById("mainTaskTitle").textContent =
+    "All Tasks";
+
+  todaySection.classList.remove("hidden");
+  upcomingSection.classList.remove("hidden");
+
+
+  const allTasks = [...data.tasks].sort((a, b) => {
+
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    if (!a.due && !b.due) {
+      return 0;
+    }
+
+    if (!a.due) {
+      return 1;
+    }
+
+    if (!b.due) {
+      return -1;
+    }
+
+    return new Date(a.due) - new Date(b.due);
+  });
+
+
+  renderTaskList(
+    mainContainer,
+    allTasks,
+    "No tasks yet",
+    "Add your first household task to get started."
+  );
+}
+
+
+/* Make sure the task page starts correctly */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (document.getElementById("taskList")) {
+    currentTaskFilter = "all";
+    renderTasks();
+  }
+
+});
