@@ -124,9 +124,7 @@ function updateHouseholdName() {
 function openSheet(id) {
   const sheet = document.getElementById(id);
 
-  if (!sheet) {
-    return;
-  }
+  if (!sheet) return;
 
   sheet.classList.add("open");
   document.body.classList.add("sheet-open");
@@ -135,9 +133,7 @@ function openSheet(id) {
 function closeSheet(id) {
   const sheet = document.getElementById(id);
 
-  if (!sheet) {
-    return;
-  }
+  if (!sheet) return;
 
   sheet.classList.remove("open");
   document.body.classList.remove("sheet-open");
@@ -153,41 +149,51 @@ function setupSheets() {
     });
   });
 
-  document.querySelectorAll(".sheet-close, [data-close-sheet]").forEach(button => {
-    button.addEventListener("click", () => {
-      const sheetId =
-        button.getAttribute("data-close-sheet") ||
-        button.closest(".sheet-overlay")?.id;
+  document
+    .querySelectorAll(".sheet-close, [data-close-sheet]")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        const sheetId =
+          button.getAttribute("data-close-sheet") ||
+          button.closest(".sheet-overlay")?.id;
 
-      if (sheetId) {
-        closeSheet(sheetId);
-      }
+        if (sheetId) {
+          closeSheet(sheetId);
+        }
+      });
     });
-  });
 }
 
 /* =========================
    SHOPPING
 ========================= */
 
-function addShoppingItem() {
+function addShoppingItem(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+
   const nameElement = document.getElementById("shoppingName");
   const quantityElement = document.getElementById("shoppingQuantity");
   const categoryElement = document.getElementById("shoppingCategory");
 
-  if (!nameElement || !quantityElement || !categoryElement) {
-    console.error("Shopping form elements could not be found.");
-    return;
+  if (!nameElement) {
+    console.error("Shopping name input could not be found.");
+    return false;
   }
 
   const name = nameElement.value.trim();
-  const quantity = quantityElement.value.trim();
-  const category = categoryElement.value || "Groceries";
+  const quantity = quantityElement
+    ? quantityElement.value.trim()
+    : "1";
+  const category = categoryElement
+    ? categoryElement.value || "Groceries"
+    : "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
     nameElement.focus();
-    return;
+    return false;
   }
 
   const data = getData();
@@ -203,38 +209,59 @@ function addShoppingItem() {
   saveData(data);
 
   nameElement.value = "";
-  quantityElement.value = "";
-  categoryElement.value = "Groceries";
+
+  if (quantityElement) {
+    quantityElement.value = "";
+  }
+
+  if (categoryElement) {
+    categoryElement.value = "Groceries";
+  }
 
   closeSheet("shoppingSheet");
 
   renderShopping();
   loadDashboard();
   updateToday();
+
+  return false;
 }
 
-function addTaskShoppingItem() {
-  addShoppingItem();
+function addTaskShoppingItem(event) {
+  return addShoppingItem(event);
 }
 
-function addDashboardShopping() {
-  const nameElement = document.getElementById("dashboardShoppingName");
-  const quantityElement = document.getElementById("dashboardShoppingQuantity");
-  const categoryElement = document.getElementById("dashboardShoppingCategory");
+function addDashboardShopping(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
 
-  if (!nameElement || !quantityElement || !categoryElement) {
-    console.error("Dashboard shopping form elements could not be found.");
-    return;
+  const nameElement =
+    document.getElementById("dashboardShoppingName");
+
+  const quantityElement =
+    document.getElementById("dashboardShoppingQuantity");
+
+  const categoryElement =
+    document.getElementById("dashboardShoppingCategory");
+
+  if (!nameElement) {
+    return false;
   }
 
   const name = nameElement.value.trim();
-  const quantity = quantityElement.value.trim();
-  const category = categoryElement.value || "Groceries";
+  const quantity = quantityElement
+    ? quantityElement.value.trim()
+    : "1";
+
+  const category = categoryElement
+    ? categoryElement.value || "Groceries"
+    : "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
     nameElement.focus();
-    return;
+    return false;
   }
 
   const data = getData();
@@ -250,39 +277,58 @@ function addDashboardShopping() {
   saveData(data);
 
   nameElement.value = "";
-  quantityElement.value = "";
+
+  if (quantityElement) {
+    quantityElement.value = "";
+  }
+
+  if (categoryElement) {
+    categoryElement.value = "Groceries";
+  }
 
   closeSheet("dashboardShoppingSheet");
 
   loadDashboard();
   updateToday();
+  renderShopping();
+
+  return false;
 }
 
 function toggleShoppingItem(id) {
   const data = getData();
 
-  const item = data.shopping.find(item => String(item.id) === String(id));
+  const item = data.shopping.find(
+    item => String(item.id) === String(id)
+  );
 
   if (!item) return;
 
   item.completed = !item.completed;
 
   saveData(data);
+
   renderShopping();
   loadDashboard();
   updateToday();
 }
 
-function deleteShopping(id) {
+function deleteShoppingItem(id) {
   const data = getData();
 
-  data.shopping = data.shopping.filter(item => item.id !== id);
+  data.shopping = data.shopping.filter(
+    item => String(item.id) !== String(id)
+  );
 
   saveData(data);
 
   renderShopping();
   loadDashboard();
   updateToday();
+}
+
+function deleteShopping(id) {
+  deleteShoppingItem(id);
 }
 
 function filterShopping(filter, button) {
@@ -304,9 +350,11 @@ function filterShopping(filter, button) {
 function filterShoppingCategory(category, button) {
   currentShoppingCategory = category;
 
-  document.querySelectorAll(".category-button").forEach(item => {
-    item.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".category-button")
+    .forEach(item => {
+      item.classList.remove("active");
+    });
 
   if (button) {
     button.classList.add("active");
@@ -328,68 +376,32 @@ function getShoppingCategoryIcon(category) {
   return icons[category] || "📦";
 }
 
-function createShoppingHTML(item) {
-  const icon = getShoppingCategoryIcon(item.category);
-
-  return `
-    <div class="shopping-card ${item.completed ? "completed" : ""}">
-      <input
-        class="shopping-checkbox"
-        type="checkbox"
-        ${item.completed ? "checked" : ""}
-        onchange="toggleShopping('${item.id}')"
-        aria-label="Complete ${escapeHTML(item.name)}"
-      >
-
-      <div class="shopping-item-content">
-        <div class="shopping-item-name">
-          ${escapeHTML(item.name)}
-        </div>
-
-        <div class="shopping-item-details">
-          <span class="shopping-item-detail">
-            ${escapeHTML(item.quantity || "1")}
-          </span>
-
-          <span class="shopping-item-dot">•</span>
-
-          <span class="shopping-item-detail">
-            ${icon}
-            ${escapeHTML(item.category || "Other")}
-          </span>
-        </div>
-      </div>
-
-      <span class="shopping-category-badge">
-        ${escapeHTML(item.category || "Other")}
-      </span>
-
-      <button
-        class="shopping-delete"
-        type="button"
-        onclick="deleteShopping('${item.id}')"
-        aria-label="Delete ${escapeHTML(item.name)}"
-      >
-        ×
-      </button>
-    </div>
-  `;
-}
-
 function renderShopping() {
   const data = getData();
-  const items = Array.isArray(data.shopping) ? data.shopping : [];
+  const items = Array.isArray(data.shopping)
+    ? data.shopping
+    : [];
 
   const list = document.getElementById("shoppingList");
-  const remainingCount = document.getElementById("shoppingRemainingCount");
-  const totalCount = document.getElementById("shoppingTotalCount");
-  const completedCount = document.getElementById("shoppingCompletedCount");
-  const visibleCount = document.getElementById("visibleShoppingCount");
-  const sectionTitle = document.getElementById("shoppingSectionTitle");
-  const clearButton = document.getElementById("clearCompletedButton");
+  const remainingCount =
+    document.getElementById("shoppingRemainingCount");
+  const totalCount =
+    document.getElementById("shoppingTotalCount");
+  const completedCount =
+    document.getElementById("shoppingCompletedCount");
+  const visibleCount =
+    document.getElementById("visibleShoppingCount");
+  const sectionTitle =
+    document.getElementById("shoppingSectionTitle");
+  const clearButton =
+    document.getElementById("clearCompletedButton");
 
   const total = items.length;
-  const completed = items.filter(item => item.completed).length;
+
+  const completed = items.filter(
+    item => item.completed
+  ).length;
+
   const remaining = total - completed;
 
   if (remainingCount) {
@@ -407,11 +419,15 @@ function renderShopping() {
   let filteredItems = [...items];
 
   if (currentShoppingFilter === "remaining") {
-    filteredItems = filteredItems.filter(item => !item.completed);
+    filteredItems = filteredItems.filter(
+      item => !item.completed
+    );
   }
 
   if (currentShoppingFilter === "completed") {
-    filteredItems = filteredItems.filter(item => item.completed);
+    filteredItems = filteredItems.filter(
+      item => item.completed
+    );
   }
 
   if (currentShoppingCategory !== "all") {
@@ -437,7 +453,8 @@ function renderShopping() {
   }
 
   if (clearButton) {
-    clearButton.style.display = completed > 0 ? "block" : "none";
+    clearButton.style.display =
+      completed > 0 ? "block" : "none";
   }
 
   if (!list) return;
@@ -452,54 +469,55 @@ function renderShopping() {
         </div>
       </div>
     `;
+
     return;
   }
 
-  list.innerHTML = filteredItems.map(item => {
-    const icon = getShoppingCategoryIcon(item.category);
+  list.innerHTML = filteredItems
+    .map(item => {
+      const icon = getShoppingCategoryIcon(item.category);
 
-    return `
-      <div class="shopping-card ${item.completed ? "completed" : ""}">
-        
-        <button
-          type="button"
-          class="shopping-checkbox ${item.completed ? "checked" : ""}"
-          onclick="toggleShoppingItem('${item.id}')"
-          aria-label="Complete ${escapeHTML(item.name)}"
-        >
-          ${item.completed ? "✓" : ""}
-        </button>
+      return `
+        <div class="shopping-card ${item.completed ? "completed" : ""}">
+          <button
+            type="button"
+            class="shopping-checkbox ${item.completed ? "checked" : ""}"
+            onclick="toggleShoppingItem('${item.id}')"
+            aria-label="Complete ${escapeHTML(item.name)}"
+          >
+            ${item.completed ? "✓" : ""}
+          </button>
 
-        <div class="shopping-item-content">
-          <div class="shopping-item-name">
-            ${escapeHTML(item.name)}
+          <div class="shopping-item-content">
+            <div class="shopping-item-name">
+              ${escapeHTML(item.name)}
+            </div>
+
+            <div class="shopping-item-details">
+              <span class="shopping-item-detail">
+                ${escapeHTML(item.quantity || "1")}
+              </span>
+
+              <span class="shopping-item-dot">•</span>
+
+              <span class="shopping-category-badge">
+                ${icon} ${escapeHTML(item.category || "Other")}
+              </span>
+            </div>
           </div>
 
-          <div class="shopping-item-details">
-            <span class="shopping-item-detail">
-              ${escapeHTML(item.quantity || "1")}
-            </span>
-
-            <span class="shopping-item-dot">•</span>
-
-            <span class="shopping-category-badge">
-              ${icon} ${escapeHTML(item.category || "Other")}
-            </span>
-          </div>
+          <button
+            type="button"
+            class="shopping-delete"
+            onclick="deleteShoppingItem('${item.id}')"
+            aria-label="Delete ${escapeHTML(item.name)}"
+          >
+            ×
+          </button>
         </div>
-
-        <button
-          type="button"
-          class="shopping-delete"
-          onclick="deleteShoppingItem('${item.id}')"
-          aria-label="Delete ${escapeHTML(item.name)}"
-        >
-          ×
-        </button>
-
-      </div>
-    `;
-  }).join("");
+      `;
+    })
+    .join("");
 }
 
 function clearCompletedShopping() {
@@ -509,17 +527,13 @@ function clearCompletedShopping() {
     item => item.completed
   ).length;
 
-  if (completed === 0) {
-    return;
-  }
+  if (completed === 0) return;
 
   const confirmed = confirm(
     `Remove ${completed} completed shopping item${completed === 1 ? "" : "s"}?`
   );
 
-  if (!confirmed) {
-    return;
-  }
+  if (!confirmed) return;
 
   data.shopping = data.shopping.filter(
     item => !item.completed
@@ -533,37 +547,45 @@ function clearCompletedShopping() {
 }
 
 function updateClearCompletedButton(count) {
-  const button = document.getElementById("clearCompletedButton");
+  const button =
+    document.getElementById("clearCompletedButton");
 
-  if (!button) {
-    return;
-  }
+  if (!button) return;
 
-  button.style.display = count > 0 ? "block" : "none";
+  button.style.display =
+    count > 0 ? "block" : "none";
 }
 
 /* =========================
    TASKS
 ========================= */
 
-function addTask() {
+function addTask(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+
   const nameElement = document.getElementById("taskName");
   const personElement = document.getElementById("taskPerson");
   const dueElement = document.getElementById("taskDue");
-  const priorityElement = document.getElementById("taskPriority");
+  const priorityElement =
+    document.getElementById("taskPriority");
 
-  if (!nameElement || !personElement || !dueElement || !priorityElement) {
-    return;
-  }
+  if (!nameElement) return false;
 
   const name = nameElement.value.trim();
-  const person = personElement.value.trim();
-  const due = dueElement.value;
-  const priority = priorityElement.value || "Medium";
+  const person = personElement
+    ? personElement.value.trim()
+    : "";
+  const due = dueElement ? dueElement.value : "";
+  const priority = priorityElement
+    ? priorityElement.value || "Medium"
+    : "Medium";
 
   if (!name) {
     alert("Please enter a task.");
-    return;
+    nameElement.focus();
+    return false;
   }
 
   const data = getData();
@@ -580,35 +602,52 @@ function addTask() {
   saveData(data);
 
   nameElement.value = "";
-  personElement.value = "";
-  dueElement.value = "";
-  priorityElement.value = "Medium";
+
+  if (personElement) personElement.value = "";
+  if (dueElement) dueElement.value = "";
+  if (priorityElement) priorityElement.value = "Medium";
 
   closeSheet("taskSheet");
 
   renderTasks();
   loadDashboard();
   updateToday();
+
+  return false;
 }
 
-function addDashboardTask() {
-  const nameElement = document.getElementById("dashboardTaskName");
-  const personElement = document.getElementById("dashboardTaskPerson");
-  const dueElement = document.getElementById("dashboardTaskDue");
-  const priorityElement = document.getElementById("dashboardTaskPriority");
-
-  if (!nameElement || !personElement || !dueElement || !priorityElement) {
-    return;
+function addDashboardTask(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
   }
 
+  const nameElement =
+    document.getElementById("dashboardTaskName");
+
+  const personElement =
+    document.getElementById("dashboardTaskPerson");
+
+  const dueElement =
+    document.getElementById("dashboardTaskDue");
+
+  const priorityElement =
+    document.getElementById("dashboardTaskPriority");
+
+  if (!nameElement) return false;
+
   const name = nameElement.value.trim();
-  const person = personElement.value.trim();
-  const due = dueElement.value;
-  const priority = priorityElement.value || "Medium";
+  const person = personElement
+    ? personElement.value.trim()
+    : "";
+  const due = dueElement ? dueElement.value : "";
+  const priority = priorityElement
+    ? priorityElement.value || "Medium"
+    : "Medium";
 
   if (!name) {
     alert("Please enter a task.");
-    return;
+    nameElement.focus();
+    return false;
   }
 
   const data = getData();
@@ -625,23 +664,28 @@ function addDashboardTask() {
   saveData(data);
 
   nameElement.value = "";
-  personElement.value = "";
-  dueElement.value = "";
+
+  if (personElement) personElement.value = "";
+  if (dueElement) dueElement.value = "";
+  if (priorityElement) priorityElement.value = "Medium";
 
   closeSheet("dashboardTaskSheet");
 
   loadDashboard();
   updateToday();
+  renderTasks();
+
+  return false;
 }
 
 function toggleTask(id) {
   const data = getData();
 
-  const task = data.tasks.find(task => task.id === id);
+  const task = data.tasks.find(
+    task => String(task.id) === String(id)
+  );
 
-  if (!task) {
-    return;
-  }
+  if (!task) return;
 
   task.completed = !task.completed;
 
@@ -656,7 +700,7 @@ function deleteTask(id) {
   const data = getData();
 
   data.tasks = data.tasks.filter(
-    task => task.id !== id
+    task => String(task.id) !== String(id)
   );
 
   saveData(data);
@@ -669,9 +713,11 @@ function deleteTask(id) {
 function filterTasks(filter, button) {
   currentTaskFilter = filter;
 
-  document.querySelectorAll(".filter-button").forEach(item => {
-    item.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".filter-button")
+    .forEach(item => {
+      item.classList.remove("active");
+    });
 
   if (button) {
     button.classList.add("active");
@@ -778,10 +824,13 @@ function createTaskHTML(task) {
   `;
 }
 
-function renderTaskList(container, tasks, emptyTitle, emptyText) {
-  if (!container) {
-    return;
-  }
+function renderTaskList(
+  container,
+  tasks,
+  emptyTitle,
+  emptyText
+) {
+  if (!container) return;
 
   if (tasks.length === 0) {
     container.innerHTML = `
@@ -909,9 +958,7 @@ function renderTasks() {
   const mainContainer =
     document.getElementById("taskList");
 
-  if (!mainContainer) {
-    return;
-  }
+  if (!mainContainer) return;
 
   const data = getData();
 
@@ -976,23 +1023,23 @@ function renderTasks() {
     "Future tasks will appear here."
   );
 
-  if (currentTaskFilter === "today") {
-    const title = document.getElementById("mainTaskTitle");
+  const title =
+    document.getElementById("mainTaskTitle");
 
-    if (title) {
-      title.textContent = "Today's Tasks";
+  if (currentTaskFilter === "today") {
+    if (title) title.textContent = "Today's Tasks";
+
+    if (todaySection) {
+      todaySection.classList.add("hidden");
     }
 
-    if (todaySection) todaySection.classList.add("hidden");
-    if (upcomingSection) upcomingSection.classList.add("hidden");
-
-    const todayOnly = data.tasks.filter(
-      task => isToday(task)
-    );
+    if (upcomingSection) {
+      upcomingSection.classList.add("hidden");
+    }
 
     renderTaskList(
       mainContainer,
-      todayOnly,
+      data.tasks.filter(task => isToday(task)),
       "No tasks today",
       "You don't have any tasks due today."
     );
@@ -1001,22 +1048,19 @@ function renderTasks() {
   }
 
   if (currentTaskFilter === "active") {
-    const title = document.getElementById("mainTaskTitle");
+    if (title) title.textContent = "Active Tasks";
 
-    if (title) {
-      title.textContent = "Active Tasks";
+    if (todaySection) {
+      todaySection.classList.add("hidden");
     }
 
-    if (todaySection) todaySection.classList.add("hidden");
-    if (upcomingSection) upcomingSection.classList.add("hidden");
-
-    const activeOnly = data.tasks.filter(
-      task => !task.completed
-    );
+    if (upcomingSection) {
+      upcomingSection.classList.add("hidden");
+    }
 
     renderTaskList(
       mainContainer,
-      activeOnly,
+      data.tasks.filter(task => !task.completed),
       "No active tasks",
       "Everything is completed. 🎉"
     );
@@ -1025,22 +1069,19 @@ function renderTasks() {
   }
 
   if (currentTaskFilter === "completed") {
-    const title = document.getElementById("mainTaskTitle");
+    if (title) title.textContent = "Completed Tasks";
 
-    if (title) {
-      title.textContent = "Completed Tasks";
+    if (todaySection) {
+      todaySection.classList.add("hidden");
     }
 
-    if (todaySection) todaySection.classList.add("hidden");
-    if (upcomingSection) upcomingSection.classList.add("hidden");
-
-    const completedOnly = data.tasks.filter(
-      task => task.completed
-    );
+    if (upcomingSection) {
+      upcomingSection.classList.add("hidden");
+    }
 
     renderTaskList(
       mainContainer,
-      completedOnly,
+      data.tasks.filter(task => task.completed),
       "No completed tasks",
       "Completed tasks will appear here."
     );
@@ -1048,31 +1089,26 @@ function renderTasks() {
     return;
   }
 
-  const title = document.getElementById("mainTaskTitle");
-
   if (title) {
     title.textContent = "All Tasks";
   }
 
-  if (todaySection) todaySection.classList.remove("hidden");
-  if (upcomingSection) upcomingSection.classList.remove("hidden");
+  if (todaySection) {
+    todaySection.classList.remove("hidden");
+  }
+
+  if (upcomingSection) {
+    upcomingSection.classList.remove("hidden");
+  }
 
   const allTasks = [...data.tasks].sort((a, b) => {
     if (a.completed !== b.completed) {
       return a.completed ? 1 : -1;
     }
 
-    if (!a.due && !b.due) {
-      return 0;
-    }
-
-    if (!a.due) {
-      return 1;
-    }
-
-    if (!b.due) {
-      return -1;
-    }
+    if (!a.due && !b.due) return 0;
+    if (!a.due) return 1;
+    if (!b.due) return -1;
 
     return new Date(a.due) - new Date(b.due);
   });
@@ -1089,24 +1125,37 @@ function renderTasks() {
    EVENTS
 ========================= */
 
-function addEvent() {
-  const nameElement = document.getElementById("eventName");
-  const dateElement = document.getElementById("eventDate");
-  const timeElement = document.getElementById("eventTime");
-  const locationElement = document.getElementById("eventLocation");
+function addEvent(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
 
-  if (!nameElement || !dateElement || !timeElement || !locationElement) {
-    return;
+  const nameElement =
+    document.getElementById("eventName");
+
+  const dateElement =
+    document.getElementById("eventDate");
+
+  const timeElement =
+    document.getElementById("eventTime");
+
+  const locationElement =
+    document.getElementById("eventLocation");
+
+  if (!nameElement || !dateElement) {
+    return false;
   }
 
   const name = nameElement.value.trim();
   const date = dateElement.value;
-  const time = timeElement.value;
-  const location = locationElement.value.trim();
+  const time = timeElement ? timeElement.value : "";
+  const location = locationElement
+    ? locationElement.value.trim()
+    : "";
 
   if (!name || !date) {
     alert("Please enter an event name and date.");
-    return;
+    return false;
   }
 
   const data = getData();
@@ -1123,33 +1172,49 @@ function addEvent() {
 
   nameElement.value = "";
   dateElement.value = "";
-  timeElement.value = "";
-  locationElement.value = "";
+
+  if (timeElement) timeElement.value = "";
+  if (locationElement) locationElement.value = "";
 
   closeSheet("eventSheet");
 
   renderEvents();
   loadDashboard();
+
+  return false;
 }
 
-function addDashboardEvent() {
-  const nameElement = document.getElementById("dashboardEventName");
-  const dateElement = document.getElementById("dashboardEventDate");
-  const timeElement = document.getElementById("dashboardEventTime");
-  const locationElement = document.getElementById("dashboardEventLocation");
+function addDashboardEvent(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
 
-  if (!nameElement || !dateElement || !timeElement || !locationElement) {
-    return;
+  const nameElement =
+    document.getElementById("dashboardEventName");
+
+  const dateElement =
+    document.getElementById("dashboardEventDate");
+
+  const timeElement =
+    document.getElementById("dashboardEventTime");
+
+  const locationElement =
+    document.getElementById("dashboardEventLocation");
+
+  if (!nameElement || !dateElement) {
+    return false;
   }
 
   const name = nameElement.value.trim();
   const date = dateElement.value;
-  const time = timeElement.value;
-  const location = locationElement.value.trim();
+  const time = timeElement ? timeElement.value : "";
+  const location = locationElement
+    ? locationElement.value.trim()
+    : "";
 
   if (!name || !date) {
     alert("Please enter an event name and date.");
-    return;
+    return false;
   }
 
   const data = getData();
@@ -1166,19 +1231,23 @@ function addDashboardEvent() {
 
   nameElement.value = "";
   dateElement.value = "";
-  timeElement.value = "";
-  locationElement.value = "";
+
+  if (timeElement) timeElement.value = "";
+  if (locationElement) locationElement.value = "";
 
   closeSheet("dashboardEventSheet");
 
+  renderEvents();
   loadDashboard();
+
+  return false;
 }
 
 function deleteEvent(id) {
   const data = getData();
 
   data.events = data.events.filter(
-    event => event.id !== id
+    event => String(event.id) !== String(id)
   );
 
   saveData(data);
@@ -1188,27 +1257,24 @@ function deleteEvent(id) {
 }
 
 function renderEvents() {
-  const container = document.getElementById("eventList");
+  const container =
+    document.getElementById("eventList");
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   const data = getData();
 
-  const events = [...data.events].sort(
-    (a, b) => {
-      const dateA = new Date(
-        `${a.date}T${a.time || "00:00"}`
-      );
+  const events = [...data.events].sort((a, b) => {
+    const dateA = new Date(
+      `${a.date}T${a.time || "00:00"}`
+    );
 
-      const dateB = new Date(
-        `${b.date}T${b.time || "00:00"}`
-      );
+    const dateB = new Date(
+      `${b.date}T${b.time || "00:00"}`
+    );
 
-      return dateA - dateB;
-    }
-  );
+    return dateA - dateB;
+  });
 
   if (events.length === 0) {
     container.innerHTML = `
@@ -1257,24 +1323,35 @@ function renderEvents() {
    SPENDING
 ========================= */
 
-function addExpense() {
-  const nameElement = document.getElementById("expenseName");
-  const amountElement = document.getElementById("expenseAmount");
-  const categoryElement = document.getElementById("expenseCategory");
-  const dateElement = document.getElementById("expenseDate");
+function addExpense(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
 
-  if (!nameElement || !amountElement || !categoryElement || !dateElement) {
-    return;
+  const nameElement =
+    document.getElementById("expenseName");
+
+  const amountElement =
+    document.getElementById("expenseAmount");
+
+  const categoryElement =
+    document.getElementById("expenseCategory");
+
+  const dateElement =
+    document.getElementById("expenseDate");
+
+  if (!nameElement || !amountElement || !categoryElement) {
+    return false;
   }
 
   const name = nameElement.value.trim();
   const amount = parseFloat(amountElement.value);
   const category = categoryElement.value;
-  const date = dateElement.value;
+  const date = dateElement ? dateElement.value : "";
 
   if (!name || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid expense.");
-    return;
+    return false;
   }
 
   const data = getData();
@@ -1291,32 +1368,48 @@ function addExpense() {
 
   nameElement.value = "";
   amountElement.value = "";
-  dateElement.value = "";
+
+  if (dateElement) {
+    dateElement.value = "";
+  }
 
   closeSheet("expenseSheet");
 
   renderSpending();
   loadDashboard();
+
+  return false;
 }
 
-function addDashboardExpense() {
-  const nameElement = document.getElementById("dashboardExpenseName");
-  const amountElement = document.getElementById("dashboardExpenseAmount");
-  const categoryElement = document.getElementById("dashboardExpenseCategory");
-  const dateElement = document.getElementById("dashboardExpenseDate");
+function addDashboardExpense(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
 
-  if (!nameElement || !amountElement || !categoryElement || !dateElement) {
-    return;
+  const nameElement =
+    document.getElementById("dashboardExpenseName");
+
+  const amountElement =
+    document.getElementById("dashboardExpenseAmount");
+
+  const categoryElement =
+    document.getElementById("dashboardExpenseCategory");
+
+  const dateElement =
+    document.getElementById("dashboardExpenseDate");
+
+  if (!nameElement || !amountElement || !categoryElement) {
+    return false;
   }
 
   const name = nameElement.value.trim();
   const amount = parseFloat(amountElement.value);
   const category = categoryElement.value;
-  const date = dateElement.value;
+  const date = dateElement ? dateElement.value : "";
 
   if (!name || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid expense.");
-    return;
+    return false;
   }
 
   const data = getData();
@@ -1333,18 +1426,24 @@ function addDashboardExpense() {
 
   nameElement.value = "";
   amountElement.value = "";
-  dateElement.value = "";
+
+  if (dateElement) {
+    dateElement.value = "";
+  }
 
   closeSheet("dashboardExpenseSheet");
 
+  renderSpending();
   loadDashboard();
+
+  return false;
 }
 
 function deleteExpense(id) {
   const data = getData();
 
   data.spending = data.spending.filter(
-    expense => expense.id !== id
+    expense => String(expense.id) !== String(id)
   );
 
   saveData(data);
@@ -1354,16 +1453,16 @@ function deleteExpense(id) {
 }
 
 function renderSpending() {
-  const container = document.getElementById("spendingList");
+  const container =
+    document.getElementById("spendingList");
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   const data = getData();
 
   const total = data.spending.reduce(
-    (sum, expense) => sum + Number(expense.amount),
+    (sum, expense) =>
+      sum + Number(expense.amount),
     0
   );
 
@@ -1381,7 +1480,8 @@ function renderSpending() {
       );
     })
     .reduce(
-      (sum, expense) => sum + Number(expense.amount),
+      (sum, expense) =>
+        sum + Number(expense.amount),
       0
     );
 
@@ -1485,7 +1585,11 @@ function loadSettings() {
   }
 }
 
-function saveSettings() {
+function saveSettings(event) {
+  if (event && typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+
   const data = getData();
 
   const nameInput =
@@ -1495,7 +1599,7 @@ function saveSettings() {
     document.getElementById("currency");
 
   if (!nameInput || !currencyInput) {
-    return;
+    return false;
   }
 
   const name = nameInput.value.trim();
@@ -1514,6 +1618,8 @@ function saveSettings() {
   renderSpending();
 
   alert("Settings saved.");
+
+  return false;
 }
 
 function resetData() {
@@ -1521,12 +1627,10 @@ function resetData() {
     "Are you sure you want to delete all Household Manager data?"
   );
 
-  if (!confirmed) {
-    return;
-  }
+  if (!confirmed) return;
 
   localStorage.removeItem("householdManager");
-  location.reload();
+  window.location.reload();
 }
 
 /* =========================
@@ -1716,13 +1820,38 @@ function loadDashboard() {
 }
 
 /* =========================
-   FORM SUBMIT SUPPORT
+   FORM SUPPORT
 ========================= */
+
+function setupForms() {
+  const forms = [
+    ["shoppingForm", addShoppingItem],
+    ["dashboardShoppingForm", addDashboardShopping],
+    ["taskForm", addTask],
+    ["dashboardTaskForm", addDashboardTask],
+    ["eventForm", addEvent],
+    ["dashboardEventForm", addDashboardEvent],
+    ["expenseForm", addExpense],
+    ["dashboardExpenseForm", addDashboardExpense]
+  ];
+
+  forms.forEach(([id, handler]) => {
+    const form = document.getElementById(id);
+
+    if (!form) return;
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      handler(event);
+    });
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   setActiveNavigation();
   updateHouseholdName();
   loadSettings();
+
   loadDashboard();
   updateToday();
 
@@ -1732,178 +1861,22 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSpending();
 
   setupSheets();
+  setupForms();
 
-  /*
-    This makes the shopping form work even if the HTML
-    button uses a form submit instead of onclick.
-  */
-  const shoppingForm = document.getElementById("shoppingForm");
+  document.addEventListener("submit", event => {
+    const form = event.target;
 
-  if (shoppingForm) {
-    shoppingForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addShoppingItem();
-    });
-  }
-
-  const dashboardShoppingForm =
-    document.getElementById("dashboardShoppingForm");
-
-  if (dashboardShoppingForm) {
-    dashboardShoppingForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addDashboardShopping();
-    });
-  }
-
-  const taskForm =
-    document.getElementById("taskForm");
-
-  if (taskForm) {
-    taskForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addTask();
-    });
-  }
-
-  const eventForm =
-    document.getElementById("eventForm");
-
-  if (eventForm) {
-    eventForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addEvent();
-    });
-  }
-
-  const expenseForm =
-    document.getElementById("expenseForm");
-
-  if (expenseForm) {
-    expenseForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addExpense();
-    });
-  }
-
-  const dashboardTaskForm =
-    document.getElementById("dashboardTaskForm");
-
-  if (dashboardTaskForm) {
-    dashboardTaskForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addDashboardTask();
-    });
-  }
-
-  const dashboardEventForm =
-    document.getElementById("dashboardEventForm");
-
-  if (dashboardEventForm) {
-    dashboardEventForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addDashboardEvent();
-    });
-  }
-
-  const dashboardExpenseForm =
-    document.getElementById("dashboardExpenseForm");
-
-  if (dashboardExpenseForm) {
-    dashboardExpenseForm.addEventListener("submit", event => {
-      event.preventDefault();
-      addDashboardExpense();
-    });
-  }
-});
-
-function addShoppingItem(event) {
-  if (event) {
-    event.preventDefault();
-  }
-
-  const nameInput = document.getElementById("shoppingName");
-  const quantityInput = document.getElementById("shoppingQuantity");
-  const categoryInput = document.getElementById("shoppingCategory");
-
-  if (!nameInput) return;
-
-  const name = nameInput.value.trim();
-  const quantity = quantityInput ? quantityInput.value.trim() : "1";
-  const category = categoryInput ? categoryInput.value : "Groceries";
-
-  if (!name) {
-    nameInput.focus();
-    return;
-  }
-
-  const data = getData();
-
-  data.shopping.push({
-    id: createId(),
-    name: name,
-    quantity: quantity || "1",
-    category: category || "Groceries",
-    completed: false
-  });
-
-  saveData(data);
-
-  nameInput.value = "";
-
-  if (quantityInput) {
-    quantityInput.value = "";
-  }
-
-  if (categoryInput) {
-    categoryInput.value = "Groceries";
-  }
-
-  closeSheet("shoppingSheet");
-
-  renderShopping();
-  loadDashboard();
-  updateToday();
-}
-
-function addTaskShoppingItem(event) {
-  addShoppingItem(event);
-}
-
-document.addEventListener("submit", function(event) {
-  const form = event.target;
-
-  if (
-    form &&
-    (
-      form.id === "shoppingForm" ||
-      form.querySelector("#shoppingName")
-    )
-  ) {
-    event.preventDefault();
-    addShoppingItem(event);
-  }
-});
-
-document.addEventListener("click", function(event) {
-  const button = event.target.closest("button");
-
-  if (!button) return;
-
-  const buttonText = button.textContent.trim().toLowerCase();
-
-  if (
-    buttonText === "add item" &&
-    document.getElementById("shoppingName")
-  ) {
-    const nameInput = document.getElementById("shoppingName");
+    if (!form) return;
 
     if (
-      nameInput.closest(".sheet") &&
-      nameInput.closest(".sheet").id === "shoppingSheet"
+      form.id === "shoppingForm" ||
+      form.querySelector("#shoppingName")
     ) {
       event.preventDefault();
-      addShoppingItem(event);
+
+      if (form.id !== "shoppingForm") {
+        addShoppingItem(event);
+      }
     }
-  }
+  });
 });
