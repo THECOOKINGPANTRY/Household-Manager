@@ -10,15 +10,23 @@
 
 <body>
   <div class="app">
+
     <main class="main">
 
       <div class="mobile-topbar">
         <div class="mobile-brand">
           <img src="House_Manager_Logo.png" alt="Household Manager">
-          <span class="mobile-brand-name">Household Manager</span>
+
+          <span class="mobile-brand-name">
+            Household Manager
+          </span>
         </div>
 
-        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        <a
+          href="settings.html"
+          class="mobile-top-action"
+          aria-label="Settings"
+        >
           <img src="settings_dark_thick.png" alt="">
         </a>
       </div>
@@ -26,11 +34,15 @@
       <header class="page-header">
         <div>
           <h1 class="page-title">Events</h1>
-          <p class="page-subtitle">Keep track of important household dates.</p>
+
+          <p class="page-subtitle">
+            Keep track of important household dates.
+          </p>
         </div>
       </header>
 
       <button
+        type="button"
         class="mobile-add-button"
         onclick="openSheet('eventSheet')"
       >
@@ -38,80 +50,125 @@
         <span>Add Event</span>
       </button>
 
-      <section class="data-list" id="eventList"></section>
+      <section
+        class="data-list"
+        id="eventList"
+      ></section>
 
     </main>
+
   </div>
 
-  <div class="sheet-overlay" id="eventSheet">
+  <div
+    class="sheet-overlay"
+    id="eventSheet"
+  >
+
     <div class="sheet">
 
       <div class="sheet-handle"></div>
 
       <div class="sheet-header">
+
         <div>
-          <div class="sheet-title">Add Event</div>
+          <div class="sheet-title">
+            Add Event
+          </div>
+
           <div class="sheet-subtitle">
             Add an important household date.
           </div>
         </div>
 
         <button
+          type="button"
           class="sheet-close"
           onclick="closeSheet('eventSheet')"
           aria-label="Close"
         >
           <span aria-hidden="true">×</span>
         </button>
+
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="eventName">Event Name</label>
+
+        <label
+          class="form-label"
+          for="eventName"
+        >
+          Event Name
+        </label>
 
         <input
           id="eventName"
           class="form-control"
           type="text"
           placeholder="e.g. Family dinner"
+          autocomplete="off"
         >
+
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="eventLocation">Location</label>
+
+        <label
+          class="form-label"
+          for="eventLocation"
+        >
+          Location
+        </label>
 
         <input
           id="eventLocation"
           class="form-control"
           type="text"
           placeholder="e.g. Home"
+          autocomplete="off"
         >
+
       </div>
 
       <div class="form-row">
 
         <div class="form-group">
-          <label class="form-label" for="eventDate">Date</label>
+
+          <label
+            class="form-label"
+            for="eventDate"
+          >
+            Date
+          </label>
 
           <input
             id="eventDate"
             class="form-control"
             type="date"
           >
+
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="eventTime">Time</label>
+
+          <label
+            class="form-label"
+            for="eventTime"
+          >
+            Time
+          </label>
 
           <input
             id="eventTime"
             class="form-control"
             type="time"
           >
+
         </div>
 
       </div>
 
       <button
+        type="button"
         class="btn btn-primary btn-large"
         onclick="addEvent(); closeSheet('eventSheet')"
       >
@@ -120,54 +177,86 @@
       </button>
 
     </div>
+
   </div>
 
   <nav class="mobile-header">
 
-    <a href="index.html" data-page="index.html">
+    <a
+      href="index.html"
+      data-page="index.html"
+      aria-label="Home"
+    >
       <span class="mobile-icon">
         <img src="home_light_thick.png" alt="">
       </span>
+
       <span>Home</span>
     </a>
 
-    <a href="shopping.html" data-page="shopping.html">
+    <a
+      href="shopping.html"
+      data-page="shopping.html"
+      aria-label="Shopping"
+    >
       <span class="mobile-icon">
-        <img src="cart_light_thick.png" alt="">
+        <img src="shopping_light_thick.png" alt="">
       </span>
+
       <span>Shopping</span>
     </a>
 
-    <a href="tasks.html" data-page="tasks.html">
+    <a
+      href="tasks.html"
+      data-page="tasks.html"
+      aria-label="Tasks"
+    >
       <span class="mobile-icon">
         <img src="checkbox_light_thick.png" alt="">
       </span>
+
       <span>Tasks</span>
     </a>
 
-    <a href="events.html" data-page="events.html">
+    <a
+      href="events.html"
+      data-page="events.html"
+      aria-label="Events"
+    >
       <span class="mobile-icon">
         <img src="calendar_light_thick.png" alt="">
       </span>
+
       <span>Events</span>
     </a>
 
-    <a href="spending.html" data-page="spending.html">
+    <a
+      href="spending.html"
+      data-page="spending.html"
+      aria-label="Spending"
+    >
       <span class="mobile-icon">
         <img src="wallet_light_thick.png" alt="">
       </span>
+
       <span>Spending</span>
     </a>
 
-    <a href="settings.html" data-page="settings.html">
+    <a
+      href="settings.html"
+      data-page="settings.html"
+      aria-label="Settings"
+    >
       <span class="mobile-icon">
         <img src="settings_light_thick.png" alt="">
       </span>
+
       <span>Settings</span>
     </a>
 
   </nav>
 
   <script src="script.js"></script>
+
 </body>
 </html>
