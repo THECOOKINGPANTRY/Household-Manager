@@ -6,619 +6,744 @@
   <meta name="theme-color" content="#333533">
   <title>Household Manager</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
-<div class="app">
+  <div class="app">
 
-  <main class="main">
+    <main class="main">
 
-    <div class="mobile-topbar">
-      <div class="mobile-brand">
-        <img src="House_Manager_Logo.png" alt="Household Manager">
-        <div>
-          <div class="mobile-brand-name">Household Manager</div>
-          <div class="mobile-brand-subtitle household-name">My Household</div>
-        </div>
-      </div>
+      <div class="mobile-topbar">
+        <div class="mobile-brand">
+          <img src="House_Manager_Logo.png" alt="Household Manager">
 
-      <a href="settings.html" class="mobile-top-action" aria-label="Settings">
-        <i data-lucide="settings"></i>
-      </a>
-    </div>
-
-    <header class="page-header">
-      <div>
-        <div class="eyebrow">HOME</div>
-        <h1 class="page-title">Good afternoon</h1>
-        <p class="page-subtitle">
-          Here's what's happening around the house.
-        </p>
-      </div>
-    </header>
-
-    <!-- STATS -->
-    <section class="dashboard-grid">
-
-      <a href="tasks.html" class="card yellow stat-card">
-        <div class="stat-top">
-          <div class="stat-icon">
-            <i data-lucide="circle-check"></i>
-          </div>
-          <span class="stat-arrow">
-            <i data-lucide="arrow-right"></i>
-          </span>
-        </div>
-
-        <div>
-          <div class="stat-label">Outstanding Tasks</div>
-          <div class="stat-number" id="dashboardTasks">0</div>
-        </div>
-      </a>
-
-      <a href="shopping.html" class="card stat-card">
-        <div class="stat-top">
-          <div class="stat-icon">
-            <i data-lucide="shopping-cart"></i>
-          </div>
-          <span class="stat-arrow">
-            <i data-lucide="arrow-right"></i>
-          </span>
-        </div>
-
-        <div>
-          <div class="stat-label">Shopping Items</div>
-          <div class="stat-number" id="dashboardShopping">0</div>
-        </div>
-      </a>
-
-      <a href="events.html" class="card stat-card">
-        <div class="stat-top">
-          <div class="stat-icon">
-            <i data-lucide="calendar-days"></i>
-          </div>
-          <span class="stat-arrow">
-            <i data-lucide="arrow-right"></i>
-          </span>
-        </div>
-
-        <div>
-          <div class="stat-label">Upcoming Events</div>
-          <div class="stat-number" id="dashboardEvents">0</div>
-        </div>
-      </a>
-
-      <a href="spending.html" class="card dark stat-card">
-        <div class="stat-top">
-          <div class="stat-icon">
-            <i data-lucide="wallet"></i>
-          </div>
-          <span class="stat-arrow">
-            <i data-lucide="arrow-right"></i>
-          </span>
-        </div>
-
-        <div>
-          <div class="stat-label">Total Spending</div>
-          <div class="stat-number" id="dashboardSpending">$0.00</div>
-        </div>
-      </a>
-
-    </section>
-
-    <!-- QUICK ACTIONS -->
-    <section class="dashboard-section">
-
-      <div class="section-heading">
-        <div>
-          <div class="section-title">Quick Actions</div>
-          <div class="section-subtitle">Get things done faster.</div>
-        </div>
-      </div>
-
-      <div class="quick-actions">
-
-        <button
-          class="quick-action yellow-action"
-          onclick="openSheet('dashboardTaskSheet')"
-        >
-          <span class="quick-action-icon">
-            <i data-lucide="circle-check"></i>
-          </span>
-          <span>Add Task</span>
-        </button>
-
-        <button
-          class="quick-action"
-          onclick="openSheet('dashboardShoppingSheet')"
-        >
-          <span class="quick-action-icon">
-            <i data-lucide="shopping-cart"></i>
-          </span>
-          <span>Add Shopping</span>
-        </button>
-
-        <button
-          class="quick-action"
-          onclick="openSheet('dashboardEventSheet')"
-        >
-          <span class="quick-action-icon">
-            <i data-lucide="calendar-plus"></i>
-          </span>
-          <span>Add Event</span>
-        </button>
-
-        <button
-          class="quick-action"
-          onclick="openSheet('dashboardExpenseSheet')"
-        >
-          <span class="quick-action-icon">
-            <i data-lucide="wallet"></i>
-          </span>
-          <span>Add Expense</span>
-        </button>
-
-      </div>
-    </section>
-
-    <!-- TODAY -->
-    <section class="dashboard-section">
-
-      <div class="section-heading">
-        <div>
-          <div class="section-title">Today</div>
-          <div class="section-subtitle" id="todayDate">Today</div>
-        </div>
-      </div>
-
-      <div class="today-card">
-
-        <div class="today-item">
-          <div class="today-item-icon">
-            <i data-lucide="circle-check"></i>
-          </div>
-
-          <div class="today-item-content">
-            <span class="today-item-label">Tasks to finish</span>
-            <strong id="todayTaskCount">0</strong>
+          <div>
+            <div class="mobile-brand-name">Household Manager</div>
+            <div class="mobile-brand-subtitle household-name">My Household</div>
           </div>
         </div>
 
-        <div class="today-divider"></div>
+        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v2"></path>
+            <path d="M12 19v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M3 12h2"></path>
+            <path d="M19 12h2"></path>
+            <path d="m4.93 19.07 1.41-1.41"></path>
+            <path d="m17.66 6.34 1.41-1.41"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
+        </a>
+      </div>
 
-        <div class="today-item">
-          <div class="today-item-icon">
-            <i data-lucide="shopping-cart"></i>
+      <header class="page-header">
+        <div>
+          <div class="eyebrow">HOME</div>
+          <h1 class="page-title">Good afternoon</h1>
+          <p class="page-subtitle">
+            Here's what's happening around the house.
+          </p>
+        </div>
+      </header>
+
+      <!-- STATS -->
+      <section class="dashboard-grid">
+
+        <a href="tasks.html" class="card yellow stat-card">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="m8 12 2.5 2.5L16 9"></path>
+              </svg>
+            </div>
+
+            <span class="stat-arrow">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </span>
           </div>
 
-          <div class="today-item-content">
-            <span class="today-item-label">Shopping items</span>
-            <strong id="todayShoppingCount">0</strong>
+          <div>
+            <div class="stat-label">Outstanding Tasks</div>
+            <div class="stat-number" id="dashboardTasks">0</div>
+          </div>
+        </a>
+
+        <a href="shopping.html" class="card stat-card">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="20" r="1.5"></circle>
+                <circle cx="18" cy="20" r="1.5"></circle>
+                <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+              </svg>
+            </div>
+
+            <span class="stat-arrow">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </span>
+          </div>
+
+          <div>
+            <div class="stat-label">Shopping Items</div>
+            <div class="stat-number" id="dashboardShopping">0</div>
+          </div>
+        </a>
+
+        <a href="events.html" class="card stat-card">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                <path d="M16 3v4"></path>
+                <path d="M8 3v4"></path>
+                <path d="M3 10h18"></path>
+              </svg>
+            </div>
+
+            <span class="stat-arrow">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </span>
+          </div>
+
+          <div>
+            <div class="stat-label">Upcoming Events</div>
+            <div class="stat-number" id="dashboardEvents">0</div>
+          </div>
+        </a>
+
+        <a href="spending.html" class="card dark stat-card">
+          <div class="stat-top">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16v13H4z"></path>
+                <path d="M4 7V5h13l3 2"></path>
+                <path d="M16 13h4"></path>
+                <circle cx="16" cy="13" r="1"></circle>
+              </svg>
+            </div>
+
+            <span class="stat-arrow">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </span>
+          </div>
+
+          <div>
+            <div class="stat-label">Total Spending</div>
+            <div class="stat-number" id="dashboardSpending">$0.00</div>
+          </div>
+        </a>
+
+      </section>
+
+      <!-- QUICK ACTIONS -->
+      <section class="dashboard-section">
+
+        <div class="section-heading">
+          <div>
+            <div class="section-title">Quick Actions</div>
+            <div class="section-subtitle">Get things done faster.</div>
           </div>
         </div>
 
-      </div>
-    </section>
+        <div class="quick-actions">
 
-    <!-- TASKS -->
-    <section class="dashboard-section">
+          <button
+            class="quick-action yellow-action"
+            onclick="openSheet('dashboardTaskSheet')"
+          >
+            <span class="quick-action-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="m8 12 2.5 2.5L16 9"></path>
+              </svg>
+            </span>
+            <span>Add Task</span>
+          </button>
 
-      <div class="section-heading">
-        <div>
-          <div class="section-title">Outstanding Tasks</div>
-          <div class="section-subtitle">Things that still need doing.</div>
+          <button
+            class="quick-action"
+            onclick="openSheet('dashboardShoppingSheet')"
+          >
+            <span class="quick-action-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="20" r="1.5"></circle>
+                <circle cx="18" cy="20" r="1.5"></circle>
+                <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+              </svg>
+            </span>
+            <span>Add Shopping</span>
+          </button>
+
+          <button
+            class="quick-action"
+            onclick="openSheet('dashboardEventSheet')"
+          >
+            <span class="quick-action-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                <path d="M16 3v4"></path>
+                <path d="M8 3v4"></path>
+                <path d="M3 10h18"></path>
+                <path d="M12 14v4"></path>
+                <path d="M10 16h4"></path>
+              </svg>
+            </span>
+            <span>Add Event</span>
+          </button>
+
+          <button
+            class="quick-action"
+            onclick="openSheet('dashboardExpenseSheet')"
+          >
+            <span class="quick-action-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16v13H4z"></path>
+                <path d="M4 7V5h13l3 2"></path>
+                <path d="M16 13h4"></path>
+                <circle cx="16" cy="13" r="1"></circle>
+              </svg>
+            </span>
+            <span>Add Expense</span>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- TODAY -->
+      <section class="dashboard-section">
+
+        <div class="section-heading">
+          <div>
+            <div class="section-title">Today</div>
+            <div class="section-subtitle" id="todayDate">Today</div>
+          </div>
         </div>
 
-        <a href="tasks.html" class="text-link">View all</a>
-      </div>
+        <div class="today-card">
 
-      <div class="section-list" id="dashboardTaskList"></div>
+          <div class="today-item">
+            <div class="today-item-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="m8 12 2.5 2.5L16 9"></path>
+              </svg>
+            </div>
 
-    </section>
+            <div class="today-item-content">
+              <span class="today-item-label">Tasks to finish</span>
+              <strong id="todayTaskCount">0</strong>
+            </div>
+          </div>
 
-    <!-- EVENTS -->
-    <section class="dashboard-section">
+          <div class="today-divider"></div>
 
-      <div class="section-heading">
-        <div>
-          <div class="section-title">Upcoming Events</div>
-          <div class="section-subtitle">What's coming up.</div>
+          <div class="today-item">
+            <div class="today-item-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="20" r="1.5"></circle>
+                <circle cx="18" cy="20" r="1.5"></circle>
+                <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+              </svg>
+            </div>
+
+            <div class="today-item-content">
+              <span class="today-item-label">Shopping items</span>
+              <strong id="todayShoppingCount">0</strong>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section class="dashboard-section">
+
+        <div class="section-heading">
+          <div>
+            <div class="section-title">Outstanding Tasks</div>
+            <div class="section-subtitle">Things that still need doing.</div>
+          </div>
+
+          <a href="tasks.html" class="text-link">View all</a>
         </div>
 
-        <a href="events.html" class="text-link">View all</a>
-      </div>
+        <div class="section-list" id="dashboardTaskList"></div>
 
-      <div class="section-list" id="dashboardEventList"></div>
+      </section>
 
-    </section>
+      <!-- EVENTS -->
+      <section class="dashboard-section">
 
-  </main>
-</div>
+        <div class="section-heading">
+          <div>
+            <div class="section-title">Upcoming Events</div>
+            <div class="section-subtitle">What's coming up.</div>
+          </div>
 
-
-<!-- DASHBOARD TASK SHEET -->
-<div class="sheet-overlay" id="dashboardTaskSheet">
-
-  <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title">Add Task</div>
-        <div class="sheet-subtitle">
-          Create a new household task.
+          <a href="events.html" class="text-link">View all</a>
         </div>
-      </div>
 
-      <button
-        class="sheet-close"
-        onclick="closeSheet('dashboardTaskSheet')"
-        aria-label="Close"
-      >
-        <i data-lucide="x"></i>
-      </button>
-    </div>
+        <div class="section-list" id="dashboardEventList"></div>
 
-    <div class="form-group">
-      <label class="form-label">Task</label>
+      </section>
 
-      <input
-        id="dashboardTaskName"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Clean the kitchen"
-      >
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Assigned To</label>
-
-      <input
-        id="dashboardTaskPerson"
-        class="form-control"
-        type="text"
-        placeholder="e.g. James"
-      >
-    </div>
-
-    <div class="form-row">
-
-      <div class="form-group">
-        <label class="form-label">Due Date</label>
-
-        <input
-          id="dashboardTaskDue"
-          class="form-control"
-          type="date"
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Priority</label>
-
-        <select
-          id="dashboardTaskPriority"
-          class="form-control"
-        >
-          <option>Low</option>
-          <option selected>Medium</option>
-          <option>High</option>
-        </select>
-      </div>
-
-    </div>
-
-    <button
-      class="btn btn-primary btn-large"
-      onclick="addDashboardTask()"
-    >
-      <i data-lucide="plus"></i>
-      <span>Add Task</span>
-    </button>
-
+    </main>
   </div>
-</div>
 
+  <!-- DASHBOARD TASK SHEET -->
+  <div class="sheet-overlay" id="dashboardTaskSheet">
 
-<!-- DASHBOARD SHOPPING SHEET -->
-<div class="sheet-overlay" id="dashboardShoppingSheet">
+    <div class="sheet">
 
-  <div class="sheet">
+      <div class="sheet-handle"></div>
 
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title">Add Shopping Item</div>
-        <div class="sheet-subtitle">
-          Add something to your shopping list.
+      <div class="sheet-header">
+        <div>
+          <div class="sheet-title">Add Task</div>
+          <div class="sheet-subtitle">
+            Create a new household task.
+          </div>
         </div>
+
+        <button
+          class="sheet-close"
+          onclick="closeSheet('dashboardTaskSheet')"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6 6 18"></path>
+          </svg>
+        </button>
       </div>
 
-      <button
-        class="sheet-close"
-        onclick="closeSheet('dashboardShoppingSheet')"
-        aria-label="Close"
-      >
-        <i data-lucide="x"></i>
-      </button>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Item</label>
-
-      <input
-        id="dashboardShoppingName"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Milk"
-      >
-    </div>
-
-    <div class="form-row">
-
       <div class="form-group">
-        <label class="form-label">Quantity</label>
+        <label class="form-label">Task</label>
 
         <input
-          id="dashboardShoppingQuantity"
+          id="dashboardTaskName"
           class="form-control"
           type="text"
-          placeholder="1"
+          placeholder="e.g. Clean the kitchen"
         >
       </div>
 
       <div class="form-group">
-        <label class="form-label">Category</label>
+        <label class="form-label">Assigned To</label>
 
-        <select
-          id="dashboardShoppingCategory"
+        <input
+          id="dashboardTaskPerson"
           class="form-control"
+          type="text"
+          placeholder="e.g. James"
         >
-          <option>Groceries</option>
-          <option>Household</option>
-          <option>Cleaning</option>
-          <option>Bathroom</option>
-          <option>Pet</option>
-          <option>Other</option>
-        </select>
       </div>
 
-    </div>
+      <div class="form-row">
 
-    <button
-      class="btn btn-primary btn-large"
-      onclick="addDashboardShopping()"
-    >
-      <i data-lucide="shopping-cart"></i>
-      <span>Add to Shopping List</span>
-    </button>
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
 
-  </div>
-</div>
-
-
-<!-- DASHBOARD EVENT SHEET -->
-<div class="sheet-overlay" id="dashboardEventSheet">
-
-  <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title">Add Event</div>
-        <div class="sheet-subtitle">
-          Add an important household date.
+          <input
+            id="dashboardTaskDue"
+            class="form-control"
+            type="date"
+          >
         </div>
+
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+
+          <select
+            id="dashboardTaskPriority"
+            class="form-control"
+          >
+            <option>Low</option>
+            <option selected>Medium</option>
+            <option>High</option>
+          </select>
+        </div>
+
       </div>
 
       <button
-        class="sheet-close"
-        onclick="closeSheet('dashboardEventSheet')"
-        aria-label="Close"
+        class="btn btn-primary btn-large"
+        onclick="addDashboardTask()"
       >
-        <i data-lucide="x"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+        <span>Add Task</span>
       </button>
+
     </div>
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Event Name</label>
+  <!-- DASHBOARD SHOPPING SHEET -->
+  <div class="sheet-overlay" id="dashboardShoppingSheet">
 
-      <input
-        id="dashboardEventName"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Family dinner"
+    <div class="sheet">
+
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+        <div>
+          <div class="sheet-title">Add Shopping Item</div>
+          <div class="sheet-subtitle">
+            Add something to your shopping list.
+          </div>
+        </div>
+
+        <button
+          class="sheet-close"
+          onclick="closeSheet('dashboardShoppingSheet')"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6 6 18"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Item</label>
+
+        <input
+          id="dashboardShoppingName"
+          class="form-control"
+          type="text"
+          placeholder="e.g. Milk"
+        >
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+
+          <input
+            id="dashboardShoppingQuantity"
+            class="form-control"
+            type="text"
+            placeholder="1"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+
+          <select
+            id="dashboardShoppingCategory"
+            class="form-control"
+          >
+            <option>Groceries</option>
+            <option>Household</option>
+            <option>Cleaning</option>
+            <option>Bathroom</option>
+            <option>Pet</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button
+        class="btn btn-primary btn-large"
+        onclick="addDashboardShopping()"
       >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+        </svg>
+        <span>Add to Shopping List</span>
+      </button>
+
     </div>
+  </div>
 
-    <div class="form-group">
-      <label class="form-label">Location</label>
+  <!-- DASHBOARD EVENT SHEET -->
+  <div class="sheet-overlay" id="dashboardEventSheet">
 
-      <input
-        id="dashboardEventLocation"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Home"
+    <div class="sheet">
+
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+        <div>
+          <div class="sheet-title">Add Event</div>
+          <div class="sheet-subtitle">
+            Add an important household date.
+          </div>
+        </div>
+
+        <button
+          class="sheet-close"
+          onclick="closeSheet('dashboardEventSheet')"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6 6 18"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Event Name</label>
+
+        <input
+          id="dashboardEventName"
+          class="form-control"
+          type="text"
+          placeholder="e.g. Family dinner"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Location</label>
+
+        <input
+          id="dashboardEventLocation"
+          class="form-control"
+          type="text"
+          placeholder="e.g. Home"
+        >
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label class="form-label">Date</label>
+
+          <input
+            id="dashboardEventDate"
+            class="form-control"
+            type="date"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Time</label>
+
+          <input
+            id="dashboardEventTime"
+            class="form-control"
+            type="time"
+          >
+        </div>
+
+      </div>
+
+      <button
+        class="btn btn-primary btn-large"
+        onclick="addDashboardEvent()"
       >
-    </div>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M16 3v4"></path>
+          <path d="M8 3v4"></path>
+          <path d="M3 10h18"></path>
+          <path d="M12 14v4"></path>
+          <path d="M10 16h4"></path>
+        </svg>
+        <span>Add Event</span>
+      </button>
 
-    <div class="form-row">
+    </div>
+  </div>
+
+  <!-- DASHBOARD EXPENSE SHEET -->
+  <div class="sheet-overlay" id="dashboardExpenseSheet">
+
+    <div class="sheet">
+
+      <div class="sheet-handle"></div>
+
+      <div class="sheet-header">
+        <div>
+          <div class="sheet-title">Add Expense</div>
+          <div class="sheet-subtitle">
+            Record a household expense.
+          </div>
+        </div>
+
+        <button
+          class="sheet-close"
+          onclick="closeSheet('dashboardExpenseSheet')"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6 6 18"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Expense</label>
+
+        <input
+          id="dashboardExpenseName"
+          class="form-control"
+          type="text"
+          placeholder="e.g. Weekly groceries"
+        >
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+
+          <input
+            id="dashboardExpenseAmount"
+            class="form-control"
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+
+          <select
+            id="dashboardExpenseCategory"
+            class="form-control"
+          >
+            <option>Groceries</option>
+            <option>Bills</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Home</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+      </div>
 
       <div class="form-group">
         <label class="form-label">Date</label>
 
         <input
-          id="dashboardEventDate"
+          id="dashboardExpenseDate"
           class="form-control"
           type="date"
         >
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Time</label>
-
-        <input
-          id="dashboardEventTime"
-          class="form-control"
-          type="time"
-        >
-      </div>
-
-    </div>
-
-    <button
-      class="btn btn-primary btn-large"
-      onclick="addDashboardEvent()"
-    >
-      <i data-lucide="calendar-plus"></i>
-      <span>Add Event</span>
-    </button>
-
-  </div>
-</div>
-
-
-<!-- DASHBOARD EXPENSE SHEET -->
-<div class="sheet-overlay" id="dashboardExpenseSheet">
-
-  <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title">Add Expense</div>
-        <div class="sheet-subtitle">
-          Record a household expense.
-        </div>
-      </div>
-
       <button
-        class="sheet-close"
-        onclick="closeSheet('dashboardExpenseSheet')"
-        aria-label="Close"
+        class="btn btn-primary btn-large"
+        onclick="addDashboardExpense()"
       >
-        <i data-lucide="x"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16v13H4z"></path>
+          <path d="M4 7V5h13l3 2"></path>
+          <path d="M16 13h4"></path>
+          <circle cx="16" cy="13" r="1"></circle>
+        </svg>
+        <span>Add Expense</span>
       </button>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Expense</label>
-
-      <input
-        id="dashboardExpenseName"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Weekly groceries"
-      >
-    </div>
-
-    <div class="form-row">
-
-      <div class="form-group">
-        <label class="form-label">Amount</label>
-
-        <input
-          id="dashboardExpenseAmount"
-          class="form-control"
-          type="number"
-          step="0.01"
-          min="0"
-          placeholder="0.00"
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Category</label>
-
-        <select
-          id="dashboardExpenseCategory"
-          class="form-control"
-        >
-          <option>Groceries</option>
-          <option>Bills</option>
-          <option>Transport</option>
-          <option>Entertainment</option>
-          <option>Home</option>
-          <option>Other</option>
-        </select>
-      </div>
 
     </div>
-
-    <div class="form-group">
-      <label class="form-label">Date</label>
-
-      <input
-        id="dashboardExpenseDate"
-        class="form-control"
-        type="date"
-      >
-    </div>
-
-    <button
-      class="btn btn-primary btn-large"
-      onclick="addDashboardExpense()"
-    >
-      <i data-lucide="wallet"></i>
-      <span>Add Expense</span>
-    </button>
-
   </div>
-</div>
 
+  <nav class="mobile-header">
 
-<nav class="mobile-header">
+    <a href="index.html" data-page="index.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 10.5 12 3l9 7.5"></path>
+          <path d="M5.5 9.5V21h13V9.5"></path>
+          <path d="M9.5 21v-6h5v6"></path>
+        </svg>
+      </span>
+      <span>Home</span>
+    </a>
 
-  <a href="index.html" data-page="index.html">
-    <i data-lucide="house" class="mobile-icon"></i>
-    <span>Home</span>
-  </a>
+    <a href="shopping.html" data-page="shopping.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+        </svg>
+      </span>
+      <span>Shopping</span>
+    </a>
 
-  <a href="shopping.html" data-page="shopping.html">
-    <i data-lucide="shopping-cart" class="mobile-icon"></i>
-    <span>Shopping</span>
-  </a>
+    <a href="tasks.html" data-page="tasks.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m8 12 2.5 2.5L16 9"></path>
+        </svg>
+      </span>
+      <span>Tasks</span>
+    </a>
 
-  <a href="tasks.html" data-page="tasks.html">
-    <i data-lucide="circle-check" class="mobile-icon"></i>
-    <span>Tasks</span>
-  </a>
+    <a href="events.html" data-page="events.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M16 3v4"></path>
+          <path d="M8 3v4"></path>
+          <path d="M3 10h18"></path>
+        </svg>
+      </span>
+      <span>Events</span>
+    </a>
 
-  <a href="events.html" data-page="events.html">
-    <i data-lucide="calendar-days" class="mobile-icon"></i>
-    <span>Events</span>
-  </a>
+    <a href="spending.html" data-page="spending.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16v13H4z"></path>
+          <path d="M4 7V5h13l3 2"></path>
+          <path d="M16 13h4"></path>
+          <circle cx="16" cy="13" r="1"></circle>
+        </svg>
+      </span>
+      <span>Spending</span>
+    </a>
 
-  <a href="spending.html" data-page="spending.html">
-    <i data-lucide="wallet" class="mobile-icon"></i>
-    <span>Spending</span>
-  </a>
+    <a href="settings.html" data-page="settings.html">
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v2"></path>
+          <path d="M12 19v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M3 12h2"></path>
+          <path d="M19 12h2"></path>
+          <path d="m4.93 19.07 1.41-1.41"></path>
+          <path d="m17.66 6.34 1.41-1.41"></path>
+          <circle cx="12" cy="12" r="4"></circle>
+        </svg>
+      </span>
+      <span>Settings</span>
+    </a>
 
-  <a href="settings.html" data-page="settings.html">
-    <i data-lucide="settings" class="mobile-icon"></i>
-    <span>Settings</span>
-  </a>
+  </nav>
 
-</nav>
-
-<script src="script.js"></script>
-
-<script>
-  if (window.lucide) {
-    lucide.createIcons({
-      attrs: {
-        "stroke-width": 2,
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round"
-      }
-    });
-  }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
