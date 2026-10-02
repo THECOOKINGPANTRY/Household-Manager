@@ -10,57 +10,101 @@
 
 <body>
   <div class="app">
+
     <main class="main">
 
       <div class="mobile-topbar">
+
         <div class="mobile-brand">
-          <img src="House_Manager_Logo.png" alt="Household Manager">
+
+          <img
+            src="House_Manager_Logo.png"
+            alt="Household Manager"
+          >
 
           <div>
-            <div class="mobile-brand-name">Household Manager</div>
-            <div class="mobile-brand-subtitle household-name">My Household</div>
+            <div class="mobile-brand-name">
+              Household Manager
+            </div>
+
+            <div class="mobile-brand-subtitle household-name">
+              My Household
+            </div>
           </div>
+
         </div>
 
-        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        <a
+          href="settings.html"
+          class="mobile-top-action"
+          aria-label="Settings"
+        >
           <img src="settings_dark_thick.png" alt="">
         </a>
+
       </div>
 
       <header class="page-header">
-        <div class="eyebrow">HOUSEHOLD</div>
 
-        <h1 class="page-title">Spending</h1>
+        <div class="eyebrow">
+          HOUSEHOLD
+        </div>
+
+        <h1 class="page-title">
+          Spending
+        </h1>
 
         <p class="page-subtitle">
           Keep track of household expenses.
         </p>
+
       </header>
 
       <section class="spending-summary">
 
         <div class="card yellow summary-card">
-          <span class="summary-label">Total Spending</span>
 
-          <strong class="money" id="totalSpending">
+          <span class="summary-label">
+            Total Spending
+          </span>
+
+          <strong
+            class="money"
+            id="totalSpending"
+          >
             $0.00
           </strong>
+
         </div>
 
         <div class="card summary-card">
-          <span class="summary-label">This Month</span>
 
-          <strong class="money" id="monthSpending">
+          <span class="summary-label">
+            This Month
+          </span>
+
+          <strong
+            class="money"
+            id="monthSpending"
+          >
             $0.00
           </strong>
+
         </div>
 
         <div class="card dark summary-card">
-          <span class="summary-label">Average Expense</span>
 
-          <strong class="money" id="averageSpending">
+          <span class="summary-label">
+            Average Expense
+          </span>
+
+          <strong
+            class="money"
+            id="averageSpending"
+          >
             $0.00
           </strong>
+
         </div>
 
       </section>
@@ -74,12 +118,20 @@
         <span>Add Expense</span>
       </button>
 
-      <section class="data-list" id="spendingList"></section>
+      <section
+        class="data-list"
+        id="spendingList"
+      ></section>
 
     </main>
+
   </div>
 
-  <div class="sheet-overlay" id="expenseSheet">
+  <div
+    class="sheet-overlay"
+    id="expenseSheet"
+  >
+
     <div class="sheet">
 
       <div class="sheet-handle"></div>
@@ -87,6 +139,7 @@
       <div class="sheet-header">
 
         <div>
+
           <div class="sheet-title">
             Add Expense
           </div>
@@ -94,6 +147,7 @@
           <div class="sheet-subtitle">
             Record a household expense.
           </div>
+
         </div>
 
         <button
@@ -108,7 +162,11 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="expenseName">
+
+        <label
+          class="form-label"
+          for="expenseName"
+        >
           Expense
         </label>
 
@@ -119,12 +177,17 @@
           placeholder="e.g. Weekly groceries"
           autocomplete="off"
         >
+
       </div>
 
       <div class="form-row">
 
         <div class="form-group">
-          <label class="form-label" for="expenseAmount">
+
+          <label
+            class="form-label"
+            for="expenseAmount"
+          >
             Amount
           </label>
 
@@ -137,10 +200,15 @@
             placeholder="0.00"
             inputmode="decimal"
           >
+
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="expenseCategory">
+
+          <label
+            class="form-label"
+            for="expenseCategory"
+          >
             Category
           </label>
 
@@ -148,19 +216,41 @@
             id="expenseCategory"
             class="form-control"
           >
-            <option value="Groceries">Groceries</option>
-            <option value="Bills">Bills</option>
-            <option value="Transport">Transport</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Home">Home</option>
-            <option value="Other">Other</option>
+            <option value="Groceries">
+              Groceries
+            </option>
+
+            <option value="Bills">
+              Bills
+            </option>
+
+            <option value="Transport">
+              Transport
+            </option>
+
+            <option value="Entertainment">
+              Entertainment
+            </option>
+
+            <option value="Home">
+              Home
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
           </select>
+
         </div>
 
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="expenseDate">
+
+        <label
+          class="form-label"
+          for="expenseDate"
+        >
           Date
         </label>
 
@@ -169,6 +259,7 @@
           class="form-control"
           type="date"
         >
+
       </div>
 
       <button
@@ -181,54 +272,98 @@
       </button>
 
     </div>
+
   </div>
 
   <nav class="mobile-header">
 
-    <a href="index.html" data-page="index.html">
+    <a
+      href="index.html"
+      data-page="index.html"
+      aria-label="Home"
+    >
       <span class="mobile-icon">
-        <img src="home_dark_thick.png" alt="">
+        <img src="home_light_thick.png" alt="">
       </span>
-      <span>Home</span>
+
+      <span>
+        Home
+      </span>
     </a>
 
-    <a href="shopping.html" data-page="shopping.html">
+    <a
+      href="shopping.html"
+      data-page="shopping.html"
+      aria-label="Shopping"
+    >
       <span class="mobile-icon">
-        <img src="cart_dark_thick.png" alt="">
+        <img src="shopping_light_thick.png" alt="">
       </span>
-      <span>Shopping</span>
+
+      <span>
+        Shopping
+      </span>
     </a>
 
-    <a href="tasks.html" data-page="tasks.html">
+    <a
+      href="tasks.html"
+      data-page="tasks.html"
+      aria-label="Tasks"
+    >
       <span class="mobile-icon">
-        <img src="checkbox_dark_thick.png" alt="">
+        <img src="checkbox_light_thick.png" alt="">
       </span>
-      <span>Tasks</span>
+
+      <span>
+        Tasks
+      </span>
     </a>
 
-    <a href="events.html" data-page="events.html">
+    <a
+      href="events.html"
+      data-page="events.html"
+      aria-label="Events"
+    >
       <span class="mobile-icon">
-        <img src="calendar_dark_thick.png" alt="">
+        <img src="calendar_light_thick.png" alt="">
       </span>
-      <span>Events</span>
+
+      <span>
+        Events
+      </span>
     </a>
 
-    <a href="spending.html" data-page="spending.html">
+    <a
+      href="spending.html"
+      data-page="spending.html"
+      aria-label="Spending"
+    >
       <span class="mobile-icon">
-        <img src="wallet_dark_thick.png" alt="">
+        <img src="wallet_light_thick.png" alt="">
       </span>
-      <span>Spending</span>
+
+      <span>
+        Spending
+      </span>
     </a>
 
-    <a href="settings.html" data-page="settings.html">
+    <a
+      href="settings.html"
+      data-page="settings.html"
+      aria-label="Settings"
+    >
       <span class="mobile-icon">
-        <img src="settings_dark_thick.png" alt="">
+        <img src="settings_light_thick.png" alt="">
       </span>
-      <span>Settings</span>
+
+      <span>
+        Settings
+      </span>
     </a>
 
   </nav>
 
   <script src="script.js"></script>
+
 </body>
 </html>
