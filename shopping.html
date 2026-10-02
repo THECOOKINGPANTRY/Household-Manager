@@ -26,7 +26,6 @@
       <a href="settings.html" class="mobile-top-action" aria-label="Settings">⚙</a>
     </div>
 
-
     <header class="page-header">
       <div class="eyebrow">HOUSEHOLD</div>
       <h1 class="page-title">Shopping</h1>
@@ -34,7 +33,6 @@
         Keep track of everything your household needs.
       </p>
     </header>
-
 
     <!-- SHOPPING SUMMARY -->
     <section class="shopping-summary">
@@ -60,7 +58,6 @@
 
       </div>
 
-
       <div class="shopping-summary-stats">
 
         <div class="shopping-summary-stat">
@@ -79,9 +76,9 @@
 
     </section>
 
-
     <!-- ADD ITEM -->
     <button
+      type="button"
       class="mobile-add-button"
       onclick="openSheet('shoppingSheet')"
     >
@@ -89,11 +86,11 @@
       Add Shopping Item
     </button>
 
-
     <!-- STATUS FILTERS -->
     <section class="shopping-filters">
 
       <button
+        type="button"
         class="filter-button active"
         onclick="filterShopping('all', this)"
       >
@@ -101,6 +98,7 @@
       </button>
 
       <button
+        type="button"
         class="filter-button"
         onclick="filterShopping('remaining', this)"
       >
@@ -108,6 +106,7 @@
       </button>
 
       <button
+        type="button"
         class="filter-button"
         onclick="filterShopping('completed', this)"
       >
@@ -116,11 +115,11 @@
 
     </section>
 
-
     <!-- CATEGORY FILTERS -->
     <div class="category-scroll">
 
       <button
+        type="button"
         class="category-button active"
         onclick="filterShoppingCategory('all', this)"
       >
@@ -128,6 +127,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Groceries', this)"
       >
@@ -135,6 +135,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Household', this)"
       >
@@ -142,6 +143,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Cleaning', this)"
       >
@@ -149,6 +151,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Bathroom', this)"
       >
@@ -156,6 +159,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Pet', this)"
       >
@@ -163,6 +167,7 @@
       </button>
 
       <button
+        type="button"
         class="category-button"
         onclick="filterShoppingCategory('Other', this)"
       >
@@ -170,7 +175,6 @@
       </button>
 
     </div>
-
 
     <!-- SHOPPING LIST -->
     <section class="shopping-section">
@@ -199,7 +203,6 @@
 
       </div>
 
-
       <div
         class="shopping-list"
         id="shoppingList"
@@ -207,9 +210,9 @@
 
     </section>
 
-
     <!-- CLEAR COMPLETED -->
     <button
+      type="button"
       class="clear-completed-button"
       id="clearCompletedButton"
       onclick="clearCompletedShopping()"
@@ -244,6 +247,7 @@
       </div>
 
       <button
+        type="button"
         class="sheet-close"
         onclick="closeSheet('shoppingSheet')"
       >
@@ -252,28 +256,36 @@
 
     </div>
 
-
+    <!-- ITEM -->
     <div class="form-group">
 
-      <label class="form-label">
+      <label
+        class="form-label"
+        for="shoppingName"
+      >
         Item
       </label>
 
       <input
-        id="shoppingItem"
+        id="shoppingName"
         class="form-control"
         type="text"
         placeholder="e.g. Milk"
+        autocomplete="off"
       >
 
     </div>
 
 
+    <!-- QUANTITY + CATEGORY -->
     <div class="form-row">
 
       <div class="form-group">
 
-        <label class="form-label">
+        <label
+          class="form-label"
+          for="shoppingQuantity"
+        >
           Quantity
         </label>
 
@@ -282,6 +294,7 @@
           class="form-control"
           type="text"
           placeholder="e.g. 2"
+          autocomplete="off"
         >
 
       </div>
@@ -289,7 +302,10 @@
 
       <div class="form-group">
 
-        <label class="form-label">
+        <label
+          class="form-label"
+          for="shoppingCategory"
+        >
           Category
         </label>
 
@@ -310,9 +326,12 @@
     </div>
 
 
+    <!-- ADD ITEM BUTTON -->
     <button
+      type="button"
       class="btn btn-primary btn-large"
-      onclick="addShoppingItem()"
+      id="addShoppingItemButton"
+      onclick="addShoppingItem(event)"
     >
       Add Item
     </button>
