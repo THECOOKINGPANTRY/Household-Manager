@@ -1,3 +1,4 @@
+<!-- shopping.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,71 +8,302 @@
   <title>Shopping | Household Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 <div class="app">
+
   <main class="main">
 
     <div class="mobile-topbar">
       <div class="mobile-brand">
         <img src="House_Manager_Logo.png" alt="Household Manager">
-        <span class="mobile-brand-name">Household Manager</span>
+
+        <div>
+          <div class="mobile-brand-name">Household Manager</div>
+          <div class="mobile-brand-subtitle household-name">
+            My Household
+          </div>
+        </div>
       </div>
-      <a href="settings.html" class="mobile-top-action">⚙</a>
+
+      <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        ⚙
+      </a>
     </div>
 
+
     <header class="page-header">
-      <div>
-        <h1 class="page-title">Shopping</h1>
-        <p class="page-subtitle">Keep track of everything your household needs.</p>
-      </div>
+      <div class="eyebrow">HOUSEHOLD</div>
+
+      <h1 class="page-title">Shopping</h1>
+
+      <p class="page-subtitle">
+        Everything your household needs to pick up.
+      </p>
     </header>
 
-    <button class="mobile-add-button" onclick="openSheet('shoppingSheet')">
-      <span>+</span> Add Item
-    </button>
 
-    <section class="quick-summary">
-      <div class="mini-summary">
-        <span>Items</span>
-        <strong id="shoppingCount">0</strong>
+    <!-- SHOPPING SUMMARY -->
+    <section class="shopping-summary">
+
+      <div class="shopping-summary-main">
+
+        <div>
+          <div class="shopping-summary-label">
+            Items to buy
+          </div>
+
+          <div
+            class="shopping-summary-number"
+            id="shoppingRemaining"
+          >
+            0
+          </div>
+        </div>
+
+        <div class="shopping-summary-icon">
+          🛒
+        </div>
+
       </div>
-      <div class="mini-summary">
-        <span>Remaining</span>
-        <strong id="shoppingRemaining">0</strong>
+
+
+      <div class="shopping-summary-stats">
+
+        <div class="shopping-summary-stat">
+          <span>Total</span>
+          <strong id="shoppingCount">0</strong>
+        </div>
+
+        <div class="shopping-summary-divider"></div>
+
+        <div class="shopping-summary-stat">
+          <span>Completed</span>
+          <strong id="shoppingCompleted">0</strong>
+        </div>
+
       </div>
+
     </section>
 
-    <section class="data-list" id="shoppingList"></section>
+
+    <!-- ADD ITEM -->
+    <button
+      class="mobile-add-button"
+      onclick="openSheet('shoppingSheet')"
+    >
+      <span>+</span>
+      Add Item
+    </button>
+
+
+    <!-- FILTERS -->
+    <section class="shopping-filters">
+
+      <button
+        class="filter-button active"
+        onclick="filterShopping('all', this)"
+      >
+        All
+      </button>
+
+      <button
+        class="filter-button"
+        onclick="filterShopping('remaining', this)"
+      >
+        Remaining
+      </button>
+
+      <button
+        class="filter-button"
+        onclick="filterShopping('completed', this)"
+      >
+        Completed
+      </button>
+
+    </section>
+
+
+    <!-- CATEGORY FILTER -->
+    <section class="category-scroll">
+
+      <button
+        class="category-button active"
+        onclick="filterShoppingCategory('all', this)"
+      >
+        All
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Groceries', this)"
+      >
+        🛒 Groceries
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Household', this)"
+      >
+        🏠 Household
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Cleaning', this)"
+      >
+        🧹 Cleaning
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Bathroom', this)"
+      >
+        🛁 Bathroom
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Pet', this)"
+      >
+        🐾 Pet
+      </button>
+
+      <button
+        class="category-button"
+        onclick="filterShoppingCategory('Other', this)"
+      >
+        Other
+      </button>
+
+    </section>
+
+
+    <!-- SHOPPING LIST -->
+    <section class="shopping-section">
+
+      <div class="shopping-section-heading">
+
+        <div>
+          <div
+            class="shopping-section-title"
+            id="shoppingSectionTitle"
+          >
+            Shopping List
+          </div>
+
+          <div class="shopping-section-subtitle">
+            Tap an item when you've bought it.
+          </div>
+        </div>
+
+        <span
+          class="shopping-section-count"
+          id="shoppingVisibleCount"
+        >
+          0
+        </span>
+
+      </div>
+
+
+      <div
+        class="shopping-list"
+        id="shoppingList"
+      ></div>
+
+    </section>
+
+
+    <!-- CLEAR COMPLETED -->
+    <button
+      class="clear-completed-button"
+      id="clearCompletedButton"
+      onclick="clearCompletedShopping()"
+    >
+      Clear completed items
+    </button>
 
   </main>
 </div>
 
-<div class="sheet-overlay" id="shoppingSheet">
+
+<!-- ADD SHOPPING ITEM SHEET -->
+<div
+  class="sheet-overlay"
+  id="shoppingSheet"
+>
+
   <div class="sheet">
+
     <div class="sheet-handle"></div>
 
     <div class="sheet-header">
+
       <div>
-        <div class="sheet-title">Add Shopping Item</div>
-        <div class="sheet-subtitle">Add something to your household list.</div>
+        <div class="sheet-title">
+          Add Shopping Item
+        </div>
+
+        <div class="sheet-subtitle">
+          Add something your household needs.
+        </div>
       </div>
-      <button class="sheet-close" onclick="closeSheet('shoppingSheet')">×</button>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('shoppingSheet')"
+      >
+        ×
+      </button>
+
     </div>
+
 
     <div class="form-group">
-      <label class="form-label">Item</label>
-      <input id="shoppingName" class="form-control" type="text" placeholder="e.g. Milk">
+
+      <label class="form-label">
+        Item
+      </label>
+
+      <input
+        id="shoppingName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Milk"
+      >
+
     </div>
 
+
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Quantity</label>
-        <input id="shoppingQuantity" class="form-control" type="text" placeholder="1">
-      </div>
 
       <div class="form-group">
-        <label class="form-label">Category</label>
-        <select id="shoppingCategory" class="form-control">
+
+        <label class="form-label">
+          Quantity
+        </label>
+
+        <input
+          id="shoppingQuantity"
+          class="form-control"
+          type="text"
+          placeholder="1"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Category
+        </label>
+
+        <select
+          id="shoppingCategory"
+          class="form-control"
+        >
           <option>Groceries</option>
           <option>Household</option>
           <option>Cleaning</option>
@@ -79,24 +311,77 @@
           <option>Pet</option>
           <option>Other</option>
         </select>
+
       </div>
+
     </div>
 
-    <button class="btn btn-primary btn-large" onclick="addShoppingItem(); closeSheet('shoppingSheet')">
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addTaskShoppingItem()"
+    >
       Add to Shopping List
     </button>
+
   </div>
 </div>
 
+
+<!-- MOBILE NAVIGATION -->
 <nav class="mobile-header">
-  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
-  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
-  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
-  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
-  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
-  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
+
+  <a
+    href="index.html"
+    data-page="index.html"
+  >
+    <span class="mobile-icon">⌂</span>
+    <span>Home</span>
+  </a>
+
+  <a
+    href="shopping.html"
+    data-page="shopping.html"
+  >
+    <span class="mobile-icon">🛒</span>
+    <span>Shopping</span>
+  </a>
+
+  <a
+    href="tasks.html"
+    data-page="tasks.html"
+  >
+    <span class="mobile-icon">✓</span>
+    <span>Tasks</span>
+  </a>
+
+  <a
+    href="events.html"
+    data-page="events.html"
+  >
+    <span class="mobile-icon">📅</span>
+    <span>Events</span>
+  </a>
+
+  <a
+    href="spending.html"
+    data-page="spending.html"
+  >
+    <span class="mobile-icon">💰</span>
+    <span>Spending</span>
+  </a>
+
+  <a
+    href="settings.html"
+    data-page="settings.html"
+  >
+    <span class="mobile-icon">⚙</span>
+    <span>Settings</span>
+  </a>
+
 </nav>
 
 <script src="script.js"></script>
+
 </body>
 </html>
