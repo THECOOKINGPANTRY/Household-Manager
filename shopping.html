@@ -11,6 +11,7 @@
 
 <body>
   <div class="app">
+
     <main class="main">
 
       <div class="mobile-topbar">
@@ -19,18 +20,28 @@
 
           <div>
             <div class="mobile-brand-name">Household Manager</div>
-            <div class="mobile-brand-subtitle household-name">My Household</div>
+            <div class="mobile-brand-subtitle household-name">
+              My Household
+            </div>
           </div>
         </div>
 
-        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        <a
+          href="settings.html"
+          class="mobile-top-action"
+          aria-label="Settings"
+        >
           <img src="settings_dark_thick.png" alt="">
         </a>
       </div>
 
       <header class="page-header">
         <div class="eyebrow">HOUSEHOLD</div>
-        <h1 class="page-title">Shopping</h1>
+
+        <h1 class="page-title">
+          Shopping
+        </h1>
+
         <p class="page-subtitle">
           Keep track of everything your household needs.
         </p>
@@ -39,6 +50,7 @@
       <section class="shopping-summary">
 
         <div class="shopping-summary-main">
+
           <div>
             <div class="shopping-summary-label">
               Items to buy
@@ -53,8 +65,9 @@
           </div>
 
           <div class="shopping-summary-icon">
-            <img src="cart_dark_thin.png" alt="">
+            <img src="shopping_dark_thin.png" alt="">
           </div>
+
         </div>
 
         <div class="shopping-summary-stats">
@@ -80,7 +93,7 @@
         class="mobile-add-button"
         onclick="openSheet('shoppingSheet')"
       >
-        <img src="cart_dark_thin.png" alt="">
+        <img src="shopping_dark_thin.png" alt="">
         <span>Add Shopping Item</span>
       </button>
 
@@ -127,7 +140,7 @@
           class="category-button"
           onclick="filterShoppingCategory('Groceries', this)"
         >
-          <img src="cart_dark_thin.png" alt="">
+          <img src="shopping_dark_thin.png" alt="">
           <span>Groceries</span>
         </button>
 
@@ -172,7 +185,7 @@
           class="category-button"
           onclick="filterShoppingCategory('Other', this)"
         >
-          <img src="cart_dark_thin.png" alt="">
+          <img src="shopping_dark_thin.png" alt="">
           <span>Other</span>
         </button>
 
@@ -221,12 +234,14 @@
       </button>
 
     </main>
+
   </div>
 
   <div
     class="sheet-overlay"
     id="shoppingSheet"
   >
+
     <div class="sheet">
 
       <div class="sheet-handle"></div>
@@ -325,53 +340,78 @@
         id="addShoppingItemButton"
         onclick="addShoppingItem(event)"
       >
-        <img src="cart_dark_thin.png" alt="">
+        <img src="shopping_dark_thin.png" alt="">
         <span>Add Item</span>
       </button>
 
     </div>
+
   </div>
 
   <nav class="mobile-header">
 
-    <a href="index.html" data-page="index.html">
+    <a
+      href="index.html"
+      data-page="index.html"
+      aria-label="Home"
+    >
       <span class="mobile-icon">
-        <img src="home_dark_thick.png" alt="">
+        <img src="home_light_thick.png" alt="">
       </span>
       <span>Home</span>
     </a>
 
-    <a href="shopping.html" data-page="shopping.html">
+    <a
+      href="shopping.html"
+      data-page="shopping.html"
+      aria-label="Shopping"
+    >
       <span class="mobile-icon">
-        <img src="cart_dark_thick.png" alt="">
+        <img src="shopping_light_thick.png" alt="">
       </span>
       <span>Shopping</span>
     </a>
 
-    <a href="tasks.html" data-page="tasks.html">
+    <a
+      href="tasks.html"
+      data-page="tasks.html"
+      aria-label="Tasks"
+    >
       <span class="mobile-icon">
-        <img src="checkbox_dark_thick.png" alt="">
+        <img src="checkbox_light_thick.png" alt="">
       </span>
       <span>Tasks</span>
     </a>
 
-    <a href="events.html" data-page="events.html">
+    <a
+      href="events.html"
+      data-page="events.html"
+      aria-label="Events"
+    >
       <span class="mobile-icon">
-        <img src="calendar_dark_thick.png" alt="">
+        <img src="calendar_light_thick.png" alt="">
       </span>
       <span>Events</span>
     </a>
 
-    <a href="spending.html" data-page="spending.html">
+    <a
+      href="spending.html"
+      data-page="spending.html"
+      aria-label="Spending"
+    >
       <span class="mobile-icon">
-        <img src="wallet_dark_thick.png" alt="">
+        <img src="wallet_light_thick.png" alt="">
       </span>
       <span>Spending</span>
     </a>
 
-    <a href="settings.html" data-page="settings.html">
+    <a
+      href="settings.html"
+      data-page="settings.html"
+      aria-label="Settings"
+    >
       <span class="mobile-icon">
-        <img src="settings_dark_thick.png" alt="">
+        <img src="settings_light_thick.png" alt="">
       </span>
       <span>Settings</span>
     </a>
@@ -379,5 +419,6 @@
   </nav>
 
   <script src="script.js"></script>
+
 </body>
 </html>
