@@ -1620,3 +1620,516 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+/* SHOPPING PAGE FUNCTIONS */
+
+
+/* Current shopping filters */
+
+let currentShoppingFilter = "all";
+let currentShoppingCategory = "all";
+
+
+/* Add shopping item */
+
+function addShoppingItem() {
+  const nameElement =
+    document.getElementById("shoppingName");
+
+  const quantityElement =
+    document.getElementById("shoppingQuantity");
+
+  const categoryElement =
+    document.getElementById("shoppingCategory");
+
+  if (!nameElement || !quantityElement || !categoryElement) {
+    return;
+  }
+
+  const name = nameElement.value.trim();
+  const quantity = quantityElement.value.trim();
+  const category = categoryElement.value;
+
+  if (!name) {
+    alert("Please enter an item.");
+    return;
+  }
+
+  const data = getData();
+
+  data.shopping.push({
+    id: createId(),
+    name,
+    quantity: quantity || "1",
+    category,
+    completed: false
+  });
+
+  saveData(data);
+
+  nameElement.value = "";
+  quantityElement.value = "";
+  categoryElement.value = "Groceries";
+
+  closeSheet("shoppingSheet");
+
+  renderShopping();
+  loadDashboard();
+  updateToday();
+}
+
+
+/* Dashboard uses its own shopping form.
+   Keep this function available for that form. */
+
+function addDashboardShopping() {
+  const name =
+    document
+      .getElementById("dashboardShoppingName")
+      .value
+      .trim();
+
+  const quantity =
+    document
+      .getElementById("dashboardShoppingQuantity")
+      .value
+      .trim();
+
+  const category =
+    document
+      .getElementById("dashboardShoppingCategory")
+      .value;
+
+  if (!name) {
+    alert("Please enter an item.");
+    return;
+  }
+
+  const data = getData();
+
+  data.shopping.push({
+    id: createId(),
+    name,
+    quantity: quantity || "1",
+    category,
+    completed: false
+  });
+
+  saveData(data);
+
+  document.getElementById("dashboardShoppingName").value = "";
+  document.getElementById("dashboardShoppingQuantity").value = "";
+
+  closeSheet("dashboardShoppingSheet");
+
+  loadDashboard();
+  updateToday();
+}
+
+
+/* Compatibility function for the new shopping page */
+
+function addTaskShoppingItem() {
+  addShoppingItem();
+}
+
+
+/* Complete shopping item */
+
+function toggleShopping(id) {
+  const data = getData();
+
+  const item = data.shopping.find(
+    item => item.id === id
+  );
+
+  if (!item) {
+    return;
+  }
+
+  item.completed = !item.completed;
+
+  saveData(data);
+
+  renderShopping();
+  loadDashboard();
+  updateToday();
+}
+
+
+/* Delete shopping item */
+
+function deleteShopping(id) {
+  const data = getData();
+
+  data.shopping = data.shopping.filter(
+    item => item.id !== id
+  );
+
+  saveData(data);
+
+  renderShopping();
+  loadDashboard();
+  updateToday();
+}
+
+
+/* Main filter */
+
+function filterShopping(filter, button) {
+  currentShoppingFilter = filter;
+
+  document
+    .querySelectorAll(".shopping-filters .filter-button")
+    .forEach(item => {
+      item.classList.remove("active");
+    });
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  renderShopping();
+}
+
+
+/* Category filter */
+
+function filterShoppingCategory(category, button) {
+  currentShoppingCategory = category;
+
+  document
+    .querySelectorAll(".category-button")
+    .forEach(item => {
+      item.classList.remove("active");
+    });
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  renderShopping();
+}
+
+
+/* Category icon */
+
+function getShoppingCategoryIcon(category) {
+
+  const icons = {
+    Groceries: "🛒",
+    Household: "🏠",
+    Cleaning: "🧹",
+    Bathroom: "🛁",
+    Pet: "🐾",
+    Other: "📦"
+  };
+
+  return icons[category] || "📦";
+}
+
+
+/* Render shopping page */
+
+function renderShopping() {
+  const container =
+    document.getElementById("shoppingList");
+
+  if (!container) {
+    return;
+  }
+
+  const data = getData();
+
+  const total =
+    data.shopping.length;
+
+  const completed =
+    data.shopping.filter(
+      item => item.completed
+    ).length;
+
+  const remaining =
+    total - completed;
+
+
+  /* Summary */
+
+  const countElement =
+    document.getElementById("shoppingCount");
+
+  const remainingElement =
+    document.getElementById("shoppingRemaining");
+
+  const completedElement =
+    document.getElementById("shoppingCompleted");
+
+  if (countElement) {
+    countElement.textContent = total;
+  }
+
+  if (remainingElement) {
+    remainingElement.textContent = remaining;
+  }
+
+  if (completedElement) {
+    completedElement.textContent = completed;
+  }
+
+
+  /* Apply filters */
+
+  let items = [...data.shopping];
+
+  if (currentShoppingFilter === "remaining") {
+    items = items.filter(
+      item => !item.completed
+    );
+  }
+
+  if (currentShoppingFilter === "completed") {
+    items = items.filter(
+      item => item.completed
+    );
+  }
+
+  if (currentShoppingCategory !== "all") {
+    items = items.filter(
+      item =>
+        item.category === currentShoppingCategory
+    );
+  }
+
+
+  /* Visible count */
+
+  const visibleElement =
+    document.getElementById("shoppingVisibleCount");
+
+  if (visibleElement) {
+    visibleElement.textContent = items.length;
+  }
+
+
+  /* Section title */
+
+  const titleElement =
+    document.getElementById("shoppingSectionTitle");
+
+  if (titleElement) {
+
+    if (currentShoppingFilter === "completed") {
+      titleElement.textContent =
+        "Completed Items";
+    } else if (currentShoppingFilter === "remaining") {
+      titleElement.textContent =
+        "Items to Buy";
+    } else if (currentShoppingCategory !== "all") {
+      titleElement.textContent =
+        currentShoppingCategory;
+    } else {
+      titleElement.textContent =
+        "Shopping List";
+    }
+
+  }
+
+
+  /* Empty state */
+
+  if (items.length === 0) {
+
+    let title =
+      "Your shopping list is empty";
+
+    let text =
+      "Add your first shopping item to get started.";
+
+    if (
+      currentShoppingFilter === "completed"
+    ) {
+      title = "No completed items";
+      text = "Bought items will appear here.";
+    }
+
+    if (
+      currentShoppingFilter === "remaining"
+    ) {
+      title = "Nothing left to buy";
+      text = "Everything on your list is completed.";
+    }
+
+    if (
+      currentShoppingCategory !== "all"
+    ) {
+      title = "No items in this category";
+      text = "Add something to this category.";
+    }
+
+    container.innerHTML = `
+      <div class="shopping-empty">
+
+        <div class="shopping-empty-icon">
+          🛒
+        </div>
+
+        <div class="shopping-empty-title">
+          ${title}
+        </div>
+
+        <div class="shopping-empty-text">
+          ${text}
+        </div>
+
+      </div>
+    `;
+
+    updateClearCompletedButton(completed);
+
+    return;
+  }
+
+
+  /* Sort active items before completed */
+
+  items.sort((a, b) => {
+
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    return 0;
+  });
+
+
+  container.innerHTML = items.map(item => {
+
+    const icon =
+      getShoppingCategoryIcon(item.category);
+
+    return `
+      <div class="shopping-card ${item.completed ? "completed" : ""}">
+
+        <input
+          class="shopping-checkbox"
+          type="checkbox"
+          ${item.completed ? "checked" : ""}
+          onchange="toggleShopping('${item.id}')"
+          aria-label="Complete ${escapeHTML(item.name)}"
+        >
+
+        <div class="shopping-item-content">
+
+          <div class="shopping-item-name">
+            ${escapeHTML(item.name)}
+          </div>
+
+          <div class="shopping-item-details">
+
+            <span class="shopping-item-detail">
+              ${escapeHTML(item.quantity || "1")}
+            </span>
+
+            <span class="shopping-item-dot">
+              •
+            </span>
+
+            <span class="shopping-item-detail">
+              ${icon}
+              ${escapeHTML(item.category)}
+            </span>
+
+          </div>
+
+        </div>
+
+        <span class="shopping-category-badge">
+          ${escapeHTML(item.category)}
+        </span>
+
+        <button
+          class="shopping-delete"
+          onclick="deleteShopping('${item.id}')"
+          aria-label="Delete ${escapeHTML(item.name)}"
+        >
+          ×
+        </button>
+
+      </div>
+    `;
+
+  }).join("");
+
+
+  updateClearCompletedButton(completed);
+}
+
+
+/* Clear completed items */
+
+function clearCompletedShopping() {
+
+  const data = getData();
+
+  const completed =
+    data.shopping.filter(
+      item => item.completed
+    ).length;
+
+  if (completed === 0) {
+    return;
+  }
+
+  const confirmed =
+    confirm(
+      `Remove ${completed} completed shopping item${completed === 1 ? "" : "s"}?`
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  data.shopping =
+    data.shopping.filter(
+      item => !item.completed
+    );
+
+  saveData(data);
+
+  renderShopping();
+  loadDashboard();
+  updateToday();
+}
+
+
+/* Disable clear button if there is nothing to clear */
+
+function updateClearCompletedButton(count) {
+
+  const button =
+    document.getElementById(
+      "clearCompletedButton"
+    );
+
+  if (!button) {
+    return;
+  }
+
+  button.style.display =
+    count > 0
+      ? "block"
+      : "none";
+}
+
+
+/* Keep shopping dashboard numbers accurate */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  if (document.getElementById("shoppingList")) {
+    currentShoppingFilter = "all";
+    currentShoppingCategory = "all";
+    renderShopping();
+  }
+
+});
