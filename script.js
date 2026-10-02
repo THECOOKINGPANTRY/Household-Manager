@@ -1810,3 +1810,94 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function addShoppingItem(event) {
+  if (event) {
+    event.preventDefault();
+  }
+
+  const nameInput = document.getElementById("shoppingName");
+  const quantityInput = document.getElementById("shoppingQuantity");
+  const categoryInput = document.getElementById("shoppingCategory");
+
+  if (!nameInput) return;
+
+  const name = nameInput.value.trim();
+  const quantity = quantityInput ? quantityInput.value.trim() : "1";
+  const category = categoryInput ? categoryInput.value : "Groceries";
+
+  if (!name) {
+    nameInput.focus();
+    return;
+  }
+
+  const data = getData();
+
+  data.shopping.push({
+    id: createId(),
+    name: name,
+    quantity: quantity || "1",
+    category: category || "Groceries",
+    completed: false
+  });
+
+  saveData(data);
+
+  nameInput.value = "";
+
+  if (quantityInput) {
+    quantityInput.value = "";
+  }
+
+  if (categoryInput) {
+    categoryInput.value = "Groceries";
+  }
+
+  closeSheet("shoppingSheet");
+
+  renderShopping();
+  loadDashboard();
+  updateToday();
+}
+
+function addTaskShoppingItem(event) {
+  addShoppingItem(event);
+}
+
+document.addEventListener("submit", function(event) {
+  const form = event.target;
+
+  if (
+    form &&
+    (
+      form.id === "shoppingForm" ||
+      form.querySelector("#shoppingName")
+    )
+  ) {
+    event.preventDefault();
+    addShoppingItem(event);
+  }
+});
+
+document.addEventListener("click", function(event) {
+  const button = event.target.closest("button");
+
+  if (!button) return;
+
+  const buttonText = button.textContent.trim().toLowerCase();
+
+  if (
+    buttonText === "add item" &&
+    document.getElementById("shoppingName")
+  ) {
+    const nameInput = document.getElementById("shoppingName");
+
+    if (
+      nameInput.closest(".sheet") &&
+      nameInput.closest(".sheet").id === "shoppingSheet"
+    ) {
+      event.preventDefault();
+      addShoppingItem(event);
+    }
+  }
+});
