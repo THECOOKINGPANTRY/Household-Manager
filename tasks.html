@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tasks | Household Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="House_Manager_Logo.png" alt="Household Manager">
+            <div class="brand-name">Household Manager</div>
+        </div>
+
+        <nav class="nav">
+
+            <a href="index.html" data-page="index.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="shopping.html" data-page="shopping.html">
+                <span class="nav-icon">🛒</span>
+                Shopping
+            </a>
+
+            <a href="tasks.html" data-page="tasks.html">
+                <span class="nav-icon">✓</span>
+                Tasks
+            </a>
+
+            <a href="events.html" data-page="events.html">
+                <span class="nav-icon">📅</span>
+                Events
+            </a>
+
+            <a href="spending.html" data-page="spending.html">
+                <span class="nav-icon">💰</span>
+                Spending
+            </a>
+
+            <a href="settings.html" data-page="settings.html">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Tasks
+                </h1>
+
+                <p class="page-subtitle">
+                    Stay on top of household jobs and responsibilities.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <section class="card form-card">
+
+            <div class="card-title">
+                Add Task
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Task
+                    </label>
+
+                    <input
+                        id="taskName"
+                        class="form-control"
+                        type="text"
+                        placeholder="e.g. Clean the kitchen"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Assigned To
+                    </label>
+
+                    <input
+                        id="taskPerson"
+                        class="form-control"
+                        type="text"
+                        placeholder="e.g. James"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Due Date
+                    </label>
+
+                    <input
+                        id="taskDue"
+                        class="form-control"
+                        type="date"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Priority
+                    </label>
+
+                    <select
+                        id="taskPriority"
+                        class="form-control"
+                    >
+                        <option>Low</option>
+                        <option selected>Medium</option>
+                        <option>High</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="addTask()"
+                    >
+                        + Add Task
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section
+            class="data-list"
+            id="taskList"
+        ></section>
+
+    </main>
+
+</div>
+
+
+<nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+        <span class="mobile-icon">⌂</span>
+        Home
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+        <span class="mobile-icon">🛒</span>
+        Shopping
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+        <span class="mobile-icon">✓</span>
+        Tasks
+    </a>
+
+    <a href="events.html" data-page="events.html">
+        <span class="mobile-icon">📅</span>
+        Events
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+        <span class="mobile-icon">💰</span>
+        Spending
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+        <span class="mobile-icon">⚙</span>
+        Settings
+    </a>
+
+</nav>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
