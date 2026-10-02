@@ -82,7 +82,9 @@ PNG ICON SYSTEM
 .task-delete img,
 .shopping-delete img,
 .event-delete img,
-.shopping-category-badge img {
+.shopping-category-badge img,
+.settings-household-button-icon img,
+.settings-household-button-arrow {
   display: block;
   object-fit: contain;
   flex-shrink: 0;
@@ -1115,13 +1117,6 @@ TASKS
   flex-shrink: 0;
 }
 
-.task-delete img,
-.shopping-delete img,
-.event-delete img {
-  width: 15px;
-  height: 15px;
-}
-
 .task-empty {
   background: var(--supporting);
   border-radius: 16px;
@@ -1417,8 +1412,6 @@ SHOPPING
   color: var(--deep-dark);
   font-size: 8px;
   font-weight: 800;
-
-  /* Icon + category name stay together on one line */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1638,6 +1631,75 @@ SETTINGS
   font-size: 10px;
   font-weight: 700;
   opacity: 0.65;
+}
+
+/* ================================
+HOUSEHOLD SETTINGS BUTTON
+================================ */
+
+.settings-household-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  background: var(--background);
+  border: 1px solid rgba(36, 36, 35, 0.08);
+  border-radius: 16px;
+  text-decoration: none;
+  color: var(--deep-dark);
+  box-sizing: border-box;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.settings-household-button:active {
+  transform: scale(0.98);
+}
+
+.settings-household-button-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--yellow);
+  border-radius: 12px;
+}
+
+.settings-household-button-icon img {
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+}
+
+.settings-household-button-content {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.settings-household-button-content strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--deep-dark);
+}
+
+.settings-household-button-content span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.settings-household-button-arrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 /* ================================
@@ -2043,115 +2105,6 @@ body.sheet-open {
 }
 
 /* ================================
-RESPONSIVE
-================================ */
-
-@media (max-width: 370px) {
-  .main {
-    padding-left: 13px;
-    padding-right: 13px;
-  }
-
-  .task-summary {
-    gap: 5px;
-  }
-
-  .task-summary-item {
-    padding: 10px 7px;
-    gap: 5px;
-  }
-
-  .task-summary-icon {
-    width: 25px;
-    height: 25px;
-  }
-
-  .task-summary-item span {
-    font-size: 7px;
-  }
-
-  .task-summary-item strong {
-    font-size: 15px;
-  }
-
-  .shopping-summary {
-    padding: 14px;
-  }
-
-  .shopping-summary-number {
-    font-size: 27px;
-  }
-
-  .shopping-summary-icon {
-    width: 45px;
-    height: 45px;
-  }
-
-  .shopping-category-badge {
-    padding: 5px 7px;
-    gap: 4px;
-  }
-
-  .shopping-category-badge img {
-    width: 12px;
-    height: 12px;
-  }
-
-  .shopping-category-badge span {
-    font-size: 7px;
-  }
-
-  .event-overview {
-    padding: 14px;
-  }
-
-  .event-overview-title {
-    font-size: 16px;
-  }
-
-  .event-next-date {
-    width: 50px;
-    height: 57px;
-  }
-
-  .event-date-block {
-    width: 46px;
-  }
-
-  .event-delete {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media (min-width: 600px) {
-  .main {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .mobile-header {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .sheet {
-    max-width: 600px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .quick-actions {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ================================
 LOGIN PAGE
 ================================ */
 
@@ -2238,7 +2191,7 @@ LOGIN CARD
 }
 
 /* ================================
-FORM
+LOGIN FORM
 ================================ */
 
 .login-form-group {
@@ -2500,7 +2453,513 @@ FOOTER
 }
 
 /* ================================
+HOUSEHOLD PAGE
+================================ */
+
+.household-overview {
+  background: var(--primary-dark);
+  color: var(--background);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 13px;
+  box-shadow: var(--shadow);
+}
+
+.household-overview-top {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.household-overview-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  background: var(--yellow);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.household-overview-icon img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.household-overview-name {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.household-overview-description {
+  color: var(--supporting);
+  opacity: 0.7;
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.household-overview-stats {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(232, 237, 223, 0.12);
+}
+
+.household-overview-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.household-overview-stat span {
+  color: var(--supporting);
+  opacity: 0.6;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.household-overview-stat strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.household-overview-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(232, 237, 223, 0.15);
+  margin: 0 13px;
+}
+
+.household-section {
+  margin-bottom: 13px;
+}
+
+.household-section .card-title {
+  margin-bottom: 15px;
+}
+
+.household-save-message {
+  min-height: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.household-save-message.success {
+  color: var(--success);
+}
+
+.household-save-message.error {
+  color: var(--danger);
+}
+
+/* ================================
+HOUSEHOLD MEMBERS
+================================ */
+
+.household-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.household-member {
+  width: 100%;
+  background: var(--background);
+  border-radius: 15px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.household-member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: var(--yellow);
+  color: var(--deep-dark);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.household-member-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.household-member-name {
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.household-member-email {
+  color: var(--muted);
+  font-size: 9px;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.household-member-role {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 7px;
+  margin-top: 5px;
+  border-radius: 9px;
+  background: var(--supporting);
+  color: var(--deep-dark);
+  font-size: 7px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.household-member-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.household-member-action {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--supporting);
+  display: grid;
+  place-items: center;
+}
+
+.household-member-action img {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.household-member-action.danger {
+  background: rgba(155, 77, 77, 0.12);
+}
+
+.household-member-empty {
+  background: var(--background);
+  border-radius: 15px;
+  padding: 25px 15px;
+  text-align: center;
+}
+
+.household-member-empty-icon {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 9px;
+  border-radius: 13px;
+  background: var(--supporting);
+  display: grid;
+  place-items: center;
+}
+
+.household-member-empty-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.household-member-empty-title {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.household-member-empty-text {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* ================================
+HOUSEHOLD ACTIONS
+================================ */
+
+.household-add-member {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--yellow);
+  color: var(--deep-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.household-add-member img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+
+.household-danger-card {
+  border: 1px solid rgba(155, 77, 77, 0.18);
+  background: rgba(155, 77, 77, 0.06);
+}
+
+.household-danger-title {
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.household-danger-text {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+  margin-top: 5px;
+}
+
+/* ================================
+PREMIUM / PLUS
+================================ */
+
+.premium-card {
+  background: var(--primary-dark);
+  color: var(--background);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.premium-card .eyebrow {
+  color: var(--yellow);
+}
+
+.premium-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.premium-subtitle {
+  color: var(--supporting);
+  opacity: 0.72;
+  font-size: 11px;
+  line-height: 1.45;
+  margin-top: 5px;
+}
+
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  border-radius: 9px;
+  background: var(--yellow);
+  color: var(--deep-dark);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.premium-feature {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(232, 237, 223, 0.1);
+}
+
+.premium-feature:last-child {
+  border-bottom: 0;
+}
+
+.premium-feature-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgba(232, 237, 223, 0.08);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.premium-feature-icon img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.premium-feature-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.premium-feature-title {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.premium-feature-description {
+  color: var(--supporting);
+  opacity: 0.6;
+  font-size: 9px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.premium-lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 7px;
+  border-radius: 8px;
+  background: rgba(232, 237, 223, 0.1);
+  color: var(--supporting);
+  font-size: 7px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* ================================
 SMALL PHONES
+================================ */
+
+@media (max-width: 370px) {
+  .main {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .task-summary {
+    gap: 5px;
+  }
+
+  .task-summary-item {
+    padding: 10px 7px;
+    gap: 5px;
+  }
+
+  .task-summary-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .task-summary-item span {
+    font-size: 7px;
+  }
+
+  .task-summary-item strong {
+    font-size: 15px;
+  }
+
+  .shopping-summary {
+    padding: 14px;
+  }
+
+  .shopping-summary-number {
+    font-size: 27px;
+  }
+
+  .shopping-summary-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .shopping-category-badge {
+    padding: 5px 7px;
+    gap: 4px;
+  }
+
+  .shopping-category-badge img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .shopping-category-badge span {
+    font-size: 7px;
+  }
+
+  .event-overview {
+    padding: 14px;
+  }
+
+  .event-overview-title {
+    font-size: 16px;
+  }
+
+  .event-next-date {
+    width: 50px;
+    height: 57px;
+  }
+
+  .event-date-block {
+    width: 46px;
+  }
+
+  .event-delete {
+    width: 40px;
+    height: 40px;
+  }
+
+  .household-member-action {
+    width: 34px;
+    height: 34px;
+  }
+
+  .household-member-avatar {
+    width: 37px;
+    height: 37px;
+  }
+}
+
+/* ================================
+LARGER MOBILE
+================================ */
+
+@media (min-width: 600px) {
+  .main {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .mobile-header {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .sheet {
+    max-width: 600px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ================================
+LOGIN SMALL PHONES
 ================================ */
 
 @media (max-width: 370px) {
@@ -2532,7 +2991,7 @@ SMALL PHONES
 }
 
 /* ================================
-LARGER MOBILE
+LOGIN LARGER MOBILE
 ================================ */
 
 @media (min-width: 600px) {
@@ -2547,63 +3006,4 @@ LARGER MOBILE
   .login-brand {
     max-width: 440px;
   }
-}
-
-.settings-household-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px;
-  margin-top: 12px;
-  background: var(--background);
-  border: 1px solid rgba(36, 36, 35, 0.08);
-  border-radius: 16px;
-  text-decoration: none;
-  color: var(--deep-dark);
-  box-sizing: border-box;
-}
-
-.settings-household-button-icon {
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--main);
-  border-radius: 12px;
-}
-
-.settings-household-button-icon img {
-  width: 21px;
-  height: 21px;
-  object-fit: contain;
-}
-
-.settings-household-button-content {
-  min-width: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.settings-household-button-content strong {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--deep-dark);
-}
-
-.settings-household-button-content span {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.settings-household-button-arrow {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  object-fit: contain;
 }
