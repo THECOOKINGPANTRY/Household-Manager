@@ -191,6 +191,7 @@ function addShoppingItem(event) {
   }
 
   const name = nameElement.value.trim();
+
   const quantity = quantityElement
     ? quantityElement.value.trim()
     : "1";
@@ -398,16 +399,22 @@ function renderShopping() {
     : [];
 
   const list = document.getElementById("shoppingList");
+
   const remainingCount =
     document.getElementById("shoppingRemainingCount");
+
   const totalCount =
     document.getElementById("shoppingTotalCount");
+
   const completedCount =
     document.getElementById("shoppingCompletedCount");
+
   const visibleCount =
     document.getElementById("visibleShoppingCount");
+
   const sectionTitle =
     document.getElementById("shoppingSectionTitle");
+
   const clearButton =
     document.getElementById("clearCompletedButton");
 
@@ -594,7 +601,9 @@ function addTask(event) {
     ? personElement.value.trim()
     : "";
 
-  const due = dueElement ? dueElement.value : "";
+  const due = dueElement
+    ? dueElement.value
+    : "";
 
   const priority = priorityElement
     ? priorityElement.value || "Medium"
@@ -621,9 +630,17 @@ function addTask(event) {
 
   nameElement.value = "";
 
-  if (personElement) personElement.value = "";
-  if (dueElement) dueElement.value = "";
-  if (priorityElement) priorityElement.value = "Medium";
+  if (personElement) {
+    personElement.value = "";
+  }
+
+  if (dueElement) {
+    dueElement.value = "";
+  }
+
+  if (priorityElement) {
+    priorityElement.value = "Medium";
+  }
 
   closeSheet("taskSheet");
 
@@ -659,7 +676,9 @@ function addDashboardTask(event) {
     ? personElement.value.trim()
     : "";
 
-  const due = dueElement ? dueElement.value : "";
+  const due = dueElement
+    ? dueElement.value
+    : "";
 
   const priority = priorityElement
     ? priorityElement.value || "Medium"
@@ -686,9 +705,17 @@ function addDashboardTask(event) {
 
   nameElement.value = "";
 
-  if (personElement) personElement.value = "";
-  if (dueElement) dueElement.value = "";
-  if (priorityElement) priorityElement.value = "Medium";
+  if (personElement) {
+    personElement.value = "";
+  }
+
+  if (dueElement) {
+    dueElement.value = "";
+  }
+
+  if (priorityElement) {
+    priorityElement.value = "Medium";
+  }
 
   closeSheet("dashboardTaskSheet");
 
@@ -921,7 +948,7 @@ function updateTaskProgress(data) {
         "Add your first task to get started.";
     } else if (percentage === 100) {
       messageElement.textContent =
-        "Everything is done. Great work! 🎉";
+        "Everything is done. Great work!";
     } else if (percentage >= 75) {
       messageElement.textContent =
         "Almost there. Keep going!";
@@ -1048,7 +1075,9 @@ function renderTasks() {
     document.getElementById("mainTaskTitle");
 
   if (currentTaskFilter === "today") {
-    if (title) title.textContent = "Today's Tasks";
+    if (title) {
+      title.textContent = "Today's Tasks";
+    }
 
     if (todaySection) {
       todaySection.classList.add("hidden");
@@ -1069,7 +1098,9 @@ function renderTasks() {
   }
 
   if (currentTaskFilter === "active") {
-    if (title) title.textContent = "Active Tasks";
+    if (title) {
+      title.textContent = "Active Tasks";
+    }
 
     if (todaySection) {
       todaySection.classList.add("hidden");
@@ -1083,14 +1114,16 @@ function renderTasks() {
       mainContainer,
       data.tasks.filter(task => !task.completed),
       "No active tasks",
-      "Everything is completed. 🎉"
+      "Everything is completed."
     );
 
     return;
   }
 
   if (currentTaskFilter === "completed") {
-    if (title) title.textContent = "Completed Tasks";
+    if (title) {
+      title.textContent = "Completed Tasks";
+    }
 
     if (todaySection) {
       todaySection.classList.add("hidden");
@@ -1195,8 +1228,13 @@ function addEvent(event) {
   nameElement.value = "";
   dateElement.value = "";
 
-  if (timeElement) timeElement.value = "";
-  if (locationElement) locationElement.value = "";
+  if (timeElement) {
+    timeElement.value = "";
+  }
+
+  if (locationElement) {
+    locationElement.value = "";
+  }
 
   closeSheet("eventSheet");
 
@@ -1255,8 +1293,13 @@ function addDashboardEvent(event) {
   nameElement.value = "";
   dateElement.value = "";
 
-  if (timeElement) timeElement.value = "";
-  if (locationElement) locationElement.value = "";
+  if (timeElement) {
+    timeElement.value = "";
+  }
+
+  if (locationElement) {
+    locationElement.value = "";
+  }
 
   closeSheet("dashboardEventSheet");
 
@@ -1764,7 +1807,7 @@ function loadDashboard() {
     if (tasks.length === 0) {
       taskList.innerHTML = `
         <div class="list-item">
-          <span>No outstanding tasks 🎉</span>
+          <span>No outstanding tasks</span>
         </div>
       `;
     } else {
