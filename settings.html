@@ -122,6 +122,7 @@
 
         </div>
 
+
         <div class="card">
 
           <div class="card-title">
@@ -188,7 +189,28 @@
             <span>Save Changes</span>
           </button>
 
+          <a
+            href="household.html"
+            class="settings-household-button"
+          >
+            <div class="settings-household-button-icon">
+              <img src="people_dark_thin.png" alt="">
+            </div>
+
+            <div class="settings-household-button-content">
+              <strong>Manage Household</strong>
+              <span>Edit household details and manage members</span>
+            </div>
+
+            <img
+              src="rightarrow_dark_thin.png"
+              class="settings-household-button-arrow"
+              alt=""
+            >
+          </a>
+
         </div>
+
 
         <div class="card">
 
@@ -221,6 +243,7 @@
 
         </div>
 
+
         <div class="card">
 
           <div class="card-title">
@@ -252,6 +275,7 @@
 
         </div>
 
+
         <div class="card dark">
 
           <div class="card-title">
@@ -274,6 +298,7 @@
     </main>
 
   </div>
+
 
   <nav class="mobile-header">
 
@@ -351,6 +376,7 @@
 
   </nav>
 
+
   <script src="script.js"></script>
 
   <script>
@@ -425,8 +451,12 @@
       const currentUser = getCurrentUser();
 
       if (!currentUser || !currentUser.email) {
-        message.textContent = "Account information could not be found.";
-        message.className = "settings-message error";
+        message.textContent =
+          "Account information could not be found.";
+
+        message.className =
+          "settings-message error";
+
         return;
       }
 
@@ -447,13 +477,13 @@
         saveUsers(users);
       }
 
-      const legacyUser = localStorage.getItem(
-        "householdManagerUser"
-      );
+      const legacyUser =
+        localStorage.getItem("householdManagerUser");
 
       if (legacyUser) {
         try {
-          const parsedLegacyUser = JSON.parse(legacyUser);
+          const parsedLegacyUser =
+            JSON.parse(legacyUser);
 
           if (
             parsedLegacyUser.email &&
@@ -467,12 +497,17 @@
             );
           }
         } catch (error) {
-          console.error("Could not update legacy account data.");
+          console.error(
+            "Could not update legacy account data."
+          );
         }
       }
 
-      message.textContent = "Account details saved.";
-      message.className = "settings-message success";
+      message.textContent =
+        "Account details saved.";
+
+      message.className =
+        "settings-message success";
     }
 
     function logout() {
