@@ -14,7 +14,7 @@ let currentShoppingFilter = "all";
 let currentShoppingCategory = "all";
 
 /* =========================
-  DATA
+   DATA
 ========================= */
 
 function getData() {
@@ -81,6 +81,50 @@ function getTomorrowString() {
   return `${year}-${month}-${day}`;
 }
 
+/* =========================
+   FUTURE DATE SUPPORT
+========================= */
+
+function setFutureDateMinimum(input) {
+  if (!input) return;
+
+  input.min = getTodayString();
+}
+
+function isValidFutureDate(dateString) {
+  if (!dateString) return true;
+
+  return dateString >= getTodayString();
+}
+
+function setupFutureDateInputs() {
+  document.querySelectorAll('input[type="date"]').forEach(input => {
+    setFutureDateMinimum(input);
+
+    input.addEventListener("change", function () {
+      if (!this.value) return;
+
+      if (!isValidFutureDate(this.value)) {
+        alert("Please select today or a future date.");
+        this.value = "";
+      }
+    });
+  });
+}
+
+function validateFutureDate(dateString, label = "Date") {
+  if (!dateString) {
+    return true;
+  }
+
+  if (!isValidFutureDate(dateString)) {
+    alert(`${label} cannot be in the past.`);
+    return false;
+  }
+
+  return true;
+}
+
 function formatDate(date) {
   if (!date) return "";
 
@@ -107,7 +151,7 @@ function formatMoney(amount) {
 }
 
 /* =========================
-  NAVIGATION / SHEETS
+   NAVIGATION / SHEETS
 ========================= */
 
 function setActiveNavigation() {
@@ -136,6 +180,10 @@ function openSheet(id) {
 
   sheet.classList.add("open");
   document.body.classList.add("sheet-open");
+
+  setTimeout(() => {
+    setFutureDateMinimumsInSheet(sheet);
+  }, 0);
 }
 
 function closeSheet(id) {
@@ -145,6 +193,14 @@ function closeSheet(id) {
 
   sheet.classList.remove("open");
   document.body.classList.remove("sheet-open");
+}
+
+function setFutureDateMinimumsInSheet(sheet) {
+  if (!sheet) return;
+
+  sheet.querySelectorAll('input[type="date"]').forEach(input => {
+    setFutureDateMinimum(input);
+  });
 }
 
 function setupSheets() {
@@ -173,7 +229,7 @@ function setupSheets() {
 }
 
 /* =========================
-  SHOPPING
+   SHOPPING
 ========================= */
 
 function addShoppingItem(event) {
@@ -586,7 +642,7 @@ function updateClearCompletedButton(count) {
 }
 
 /* =========================
-  TASKS
+   TASKS
 ========================= */
 
 function addTask(event) {
@@ -619,6 +675,13 @@ function addTask(event) {
   if (!name) {
     alert("Please enter a task.");
     nameElement.focus();
+    return false;
+  }
+
+  if (!validateFutureDate(due, "Task date")) {
+    if (dueElement) {
+      dueElement.focus();
+    }
     return false;
   }
 
@@ -694,6 +757,13 @@ function addDashboardTask(event) {
   if (!name) {
     alert("Please enter a task.");
     nameElement.focus();
+    return false;
+  }
+
+  if (!validateFutureDate(due, "Task date")) {
+    if (dueElement) {
+      dueElement.focus();
+    }
     return false;
   }
 
@@ -1183,7 +1253,7 @@ function renderTasks() {
 }
 
 /* =========================
-  EVENTS
+   EVENTS
 ========================= */
 
 function addEvent(event) {
@@ -1217,6 +1287,11 @@ function addEvent(event) {
 
   if (!name || !date) {
     alert("Please enter an event name and date.");
+    return false;
+  }
+
+  if (!validateFutureDate(date, "Event date")) {
+    dateElement.focus();
     return false;
   }
 
@@ -1285,6 +1360,11 @@ function addDashboardEvent(event) {
     return false;
   }
 
+  if (!validateFutureDate(date, "Event date")) {
+    dateElement.focus();
+    return false;
+  }
+
   const data = getData();
 
   data.events.push({
@@ -1337,17 +1417,19 @@ function renderEvents() {
 
   const data = getData();
 
-  const events = [...data.events].sort((a, b) => {
-    const dateA = new Date(
-      `${a.date}T${a.time || "00:00"}`
-    );
+  const events = [...data.events]
+    .filter(event => isValidFutureDate(event.date))
+    .sort((a, b) => {
+      const dateA = new Date(
+        `${a.date}T${a.time || "00:00"}`
+      );
 
-    const dateB = new Date(
-      `${b.date}T${b.time || "00:00"}`
-    );
+      const dateB = new Date(
+        `${b.date}T${b.time || "00:00"}`
+      );
 
-    return dateA - dateB;
-  });
+      return dateA - dateB;
+    });
 
   if (events.length === 0) {
     container.innerHTML = `
@@ -1395,7 +1477,7 @@ function renderEvents() {
 }
 
 /* =========================
-  SPENDING
+   SPENDING
 ========================= */
 
 function addExpense(event) {
@@ -1426,6 +1508,13 @@ function addExpense(event) {
 
   if (!name || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid expense.");
+    return false;
+  }
+
+  if (!validateFutureDate(date, "Expense date")) {
+    if (dateElement) {
+      dateElement.focus();
+    }
     return false;
   }
 
@@ -1484,6 +1573,13 @@ function addDashboardExpense(event) {
 
   if (!name || isNaN(amount) || amount <= 0) {
     alert("Please enter a valid expense.");
+    return false;
+  }
+
+  if (!validateFutureDate(date, "Expense date")) {
+    if (dateElement) {
+      dateElement.focus();
+    }
     return false;
   }
 
@@ -1639,7 +1735,7 @@ function renderSpending() {
 }
 
 /* =========================
-  SETTINGS
+   SETTINGS
 ========================= */
 
 function loadSettings() {
@@ -1711,7 +1807,7 @@ function resetData() {
 }
 
 /* =========================
-  DASHBOARD
+   DASHBOARD
 ========================= */
 
 function updateToday() {
@@ -1770,7 +1866,9 @@ function loadDashboard() {
     item => !item.completed
   ).length;
 
-  const eventCount = data.events.length;
+  const eventCount = data.events.filter(
+    event => isValidFutureDate(event.date)
+  ).length;
 
   const spending = data.spending.reduce(
     (sum, expense) =>
@@ -1851,6 +1949,7 @@ function loadDashboard() {
 
   if (eventList) {
     const events = [...data.events]
+      .filter(event => isValidFutureDate(event.date))
       .sort((a, b) => {
         const dateA = new Date(
           `${a.date}T${a.time || "00:00"}`
@@ -1893,7 +1992,7 @@ function loadDashboard() {
 }
 
 /* =========================
-  FORM SUPPORT
+   FORM SUPPORT
 ========================= */
 
 function setupForms() {
@@ -1921,7 +2020,7 @@ function setupForms() {
 }
 
 /* =========================
-  INITIALIZATION
+   INITIALIZATION
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1939,4 +2038,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupSheets();
   setupForms();
+  setupFutureDateInputs();
 });
