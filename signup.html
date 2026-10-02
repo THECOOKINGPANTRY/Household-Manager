@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household Manager - Sign Up</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="login-page">
+
+    <div class="login-brand">
+      <img src="House_Manager_Logo.png" alt="Household Manager">
+      <h1>Household Manager</h1>
+      <p>Manage your home. Stay organised.</p>
+    </div>
+
+    <section class="login-card">
+
+      <div class="login-header">
+        <span class="login-eyebrow">GET STARTED</span>
+        <h2>Create account</h2>
+        <p>Create your account to start managing your household.</p>
+      </div>
+
+      <form id="signupForm">
+
+        <div class="login-form-group">
+          <label for="signupName">Name</label>
+          <input
+            type="text"
+            id="signupName"
+            class="login-input"
+            placeholder="Your name"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="login-form-group">
+          <label for="signupEmail">Email</label>
+          <input
+            type="email"
+            id="signupEmail"
+            class="login-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="login-form-group">
+          <label for="signupPassword">Password</label>
+
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="signupPassword"
+              class="login-input"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+
+            <button
+              type="button"
+              id="toggleSignupPassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label for="signupConfirmPassword">Confirm password</label>
+
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="signupConfirmPassword"
+              class="login-input"
+              placeholder="Enter your password again"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+
+            <button
+              type="button"
+              id="toggleConfirmPassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <label class="remember-row">
+          <input type="checkbox" id="termsCheckbox" required>
+          <span class="custom-checkbox"></span>
+          <span>I agree to use Household Manager responsibly.</span>
+        </label>
+
+        <button type="submit" class="login-button">
+          Create account
+        </button>
+
+        <p id="signupMessage" class="login-message"></p>
+
+      </form>
+
+      <div class="login-divider">
+        <span>ALREADY HAVE AN ACCOUNT?</span>
+      </div>
+
+      <button
+        type="button"
+        class="secondary-login-button"
+        id="loginButton"
+      >
+        Log in
+      </button>
+
+    </section>
+
+    <p class="login-footer">
+      Household Manager
+    </p>
+
+  </main>
+
+  <script>
+    const signupForm = document.getElementById("signupForm");
+    const signupMessage = document.getElementById("signupMessage");
+
+    const signupPassword = document.getElementById("signupPassword");
+    const signupConfirmPassword = document.getElementById(
+      "signupConfirmPassword"
+    );
+
+    const toggleSignupPassword = document.getElementById(
+      "toggleSignupPassword"
+    );
+
+    const toggleConfirmPassword = document.getElementById(
+      "toggleConfirmPassword"
+    );
+
+    const loginButton = document.getElementById("loginButton");
+
+    toggleSignupPassword.addEventListener("click", function () {
+      const isPassword = signupPassword.type === "password";
+
+      signupPassword.type = isPassword ? "text" : "password";
+
+      toggleSignupPassword.textContent = isPassword
+        ? "Hide"
+        : "Show";
+
+      toggleSignupPassword.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+      );
+    });
+
+    toggleConfirmPassword.addEventListener("click", function () {
+      const isPassword =
+        signupConfirmPassword.type === "password";
+
+      signupConfirmPassword.type = isPassword
+        ? "text"
+        : "password";
+
+      toggleConfirmPassword.textContent = isPassword
+        ? "Hide"
+        : "Show";
+
+      toggleConfirmPassword.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+      );
+    });
+
+    signupForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document
+        .getElementById("signupName")
+        .value
+        .trim();
+
+      const email = document
+        .getElementById("signupEmail")
+        .value
+        .trim()
+        .toLowerCase();
+
+      const password = signupPassword.value;
+      const confirmPassword = signupConfirmPassword.value;
+
+      signupMessage.className = "login-message";
+      signupMessage.textContent = "";
+
+      if (!name || !email || !password || !confirmPassword) {
+        signupMessage.textContent =
+          "Please complete all fields.";
+        signupMessage.classList.add("error");
+        return;
+      }
+
+      if (password.length < 6) {
+        signupMessage.textContent =
+          "Your password must be at least 6 characters.";
+        signupMessage.classList.add("error");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        signupMessage.textContent =
+          "Your passwords do not match.";
+        signupMessage.classList.add("error");
+        return;
+      }
+
+      const existingUser = JSON.parse(
+        localStorage.getItem("householdManagerUser")
+      );
+
+      if (existingUser) {
+        if (existingUser.email === email) {
+          signupMessage.textContent =
+            "An account with this email already exists.";
+          signupMessage.classList.add("error");
+          return;
+        }
+
+        signupMessage.textContent =
+          "An account already exists on this device.";
+        signupMessage.classList.add("error");
+        return;
+      }
+
+      const newUser = {
+        name: name,
+        email: email,
+        password: password,
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(
+        "householdManagerUser",
+        JSON.stringify(newUser)
+      );
+
+      localStorage.setItem(
+        "householdManagerCurrentUser",
+        JSON.stringify({
+          name: name,
+          email: email
+        })
+      );
+
+      localStorage.setItem(
+        "householdManagerLoggedIn",
+        "true"
+      );
+
+      localStorage.removeItem("householdManagerGuest");
+
+      signupMessage.textContent =
+        "Account created successfully.";
+
+      signupMessage.classList.add("success");
+
+      setTimeout(function () {
+        window.location.href = "index.html";
+      }, 600);
+    });
+
+    loginButton.addEventListener("click", function () {
+      window.location.href = "login.html";
+    });
+  </script>
+
+</body>
+</html>
