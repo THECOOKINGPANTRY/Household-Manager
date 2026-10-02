@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Tasks | Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
@@ -437,7 +449,7 @@
       <button
         type="button"
         class="btn btn-primary btn-large"
-        onclick="addTask(); closeSheet('taskSheet')"
+        onclick="addTask(event)"
       >
         <img src="checkbox_dark_thin.png" alt="">
         <span>Add Task</span>
