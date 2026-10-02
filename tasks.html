@@ -1,3 +1,4 @@
+<!-- tasks.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,104 +8,410 @@
   <title>Tasks | Household Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 <div class="app">
+
   <main class="main">
 
     <div class="mobile-topbar">
       <div class="mobile-brand">
         <img src="House_Manager_Logo.png" alt="Household Manager">
-        <span class="mobile-brand-name">Household Manager</span>
+
+        <div>
+          <div class="mobile-brand-name">Household Manager</div>
+          <div class="mobile-brand-subtitle household-name">
+            My Household
+          </div>
+        </div>
       </div>
-      <a href="settings.html" class="mobile-top-action">⚙</a>
+
+      <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        ⚙
+      </a>
     </div>
 
     <header class="page-header">
-      <div>
-        <h1 class="page-title">Tasks</h1>
-        <p class="page-subtitle">Stay on top of household jobs and responsibilities.</p>
-      </div>
+      <div class="eyebrow">HOUSEHOLD</div>
+
+      <h1 class="page-title">Tasks</h1>
+
+      <p class="page-subtitle">
+        Keep everyone on top of what needs to be done.
+      </p>
     </header>
 
-    <button class="mobile-add-button" onclick="openSheet('taskSheet')">
-      <span>+</span> Add Task
+
+    <!-- PROGRESS -->
+    <section class="task-progress-card">
+
+      <div class="task-progress-top">
+        <div>
+          <div class="task-progress-label">Task Progress</div>
+          <div class="task-progress-number">
+            <span id="taskProgressCompleted">0</span>
+            <span class="task-progress-total"> / </span>
+            <span id="taskProgressTotal">0</span>
+          </div>
+        </div>
+
+        <div class="task-progress-percent" id="taskProgressPercent">
+          0%
+        </div>
+      </div>
+
+      <div class="progress-track">
+        <div
+          class="progress-fill"
+          id="taskProgressFill"
+        ></div>
+      </div>
+
+      <div class="task-progress-message" id="taskProgressMessage">
+        Add your first task to get started.
+      </div>
+
+    </section>
+
+
+    <!-- ADD TASK -->
+    <button
+      class="mobile-add-button"
+      onclick="openSheet('taskSheet')"
+    >
+      <span>+</span>
+      Add Task
     </button>
 
-    <section class="quick-summary">
-      <div class="mini-summary">
-        <span>Outstanding</span>
-        <strong id="taskCount">0</strong>
-      </div>
-      <div class="mini-summary">
-        <span>Completed</span>
-        <strong id="completedTaskCount">0</strong>
-      </div>
-    </section>
 
+    <!-- FILTERS -->
     <section class="task-filters">
-      <button class="filter-button active" onclick="filterTasks('all', this)">All</button>
-      <button class="filter-button" onclick="filterTasks('active', this)">Active</button>
-      <button class="filter-button" onclick="filterTasks('completed', this)">Done</button>
+
+      <button
+        class="filter-button active"
+        onclick="filterTasks('all', this)"
+      >
+        All
+      </button>
+
+      <button
+        class="filter-button"
+        onclick="filterTasks('today', this)"
+      >
+        Today
+      </button>
+
+      <button
+        class="filter-button"
+        onclick="filterTasks('active', this)"
+      >
+        Active
+      </button>
+
+      <button
+        class="filter-button"
+        onclick="filterTasks('completed', this)"
+      >
+        Done
+      </button>
+
     </section>
 
-    <section class="data-list" id="taskList"></section>
+
+    <!-- TASK SUMMARY -->
+    <section class="task-summary">
+
+      <div class="task-summary-item">
+        <div class="task-summary-icon yellow-summary">✓</div>
+
+        <div>
+          <span>Active</span>
+          <strong id="taskCount">0</strong>
+        </div>
+      </div>
+
+      <div class="task-summary-item">
+        <div class="task-summary-icon">⚡</div>
+
+        <div>
+          <span>High Priority</span>
+          <strong id="highPriorityCount">0</strong>
+        </div>
+      </div>
+
+      <div class="task-summary-item">
+        <div class="task-summary-icon">✓</div>
+
+        <div>
+          <span>Completed</span>
+          <strong id="completedTaskCount">0</strong>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- TODAY -->
+    <section
+      class="task-section"
+      id="todayTaskSection"
+    >
+
+      <div class="task-section-heading">
+
+        <div>
+          <div class="task-section-title">Today</div>
+
+          <div class="task-section-subtitle">
+            Tasks due today
+          </div>
+        </div>
+
+        <span
+          class="task-section-count"
+          id="todayTaskSectionCount"
+        >
+          0
+        </span>
+
+      </div>
+
+      <div
+        class="task-list"
+        id="todayTaskList"
+      ></div>
+
+    </section>
+
+
+    <!-- UPCOMING -->
+    <section
+      class="task-section"
+      id="upcomingTaskSection"
+    >
+
+      <div class="task-section-heading">
+
+        <div>
+          <div class="task-section-title">Upcoming</div>
+
+          <div class="task-section-subtitle">
+            Tasks coming up
+          </div>
+        </div>
+
+        <span
+          class="task-section-count"
+          id="upcomingTaskSectionCount"
+        >
+          0
+        </span>
+
+      </div>
+
+      <div
+        class="task-list"
+        id="upcomingTaskList"
+      ></div>
+
+    </section>
+
+
+    <!-- TASK LIST -->
+    <section
+      class="task-section"
+      id="mainTaskSection"
+    >
+
+      <div class="task-section-heading">
+
+        <div>
+          <div class="task-section-title" id="mainTaskTitle">
+            All Tasks
+          </div>
+
+          <div class="task-section-subtitle">
+            Your household task list
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        class="task-list"
+        id="taskList"
+      ></div>
+
+    </section>
 
   </main>
 </div>
 
-<div class="sheet-overlay" id="taskSheet">
+
+<!-- ADD TASK SHEET -->
+<div
+  class="sheet-overlay"
+  id="taskSheet"
+>
+
   <div class="sheet">
+
     <div class="sheet-handle"></div>
 
     <div class="sheet-header">
+
       <div>
         <div class="sheet-title">Add Task</div>
-        <div class="sheet-subtitle">Create a new household task.</div>
+
+        <div class="sheet-subtitle">
+          Create a new household task.
+        </div>
       </div>
-      <button class="sheet-close" onclick="closeSheet('taskSheet')">×</button>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('taskSheet')"
+      >
+        ×
+      </button>
+
     </div>
 
-    <div class="form-group">
-      <label class="form-label">Task</label>
-      <input id="taskName" class="form-control" type="text" placeholder="e.g. Clean the kitchen">
-    </div>
 
     <div class="form-group">
-      <label class="form-label">Assigned To</label>
-      <input id="taskPerson" class="form-control" type="text" placeholder="e.g. James">
+
+      <label class="form-label">
+        Task
+      </label>
+
+      <input
+        id="taskName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Clean the kitchen"
+      >
+
     </div>
+
+
+    <div class="form-group">
+
+      <label class="form-label">
+        Assigned To
+      </label>
+
+      <input
+        id="taskPerson"
+        class="form-control"
+        type="text"
+        placeholder="e.g. James"
+      >
+
+    </div>
+
 
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Due Date</label>
-        <input id="taskDue" class="form-control" type="date">
-      </div>
 
       <div class="form-group">
-        <label class="form-label">Priority</label>
-        <select id="taskPriority" class="form-control">
+
+        <label class="form-label">
+          Due Date
+        </label>
+
+        <input
+          id="taskDue"
+          class="form-control"
+          type="date"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Priority
+        </label>
+
+        <select
+          id="taskPriority"
+          class="form-control"
+        >
           <option>Low</option>
           <option selected>Medium</option>
           <option>High</option>
         </select>
+
       </div>
+
     </div>
 
-    <button class="btn btn-primary btn-large" onclick="addTask(); closeSheet('taskSheet')">
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addTask()"
+    >
       Add Task
     </button>
+
   </div>
 </div>
 
+
+<!-- MOBILE NAVIGATION -->
 <nav class="mobile-header">
-  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
-  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
-  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
-  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
-  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
-  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
+
+  <a
+    href="index.html"
+    data-page="index.html"
+  >
+    <span class="mobile-icon">⌂</span>
+    <span>Home</span>
+  </a>
+
+  <a
+    href="shopping.html"
+    data-page="shopping.html"
+  >
+    <span class="mobile-icon">🛒</span>
+    <span>Shopping</span>
+  </a>
+
+  <a
+    href="tasks.html"
+    data-page="tasks.html"
+  >
+    <span class="mobile-icon">✓</span>
+    <span>Tasks</span>
+  </a>
+
+  <a
+    href="events.html"
+    data-page="events.html"
+  >
+    <span class="mobile-icon">📅</span>
+    <span>Events</span>
+  </a>
+
+  <a
+    href="spending.html"
+    data-page="spending.html"
+  >
+    <span class="mobile-icon">💰</span>
+    <span>Spending</span>
+  </a>
+
+  <a
+    href="settings.html"
+    data-page="settings.html"
+  >
+    <span class="mobile-icon">⚙</span>
+    <span>Settings</span>
+  </a>
+
 </nav>
 
 <script src="script.js"></script>
+
 </body>
 </html>
