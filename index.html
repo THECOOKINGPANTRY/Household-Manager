@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
