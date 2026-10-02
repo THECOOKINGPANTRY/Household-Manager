@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#333533">
   <title>Events | Household Manager</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -20,7 +19,17 @@
         </div>
 
         <a href="settings.html" class="mobile-top-action" aria-label="Settings">
-          <i data-lucide="settings"></i>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v2"></path>
+            <path d="M12 19v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M3 12h2"></path>
+            <path d="M19 12h2"></path>
+            <path d="m4.93 19.07 1.41-1.41"></path>
+            <path d="m17.66 6.34 1.41-1.41"></path>
+            <circle cx="12" cy="12" r="4"></circle>
+          </svg>
         </a>
       </div>
 
@@ -31,8 +40,14 @@
         </div>
       </header>
 
-      <button class="mobile-add-button" onclick="openSheet('eventSheet')">
-        <i data-lucide="plus"></i>
+      <button
+        class="mobile-add-button"
+        onclick="openSheet('eventSheet')"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
         <span>Add Event</span>
       </button>
 
@@ -43,12 +58,15 @@
 
   <div class="sheet-overlay" id="eventSheet">
     <div class="sheet">
+
       <div class="sheet-handle"></div>
 
       <div class="sheet-header">
         <div>
           <div class="sheet-title">Add Event</div>
-          <div class="sheet-subtitle">Add an important household date.</div>
+          <div class="sheet-subtitle">
+            Add an important household date.
+          </div>
         </div>
 
         <button
@@ -56,12 +74,16 @@
           onclick="closeSheet('eventSheet')"
           aria-label="Close"
         >
-          <i data-lucide="x"></i>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6 6 18"></path>
+          </svg>
         </button>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Event Name</label>
+        <label class="form-label" for="eventName">Event Name</label>
+
         <input
           id="eventName"
           class="form-control"
@@ -71,7 +93,8 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Location</label>
+        <label class="form-label" for="eventLocation">Location</label>
+
         <input
           id="eventLocation"
           class="form-control"
@@ -81,8 +104,10 @@
       </div>
 
       <div class="form-row">
+
         <div class="form-group">
-          <label class="form-label">Date</label>
+          <label class="form-label" for="eventDate">Date</label>
+
           <input
             id="eventDate"
             class="form-control"
@@ -91,20 +116,29 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Time</label>
+          <label class="form-label" for="eventTime">Time</label>
+
           <input
             id="eventTime"
             class="form-control"
             type="time"
           >
         </div>
+
       </div>
 
       <button
         class="btn btn-primary btn-large"
         onclick="addEvent(); closeSheet('eventSheet')"
       >
-        <i data-lucide="calendar-plus"></i>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M16 3v4"></path>
+          <path d="M8 3v4"></path>
+          <path d="M3 10h18"></path>
+          <path d="M12 14v4"></path>
+          <path d="M10 16h4"></path>
+        </svg>
         <span>Add Event</span>
       </button>
 
@@ -114,50 +148,80 @@
   <nav class="mobile-header">
 
     <a href="index.html" data-page="index.html">
-      <i data-lucide="house" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 10.5 12 3l9 7.5"></path>
+          <path d="M5.5 9.5V21h13V9.5"></path>
+          <path d="M9.5 21v-6h5v6"></path>
+        </svg>
+      </span>
       <span>Home</span>
     </a>
 
     <a href="shopping.html" data-page="shopping.html">
-      <i data-lucide="shopping-cart" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+        </svg>
+      </span>
       <span>Shopping</span>
     </a>
 
     <a href="tasks.html" data-page="tasks.html">
-      <i data-lucide="circle-check" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m8 12 2.5 2.5L16 9"></path>
+        </svg>
+      </span>
       <span>Tasks</span>
     </a>
 
     <a href="events.html" data-page="events.html">
-      <i data-lucide="calendar-days" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M16 3v4"></path>
+          <path d="M8 3v4"></path>
+          <path d="M3 10h18"></path>
+        </svg>
+      </span>
       <span>Events</span>
     </a>
 
     <a href="spending.html" data-page="spending.html">
-      <i data-lucide="wallet" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16v13H4z"></path>
+          <path d="M4 7V5h13l3 2"></path>
+          <path d="M16 13h4"></path>
+          <circle cx="16" cy="13" r="1"></circle>
+        </svg>
+      </span>
       <span>Spending</span>
     </a>
 
     <a href="settings.html" data-page="settings.html">
-      <i data-lucide="settings" class="mobile-icon"></i>
+      <span class="mobile-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v2"></path>
+          <path d="M12 19v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M3 12h2"></path>
+          <path d="M19 12h2"></path>
+          <path d="m4.93 19.07 1.41-1.41"></path>
+          <path d="m17.66 6.34 1.41-1.41"></path>
+          <circle cx="12" cy="12" r="4"></circle>
+        </svg>
+      </span>
       <span>Settings</span>
     </a>
 
   </nav>
 
   <script src="script.js"></script>
-
-  <script>
-    if (window.lucide) {
-      lucide.createIcons({
-        attrs: {
-          "stroke-width": 2,
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round"
-        }
-      });
-    }
-  </script>
-
 </body>
 </html>
