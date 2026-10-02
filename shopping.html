@@ -17,28 +17,21 @@
     <div class="mobile-topbar">
       <div class="mobile-brand">
         <img src="House_Manager_Logo.png" alt="Household Manager">
-
         <div>
           <div class="mobile-brand-name">Household Manager</div>
-          <div class="mobile-brand-subtitle household-name">
-            My Household
-          </div>
+          <div class="mobile-brand-subtitle household-name">My Household</div>
         </div>
       </div>
 
-      <a href="settings.html" class="mobile-top-action" aria-label="Settings">
-        ⚙
-      </a>
+      <a href="settings.html" class="mobile-top-action" aria-label="Settings">⚙</a>
     </div>
 
 
     <header class="page-header">
       <div class="eyebrow">HOUSEHOLD</div>
-
       <h1 class="page-title">Shopping</h1>
-
       <p class="page-subtitle">
-        Everything your household needs to pick up.
+        Keep track of everything your household needs.
       </p>
     </header>
 
@@ -55,7 +48,7 @@
 
           <div
             class="shopping-summary-number"
-            id="shoppingRemaining"
+            id="shoppingRemainingCount"
           >
             0
           </div>
@@ -72,14 +65,14 @@
 
         <div class="shopping-summary-stat">
           <span>Total</span>
-          <strong id="shoppingCount">0</strong>
+          <strong id="shoppingTotalCount">0</strong>
         </div>
 
         <div class="shopping-summary-divider"></div>
 
         <div class="shopping-summary-stat">
           <span>Completed</span>
-          <strong id="shoppingCompleted">0</strong>
+          <strong id="shoppingCompletedCount">0</strong>
         </div>
 
       </div>
@@ -93,11 +86,11 @@
       onclick="openSheet('shoppingSheet')"
     >
       <span>+</span>
-      Add Item
+      Add Shopping Item
     </button>
 
 
-    <!-- FILTERS -->
+    <!-- STATUS FILTERS -->
     <section class="shopping-filters">
 
       <button
@@ -124,8 +117,8 @@
     </section>
 
 
-    <!-- CATEGORY FILTER -->
-    <section class="category-scroll">
+    <!-- CATEGORY FILTERS -->
+    <div class="category-scroll">
 
       <button
         class="category-button active"
@@ -138,7 +131,7 @@
         class="category-button"
         onclick="filterShoppingCategory('Groceries', this)"
       >
-        🛒 Groceries
+        🥦 Groceries
       </button>
 
       <button
@@ -152,14 +145,14 @@
         class="category-button"
         onclick="filterShoppingCategory('Cleaning', this)"
       >
-        🧹 Cleaning
+        🧽 Cleaning
       </button>
 
       <button
         class="category-button"
         onclick="filterShoppingCategory('Bathroom', this)"
       >
-        🛁 Bathroom
+        🧴 Bathroom
       </button>
 
       <button
@@ -173,10 +166,10 @@
         class="category-button"
         onclick="filterShoppingCategory('Other', this)"
       >
-        Other
+        📦 Other
       </button>
 
-    </section>
+    </div>
 
 
     <!-- SHOPPING LIST -->
@@ -193,13 +186,13 @@
           </div>
 
           <div class="shopping-section-subtitle">
-            Tap an item when you've bought it.
+            Things your household needs
           </div>
         </div>
 
         <span
           class="shopping-section-count"
-          id="shoppingVisibleCount"
+          id="visibleShoppingCount"
         >
           0
         </span>
@@ -221,14 +214,14 @@
       id="clearCompletedButton"
       onclick="clearCompletedShopping()"
     >
-      Clear completed items
+      Clear Completed
     </button>
 
   </main>
 </div>
 
 
-<!-- ADD SHOPPING ITEM SHEET -->
+<!-- ADD SHOPPING SHEET -->
 <div
   class="sheet-overlay"
   id="shoppingSheet"
@@ -267,7 +260,7 @@
       </label>
 
       <input
-        id="shoppingName"
+        id="shoppingItem"
         class="form-control"
         type="text"
         placeholder="e.g. Milk"
@@ -288,7 +281,7 @@
           id="shoppingQuantity"
           class="form-control"
           type="text"
-          placeholder="1"
+          placeholder="e.g. 2"
         >
 
       </div>
@@ -304,12 +297,12 @@
           id="shoppingCategory"
           class="form-control"
         >
-          <option>Groceries</option>
-          <option>Household</option>
-          <option>Cleaning</option>
-          <option>Bathroom</option>
-          <option>Pet</option>
-          <option>Other</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Household">Household</option>
+          <option value="Cleaning">Cleaning</option>
+          <option value="Bathroom">Bathroom</option>
+          <option value="Pet">Pet</option>
+          <option value="Other">Other</option>
         </select>
 
       </div>
@@ -319,9 +312,9 @@
 
     <button
       class="btn btn-primary btn-large"
-      onclick="addTaskShoppingItem()"
+      onclick="addShoppingItem()"
     >
-      Add to Shopping List
+      Add Item
     </button>
 
   </div>
@@ -331,50 +324,32 @@
 <!-- MOBILE NAVIGATION -->
 <nav class="mobile-header">
 
-  <a
-    href="index.html"
-    data-page="index.html"
-  >
+  <a href="index.html" data-page="index.html">
     <span class="mobile-icon">⌂</span>
     <span>Home</span>
   </a>
 
-  <a
-    href="shopping.html"
-    data-page="shopping.html"
-  >
+  <a href="shopping.html" data-page="shopping.html">
     <span class="mobile-icon">🛒</span>
     <span>Shopping</span>
   </a>
 
-  <a
-    href="tasks.html"
-    data-page="tasks.html"
-  >
+  <a href="tasks.html" data-page="tasks.html">
     <span class="mobile-icon">✓</span>
     <span>Tasks</span>
   </a>
 
-  <a
-    href="events.html"
-    data-page="events.html"
-  >
+  <a href="events.html" data-page="events.html">
     <span class="mobile-icon">📅</span>
     <span>Events</span>
   </a>
 
-  <a
-    href="spending.html"
-    data-page="spending.html"
-  >
+  <a href="spending.html" data-page="spending.html">
     <span class="mobile-icon">💰</span>
     <span>Spending</span>
   </a>
 
-  <a
-    href="settings.html"
-    data-page="settings.html"
-  >
+  <a href="settings.html" data-page="settings.html">
     <span class="mobile-icon">⚙</span>
     <span>Settings</span>
   </a>
