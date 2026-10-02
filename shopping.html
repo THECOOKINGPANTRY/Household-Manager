@@ -1,1 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Shopping | Household Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="House_Manager_Logo.png" alt="Household Manager">
+            <div class="brand-name">Household Manager</div>
+        </div>
+
+        <nav class="nav">
+
+            <a href="index.html" data-page="index.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="shopping.html" data-page="shopping.html">
+                <span class="nav-icon">🛒</span>
+                Shopping
+            </a>
+
+            <a href="tasks.html" data-page="tasks.html">
+                <span class="nav-icon">✓</span>
+                Tasks
+            </a>
+
+            <a href="events.html" data-page="events.html">
+                <span class="nav-icon">📅</span>
+                Events
+            </a>
+
+            <a href="spending.html" data-page="spending.html">
+                <span class="nav-icon">💰</span>
+                Spending
+            </a>
+
+            <a href="settings.html" data-page="settings.html">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="page-header">
+
+            <div>
+                <h1 class="page-title">Shopping</h1>
+
+                <p class="page-subtitle">
+                    Keep track of everything your household needs.
+                </p>
+            </div>
+
+        </header>
+
+
+        <section class="card form-card">
+
+            <div class="card-title">
+                Add Shopping Item
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Item
+                    </label>
+
+                    <input
+                        id="shoppingName"
+                        class="form-control"
+                        type="text"
+                        placeholder="e.g. Milk"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Quantity
+                    </label>
+
+                    <input
+                        id="shoppingQuantity"
+                        class="form-control"
+                        type="text"
+                        placeholder="e.g. 2"
+                    >
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Category
+                    </label>
+
+                    <select
+                        id="shoppingCategory"
+                        class="form-control"
+                    >
+                        <option>Groceries</option>
+                        <option>Household</option>
+                        <option>Cleaning</option>
+                        <option>Bathroom</option>
+                        <option>Pet</option>
+                        <option>Other</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group" style="justify-content:end">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="addShoppingItem()"
+                    >
+                        + Add Item
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section>
+
+            <div
+                class="data-list"
+                id="shoppingList"
+            ></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+        <span class="mobile-icon">⌂</span>
+        Home
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+        <span class="mobile-icon">🛒</span>
+        Shopping
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+        <span class="mobile-icon">✓</span>
+        Tasks
+    </a>
+
+    <a href="events.html" data-page="events.html">
+        <span class="mobile-icon">📅</span>
+        Events
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+        <span class="mobile-icon">💰</span>
+        Spending
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+        <span class="mobile-icon">⚙</span>
+        Settings
+    </a>
+
+</nav>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
