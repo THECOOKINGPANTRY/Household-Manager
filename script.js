@@ -1352,7 +1352,9 @@ function renderEvents() {
   if (events.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">📅</div>
+        <div class="empty-icon">
+          <img src="calendar_dark_thin.png" alt="">
+        </div>
         <div class="empty-title">No upcoming events</div>
         <div class="empty-text">
           Add an event to your household calendar.
@@ -1586,7 +1588,9 @@ function renderSpending() {
   if (data.spending.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">💰</div>
+        <div class="empty-icon">
+          <img src="wallet_dark_thin.png" alt="">
+        </div>
         <div class="empty-title">No spending recorded</div>
         <div class="empty-text">
           Add your first household expense.
@@ -1822,7 +1826,7 @@ function loadDashboard() {
         .map(task => `
           <div class="list-item">
             <div class="item-left">
-              <span>✓</span>
+              <span class="dashboard-list-icon"></span>
 
               <div>
                 <div class="item-title">
@@ -1873,7 +1877,7 @@ function loadDashboard() {
         .map(event => `
           <div class="list-item">
             <div class="item-left">
-              <span>📅</span>
+              <span class="dashboard-list-icon"></span>
 
               <div>
                 <div class="item-title">
