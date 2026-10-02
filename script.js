@@ -14,7 +14,7 @@ let currentShoppingFilter = "all";
 let currentShoppingCategory = "all";
 
 /* =========================
-   DATA
+  DATA
 ========================= */
 
 function getData() {
@@ -107,7 +107,7 @@ function formatMoney(amount) {
 }
 
 /* =========================
-   NAVIGATION / SHEETS
+  NAVIGATION / SHEETS
 ========================= */
 
 function setActiveNavigation() {
@@ -173,7 +173,7 @@ function setupSheets() {
 }
 
 /* =========================
-   SHOPPING
+  SHOPPING
 ========================= */
 
 function addShoppingItem(event) {
@@ -586,7 +586,7 @@ function updateClearCompletedButton(count) {
 }
 
 /* =========================
-   TASKS
+  TASKS
 ========================= */
 
 function addTask(event) {
@@ -1183,7 +1183,7 @@ function renderTasks() {
 }
 
 /* =========================
-   EVENTS
+  EVENTS
 ========================= */
 
 function addEvent(event) {
@@ -1395,7 +1395,7 @@ function renderEvents() {
 }
 
 /* =========================
-   SPENDING
+  SPENDING
 ========================= */
 
 function addExpense(event) {
@@ -1639,7 +1639,7 @@ function renderSpending() {
 }
 
 /* =========================
-   SETTINGS
+  SETTINGS
 ========================= */
 
 function loadSettings() {
@@ -1711,7 +1711,7 @@ function resetData() {
 }
 
 /* =========================
-   DASHBOARD
+  DASHBOARD
 ========================= */
 
 function updateToday() {
@@ -1826,8 +1826,6 @@ function loadDashboard() {
         .map(task => `
           <div class="list-item">
             <div class="item-left">
-              <span class="dashboard-list-icon"></span>
-
               <div>
                 <div class="item-title">
                   ${escapeHTML(task.name)}
@@ -1877,8 +1875,6 @@ function loadDashboard() {
         .map(event => `
           <div class="list-item">
             <div class="item-left">
-              <span class="dashboard-list-icon"></span>
-
               <div>
                 <div class="item-title">
                   ${escapeHTML(event.name)}
@@ -1897,7 +1893,7 @@ function loadDashboard() {
 }
 
 /* =========================
-   FORM SUPPORT
+  FORM SUPPORT
 ========================= */
 
 function setupForms() {
@@ -1925,7 +1921,7 @@ function setupForms() {
 }
 
 /* =========================
-   INITIALIZATION
+  INITIALIZATION
 ========================= */
 
 document.addEventListener("DOMContentLoaded", () => {
