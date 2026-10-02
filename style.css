@@ -16,7 +16,7 @@
 }
 
 /* ================================
-   RESET
+RESET
 ================================ */
 
 * {
@@ -62,7 +62,7 @@ img {
 }
 
 /* ================================
-   PNG ICON SYSTEM
+PNG ICON SYSTEM
 ================================ */
 
 .mobile-top-action img,
@@ -181,7 +181,7 @@ img {
 }
 
 /* ================================
-   MAIN MOBILE LAYOUT
+MAIN MOBILE LAYOUT
 ================================ */
 
 .sidebar {
@@ -243,7 +243,7 @@ img {
 }
 
 /* ================================
-   PAGE HEADERS
+PAGE HEADERS
 ================================ */
 
 .page-header {
@@ -273,7 +273,7 @@ img {
 }
 
 /* ================================
-   CARDS
+CARDS
 ================================ */
 
 .card {
@@ -306,7 +306,7 @@ img {
 }
 
 /* ================================
-   BUTTONS
+BUTTONS
 ================================ */
 
 .btn {
@@ -376,7 +376,7 @@ img {
 }
 
 /* ================================
-   LINKS
+LINKS
 ================================ */
 
 .text-link {
@@ -388,7 +388,7 @@ img {
 }
 
 /* ================================
-   DASHBOARD
+DASHBOARD
 ================================ */
 
 .dashboard-grid {
@@ -579,7 +579,7 @@ img {
 }
 
 /* ================================
-   GENERAL LISTS
+GENERAL LISTS
 ================================ */
 
 .section-list {
@@ -628,26 +628,7 @@ img {
 }
 
 .dashboard-list-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  background: var(--supporting);
-  display: block;
-  flex-shrink: 0;
-}
-
-.item-title {
-  font-weight: 700;
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.item-meta {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 3px;
+  display: none !important;
 }
 
 .data-row.completed {
@@ -698,7 +679,7 @@ img {
 }
 
 /* ================================
-   CHECKBOX
+CHECKBOX
 ================================ */
 
 .check {
@@ -731,7 +712,7 @@ img {
 }
 
 /* ================================
-   BADGES
+BADGES
 ================================ */
 
 .badge {
@@ -753,7 +734,7 @@ img {
 }
 
 /* ================================
-   EMPTY STATES
+EMPTY STATES
 ================================ */
 
 .empty-state {
@@ -791,7 +772,7 @@ img {
 }
 
 /* ================================
-   FILTERS
+FILTERS
 ================================ */
 
 .task-filters,
@@ -827,7 +808,7 @@ img {
 }
 
 /* ================================
-   TASKS
+TASKS
 ================================ */
 
 .task-progress-card {
@@ -1159,7 +1140,7 @@ img {
 }
 
 /* ================================
-   SHOPPING
+SHOPPING
 ================================ */
 
 .shopping-summary {
@@ -1471,7 +1452,7 @@ img {
 }
 
 /* ================================
-   SPENDING
+SPENDING
 ================================ */
 
 .spending-summary {
@@ -1513,7 +1494,7 @@ img {
 }
 
 /* ================================
-   FORMS
+FORMS
 ================================ */
 
 .form-group {
@@ -1562,7 +1543,7 @@ textarea.form-control {
 }
 
 /* ================================
-   SETTINGS
+SETTINGS
 ================================ */
 
 .settings-grid {
@@ -1609,7 +1590,7 @@ textarea.form-control {
 }
 
 /* ================================
-   EVENTS
+EVENTS
 ================================ */
 
 .event-overview {
@@ -1887,7 +1868,7 @@ textarea.form-control {
 }
 
 /* ================================
-   BOTTOM SHEETS
+BOTTOM SHEETS
 ================================ */
 
 .sheet-overlay {
@@ -1967,7 +1948,7 @@ textarea.form-control {
 }
 
 /* ================================
-   MOBILE BOTTOM NAV
+MOBILE BOTTOM NAV
 ================================ */
 
 .mobile-header {
@@ -2015,7 +1996,7 @@ textarea.form-control {
 }
 
 /* ================================
-   SHEET / BODY STATES
+SHEET / BODY STATES
 ================================ */
 
 body.sheet-open {
@@ -2023,7 +2004,7 @@ body.sheet-open {
 }
 
 /* ================================
-   RESPONSIVE
+RESPONSIVE
 ================================ */
 
 @media (max-width: 370px) {
