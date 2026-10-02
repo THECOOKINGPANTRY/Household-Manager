@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Settings | Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
@@ -33,17 +45,76 @@
 
       <header class="page-header">
         <div>
+          <div class="eyebrow">
+            ACCOUNT
+          </div>
+
           <h1 class="page-title">
             Settings
           </h1>
 
           <p class="page-subtitle">
-            Manage your household preferences.
+            Manage your account and household preferences.
           </p>
         </div>
       </header>
 
       <section class="settings-grid">
+
+        <div class="card">
+
+          <div class="card-title">
+            Account
+          </div>
+
+          <div class="setting-block">
+
+            <label class="form-label" for="accountName">
+              Name
+            </label>
+
+            <input
+              id="accountName"
+              class="form-control"
+              type="text"
+              placeholder="Your name"
+              autocomplete="name"
+            >
+
+          </div>
+
+          <div class="setting-block">
+
+            <label class="form-label" for="accountEmail">
+              Email
+            </label>
+
+            <input
+              id="accountEmail"
+              class="form-control"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              readonly
+            >
+
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-large"
+            onclick="saveAccountDetails()"
+          >
+            <img src="edit_dark_thin.png" alt="">
+            <span>Save Account</span>
+          </button>
+
+          <p
+            id="accountMessage"
+            class="settings-message"
+          ></p>
+
+        </div>
 
         <div class="card">
 
@@ -138,6 +209,37 @@
             >
               <img src="refresh_dark_thin.png" alt="">
               <span>Reset</span>
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-title">
+            Security
+          </div>
+
+          <div class="setting-row">
+
+            <div>
+              <div class="setting-title">
+                Log Out
+              </div>
+
+              <div class="setting-description">
+                Log out of your Household Manager account on this device.
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="logout()"
+            >
+              <img src="exit_dark_thin.png" alt="">
+              <span>Log Out</span>
             </button>
 
           </div>
@@ -244,6 +346,90 @@
   </nav>
 
   <script src="script.js"></script>
+
+  <script>
+    function loadAccountDetails() {
+      const currentUser = JSON.parse(
+        localStorage.getItem("householdManagerCurrentUser")
+      );
+
+      if (!currentUser) {
+        return;
+      }
+
+      const nameInput = document.getElementById("accountName");
+      const emailInput = document.getElementById("accountEmail");
+
+      if (nameInput) {
+        nameInput.value = currentUser.name || "";
+      }
+
+      if (emailInput) {
+        emailInput.value = currentUser.email || "";
+      }
+    }
+
+    function saveAccountDetails() {
+      const nameInput = document.getElementById("accountName");
+      const message = document.getElementById("accountMessage");
+
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        message.textContent = "Please enter your name.";
+        message.className = "settings-message error";
+        return;
+      }
+
+      const currentUser = JSON.parse(
+        localStorage.getItem("householdManagerCurrentUser")
+      );
+
+      const savedUser = JSON.parse(
+        localStorage.getItem("householdManagerUser")
+      );
+
+      if (!currentUser || !savedUser) {
+        return;
+      }
+
+      savedUser.name = name;
+      currentUser.name = name;
+
+      localStorage.setItem(
+        "householdManagerUser",
+        JSON.stringify(savedUser)
+      );
+
+      localStorage.setItem(
+        "householdManagerCurrentUser",
+        JSON.stringify(currentUser)
+      );
+
+      message.textContent = "Account details saved.";
+      message.className = "settings-message success";
+    }
+
+    function logout() {
+      const confirmed = confirm(
+        "Are you sure you want to log out?"
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      localStorage.removeItem("householdManagerLoggedIn");
+      localStorage.removeItem("householdManagerGuest");
+      localStorage.removeItem("householdManagerCurrentUser");
+
+      window.location.replace("login.html");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      loadAccountDetails();
+    });
+  </script>
 
 </body>
 </html>
