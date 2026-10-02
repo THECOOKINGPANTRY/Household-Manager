@@ -16,7 +16,7 @@
 }
 
 /* ================================
-RESET
+   RESET
 ================================ */
 
 * {
@@ -52,97 +52,100 @@ a {
   color: inherit;
 }
 
+img {
+  max-width: 100%;
+}
+
 .app {
   min-height: 100vh;
 }
 
 /* ================================
-GLOBAL SVG ICON SYSTEM
+   PNG ICON SYSTEM
 ================================ */
 
-.icon {
-  width: 18px;
-  height: 18px;
+.mobile-top-action img,
+.mobile-header img,
+.mobile-icon img,
+.mobile-add-button img,
+.btn img,
+.button-icon img,
+.quick-action-icon img,
+.stat-icon img,
+.today-item-icon img,
+.shopping-summary-icon img,
+.task-summary-icon img,
+.task-empty-icon img,
+.shopping-empty-icon img,
+.event-empty-icon img,
+.event-detail-icon img,
+.sheet-close img {
   display: block;
+  object-fit: contain;
   flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
-.icon-lg {
-  width: 24px;
-  height: 24px;
-}
-
-.button-icon,
-.quick-action-icon,
-.stat-icon,
-.today-item-icon,
-.shopping-summary-icon,
-.task-summary-icon,
-.task-empty-icon,
-.shopping-empty-icon,
-.event-empty-icon,
-.mobile-icon,
-.event-detail-icon {
-  display: grid;
-  place-items: center;
-}
-
-.button-icon .icon,
-.quick-action-icon .icon,
-.stat-icon .icon,
-.today-item-icon .icon {
-  width: 18px;
-  height: 18px;
-}
-
-.mobile-icon .icon {
+.mobile-top-action img {
   width: 20px;
   height: 20px;
 }
 
-.sheet-close .icon {
-  width: 18px;
-  height: 18px;
-}
-
-.mobile-top-action .icon {
+.mobile-header .mobile-icon img {
   width: 20px;
   height: 20px;
 }
 
-.category-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+.mobile-add-button img {
+  width: 19px;
+  height: 19px;
 }
 
-.category-button .icon {
-  width: 15px;
-  height: 15px;
+.btn img {
+  width: 17px;
+  height: 17px;
 }
 
-.clear-completed-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+.button-icon img {
+  width: 19px;
+  height: 19px;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+.quick-action-icon img,
+.stat-icon img,
+.today-item-icon img {
+  width: 18px;
+  height: 18px;
+}
+
+.shopping-summary-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.task-summary-icon img {
+  width: 17px;
+  height: 17px;
+}
+
+.task-empty-icon img,
+.shopping-empty-icon img,
+.event-empty-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+.event-detail-icon img {
+  width: 14px;
+  height: 14px;
+}
+
+.sheet-close img {
+  width: 18px;
+  height: 18px;
 }
 
 /* ================================
-MAIN MOBILE LAYOUT
+   MAIN MOBILE LAYOUT
 ================================ */
 
 .sidebar {
@@ -166,6 +169,7 @@ MAIN MOBILE LAYOUT
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .mobile-brand img {
@@ -173,6 +177,7 @@ MAIN MOBILE LAYOUT
   height: 40px;
   object-fit: contain;
   border-radius: 12px;
+  flex-shrink: 0;
 }
 
 .mobile-brand-name {
@@ -189,8 +194,8 @@ MAIN MOBILE LAYOUT
 }
 
 .mobile-top-action {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 14px;
   background: var(--supporting);
@@ -198,10 +203,11 @@ MAIN MOBILE LAYOUT
   display: grid;
   place-items: center;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 /* ================================
-PAGE HEADERS
+   PAGE HEADERS
 ================================ */
 
 .page-header {
@@ -231,7 +237,7 @@ PAGE HEADERS
 }
 
 /* ================================
-CARDS
+   CARDS
 ================================ */
 
 .card {
@@ -264,7 +270,7 @@ CARDS
 }
 
 /* ================================
-BUTTONS
+   BUTTONS
 ================================ */
 
 .btn {
@@ -274,6 +280,10 @@ BUTTONS
   padding: 11px 16px;
   font-size: 13px;
   font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
 
@@ -329,18 +339,8 @@ BUTTONS
   transform: scale(0.98);
 }
 
-.mobile-add-button .button-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.mobile-add-button .button-icon .icon {
-  width: 19px;
-  height: 19px;
-}
-
 /* ================================
-LINKS
+   LINKS
 ================================ */
 
 .text-link {
@@ -352,7 +352,7 @@ LINKS
 }
 
 /* ================================
-DASHBOARD
+   DASHBOARD
 ================================ */
 
 .dashboard-grid {
@@ -387,6 +387,8 @@ DASHBOARD
   height: 32px;
   border-radius: 10px;
   background: rgba(36, 36, 35, 0.08);
+  display: grid;
+  place-items: center;
 }
 
 .card.dark .stat-icon {
@@ -477,6 +479,8 @@ DASHBOARD
   height: 34px;
   border-radius: 10px;
   background: rgba(36, 36, 35, 0.08);
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
 }
 
@@ -502,6 +506,8 @@ DASHBOARD
   height: 34px;
   border-radius: 10px;
   background: rgba(232, 237, 223, 0.1);
+  display: grid;
+  place-items: center;
 }
 
 .today-item-content {
@@ -529,7 +535,7 @@ DASHBOARD
 }
 
 /* ================================
-GENERAL LISTS
+   GENERAL LISTS
 ================================ */
 
 .section-list {
@@ -569,6 +575,12 @@ GENERAL LISTS
   display: grid;
   place-items: center;
   flex-shrink: 0;
+}
+
+.item-left > span img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
 }
 
 .item-title {
@@ -633,7 +645,7 @@ GENERAL LISTS
 }
 
 /* ================================
-CHECKBOX
+   CHECKBOX
 ================================ */
 
 .check {
@@ -666,7 +678,7 @@ CHECKBOX
 }
 
 /* ================================
-BADGES
+   BADGES
 ================================ */
 
 .badge {
@@ -688,7 +700,7 @@ BADGES
 }
 
 /* ================================
-EMPTY STATES
+   EMPTY STATES
 ================================ */
 
 .empty-state {
@@ -704,6 +716,13 @@ EMPTY STATES
   margin: 0 auto 10px;
   border-radius: 13px;
   background: var(--background);
+  display: grid;
+  place-items: center;
+}
+
+.empty-icon img {
+  width: 20px;
+  height: 20px;
 }
 
 .empty-title {
@@ -719,7 +738,7 @@ EMPTY STATES
 }
 
 /* ================================
-FILTERS
+   FILTERS
 ================================ */
 
 .task-filters,
@@ -742,7 +761,7 @@ FILTERS
   border-radius: 20px;
   background: var(--supporting);
   color: var(--deep-dark);
-  min-height: 37px;
+  min-height: 44px;
   padding: 8px 15px;
   font-size: 11px;
   font-weight: 800;
@@ -755,7 +774,7 @@ FILTERS
 }
 
 /* ================================
-TASKS
+   TASKS
 ================================ */
 
 .task-progress-card {
@@ -849,6 +868,8 @@ TASKS
   height: 28px;
   border-radius: 9px;
   background: rgba(232, 237, 223, 0.8);
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
 }
 
@@ -1020,8 +1041,8 @@ TASKS
 }
 
 .task-delete {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
@@ -1029,6 +1050,8 @@ TASKS
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .task-delete .icon {
@@ -1049,6 +1072,8 @@ TASKS
   margin: 0 auto 9px;
   border-radius: 13px;
   background: var(--background);
+  display: grid;
+  place-items: center;
 }
 
 .task-empty-title {
@@ -1076,7 +1101,7 @@ TASKS
 }
 
 /* ================================
-SHOPPING
+   SHOPPING
 ================================ */
 
 .shopping-summary {
@@ -1113,6 +1138,8 @@ SHOPPING
   border-radius: 15px;
   background: var(--yellow);
   color: var(--deep-dark);
+  display: grid;
+  place-items: center;
 }
 
 .shopping-summary-stats {
@@ -1163,7 +1190,7 @@ SHOPPING
 }
 
 .category-button {
-  min-height: 35px;
+  min-height: 44px;
   border: 0;
   border-radius: 20px;
   padding: 7px 12px;
@@ -1172,6 +1199,10 @@ SHOPPING
   font-size: 9px;
   font-weight: 800;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .category-button.active {
@@ -1321,8 +1352,8 @@ SHOPPING
 }
 
 .shopping-delete {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
@@ -1330,6 +1361,8 @@ SHOPPING
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .shopping-delete .icon {
@@ -1350,6 +1383,8 @@ SHOPPING
   margin: 0 auto 10px;
   border-radius: 14px;
   background: var(--background);
+  display: grid;
+  place-items: center;
 }
 
 .shopping-empty-title {
@@ -1374,6 +1409,10 @@ SHOPPING
   font-size: 11px;
   font-weight: 800;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
 
 .clear-completed-button:active {
@@ -1381,7 +1420,7 @@ SHOPPING
 }
 
 /* ================================
-SPENDING
+   SPENDING
 ================================ */
 
 .spending-summary {
@@ -1423,7 +1462,7 @@ SPENDING
 }
 
 /* ================================
-FORMS
+   FORMS
 ================================ */
 
 .form-group {
@@ -1472,7 +1511,7 @@ textarea.form-control {
 }
 
 /* ================================
-SETTINGS
+   SETTINGS
 ================================ */
 
 .settings-grid {
@@ -1519,7 +1558,7 @@ SETTINGS
 }
 
 /* ================================
-EVENTS
+   EVENTS
 ================================ */
 
 .event-overview {
@@ -1749,11 +1788,14 @@ EVENTS
 .event-detail-icon {
   width: 14px;
   height: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
 }
 
 .event-delete {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 9px;
   background: rgba(155, 77, 77, 0.12);
@@ -1762,6 +1804,8 @@ EVENTS
   place-items: center;
   align-self: center;
   flex-shrink: 0;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .event-delete .icon {
@@ -1782,6 +1826,8 @@ EVENTS
   margin: 0 auto 10px;
   border-radius: 14px;
   background: var(--background);
+  display: grid;
+  place-items: center;
 }
 
 .event-empty-title {
@@ -1797,7 +1843,7 @@ EVENTS
 }
 
 /* ================================
-BOTTOM SHEETS
+   BOTTOM SHEETS
 ================================ */
 
 .sheet-overlay {
@@ -1875,7 +1921,7 @@ BOTTOM SHEETS
 }
 
 /* ================================
-MOBILE BOTTOM NAV
+   MOBILE BOTTOM NAV
 ================================ */
 
 .mobile-header {
@@ -1923,10 +1969,23 @@ MOBILE BOTTOM NAV
 }
 
 /* ================================
-RESPONSIVE
+   SHEET / BODY STATES
+================================ */
+
+body.sheet-open {
+  overflow: hidden;
+}
+
+/* ================================
+   RESPONSIVE
 ================================ */
 
 @media (max-width: 370px) {
+  .main {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
   .task-summary {
     gap: 5px;
   }
@@ -1984,8 +2043,8 @@ RESPONSIVE
   }
 
   .event-delete {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
   }
 }
 
