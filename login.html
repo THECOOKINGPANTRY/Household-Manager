@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household Manager - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="login-page">
+
+    <div class="login-brand">
+      <img src="House_Manager_Logo.png" alt="Household Manager">
+      <h1>Household Manager</h1>
+      <p>Manage your home. Stay organised.</p>
+    </div>
+
+    <section class="login-card">
+
+      <div class="login-header">
+        <span class="login-eyebrow">WELCOME BACK</span>
+        <h2>Log in</h2>
+        <p>Enter your details to continue to your household.</p>
+      </div>
+
+      <form id="loginForm">
+
+        <div class="login-form-group">
+          <label for="loginEmail">Email</label>
+          <input
+            type="email"
+            id="loginEmail"
+            class="login-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="login-form-group">
+          <div class="login-label-row">
+            <label for="loginPassword">Password</label>
+            <button type="button" id="forgotPassword" class="forgot-password">
+              Forgot password?
+            </button>
+          </div>
+
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="loginPassword"
+              class="login-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="togglePassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <label class="remember-row">
+          <input type="checkbox" id="rememberMe">
+          <span class="custom-checkbox"></span>
+          <span>Remember me</span>
+        </label>
+
+        <button type="submit" class="login-button">
+          Log in
+        </button>
+
+        <p id="loginMessage" class="login-message"></p>
+
+      </form>
+
+      <div class="login-divider">
+        <span>OR</span>
+      </div>
+
+      <button type="button" class="secondary-login-button" id="guestLogin">
+        Continue as guest
+      </button>
+
+      <p class="signup-text">
+        Don't have an account?
+        <a href="signup.html">Create one</a>
+      </p>
+
+    </section>
+
+    <p class="login-footer">
+      Household Manager
+    </p>
+
+  </main>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const loginMessage = document.getElementById("loginMessage");
+    const togglePassword = document.getElementById("togglePassword");
+    const loginPassword = document.getElementById("loginPassword");
+    const forgotPassword = document.getElementById("forgotPassword");
+    const guestLogin = document.getElementById("guestLogin");
+
+    togglePassword.addEventListener("click", function () {
+      const isPassword = loginPassword.type === "password";
+
+      loginPassword.type = isPassword ? "text" : "password";
+      togglePassword.textContent = isPassword ? "Hide" : "Show";
+      togglePassword.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+      );
+    });
+
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = loginPassword.value;
+
+      loginMessage.className = "login-message";
+
+      if (!email || !password) {
+        loginMessage.textContent = "Please enter your email and password.";
+        loginMessage.classList.add("error");
+        return;
+      }
+
+      /*
+        Temporary login system.
+
+        Replace this section with your real authentication
+        system when the backend/database is connected.
+      */
+
+      const savedUser = JSON.parse(
+        localStorage.getItem("householdManagerUser")
+      );
+
+      if (!savedUser) {
+        loginMessage.textContent =
+          "No account found. Please create an account first.";
+        loginMessage.classList.add("error");
+        return;
+      }
+
+      if (
+        savedUser.email !== email ||
+        savedUser.password !== password
+      ) {
+        loginMessage.textContent =
+          "Incorrect email or password.";
+        loginMessage.classList.add("error");
+        return;
+      }
+
+      localStorage.setItem(
+        "householdManagerLoggedIn",
+        "true"
+      );
+
+      localStorage.setItem(
+        "householdManagerCurrentUser",
+        JSON.stringify({
+          name: savedUser.name,
+          email: savedUser.email
+        })
+      );
+
+      if (document.getElementById("rememberMe").checked) {
+        localStorage.setItem(
+          "householdManagerRememberMe",
+          "true"
+        );
+      } else {
+        localStorage.removeItem(
+          "householdManagerRememberMe"
+        );
+      }
+
+      loginMessage.textContent = "Login successful.";
+      loginMessage.classList.add("success");
+
+      setTimeout(function () {
+        window.location.href = "index.html";
+      }, 500);
+    });
+
+    forgotPassword.addEventListener("click", function () {
+      loginMessage.className = "login-message";
+      loginMessage.textContent =
+        "Password reset will be available when your account system is connected.";
+      loginMessage.classList.add("info");
+    });
+
+    guestLogin.addEventListener("click", function () {
+      localStorage.setItem(
+        "householdManagerLoggedIn",
+        "true"
+      );
+
+      localStorage.setItem(
+        "householdManagerGuest",
+        "true"
+      );
+
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>
