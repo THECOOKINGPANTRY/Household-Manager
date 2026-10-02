@@ -29,9 +29,15 @@
         <div class="mobile-brand">
           <img src="House_Manager_Logo.png" alt="Household Manager">
 
-          <span class="mobile-brand-name">
-            Household Manager
-          </span>
+          <div>
+            <div class="mobile-brand-name">
+              Household Manager
+            </div>
+
+            <div class="mobile-brand-subtitle household-name">
+              My Household
+            </div>
+          </div>
         </div>
 
         <a
@@ -348,17 +354,45 @@
   <script src="script.js"></script>
 
   <script>
-    function loadAccountDetails() {
-      const currentUser = JSON.parse(
-        localStorage.getItem("householdManagerCurrentUser")
+    function getCurrentUser() {
+      try {
+        return JSON.parse(
+          localStorage.getItem("householdManagerCurrentUser")
+        );
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function getUsers() {
+      try {
+        return JSON.parse(
+          localStorage.getItem("householdManagerUsers")
+        ) || {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(
+        "householdManagerUsers",
+        JSON.stringify(users)
       );
+    }
+
+    function loadAccountDetails() {
+      const currentUser = getCurrentUser();
 
       if (!currentUser) {
         return;
       }
 
-      const nameInput = document.getElementById("accountName");
-      const emailInput = document.getElementById("accountEmail");
+      const nameInput =
+        document.getElementById("accountName");
+
+      const emailInput =
+        document.getElementById("accountEmail");
 
       if (nameInput) {
         nameInput.value = currentUser.name || "";
@@ -370,8 +404,15 @@
     }
 
     function saveAccountDetails() {
-      const nameInput = document.getElementById("accountName");
-      const message = document.getElementById("accountMessage");
+      const nameInput =
+        document.getElementById("accountName");
+
+      const message =
+        document.getElementById("accountMessage");
+
+      if (!nameInput || !message) {
+        return;
+      }
 
       const name = nameInput.value.trim();
 
@@ -381,30 +422,54 @@
         return;
       }
 
-      const currentUser = JSON.parse(
-        localStorage.getItem("householdManagerCurrentUser")
-      );
+      const currentUser = getCurrentUser();
 
-      const savedUser = JSON.parse(
-        localStorage.getItem("householdManagerUser")
-      );
-
-      if (!currentUser || !savedUser) {
+      if (!currentUser || !currentUser.email) {
+        message.textContent = "Account information could not be found.";
+        message.className = "settings-message error";
         return;
       }
 
-      savedUser.name = name;
       currentUser.name = name;
-
-      localStorage.setItem(
-        "householdManagerUser",
-        JSON.stringify(savedUser)
-      );
 
       localStorage.setItem(
         "householdManagerCurrentUser",
         JSON.stringify(currentUser)
       );
+
+      const users = getUsers();
+
+      const emailKey =
+        currentUser.email.trim().toLowerCase();
+
+      if (users[emailKey]) {
+        users[emailKey].name = name;
+        saveUsers(users);
+      }
+
+      const legacyUser = localStorage.getItem(
+        "householdManagerUser"
+      );
+
+      if (legacyUser) {
+        try {
+          const parsedLegacyUser = JSON.parse(legacyUser);
+
+          if (
+            parsedLegacyUser.email &&
+            parsedLegacyUser.email.toLowerCase() === emailKey
+          ) {
+            parsedLegacyUser.name = name;
+
+            localStorage.setItem(
+              "householdManagerUser",
+              JSON.stringify(parsedLegacyUser)
+            );
+          }
+        } catch (error) {
+          console.error("Could not update legacy account data.");
+        }
+      }
 
       message.textContent = "Account details saved.";
       message.className = "settings-message success";
@@ -419,16 +484,27 @@
         return;
       }
 
-      localStorage.removeItem("householdManagerLoggedIn");
-      localStorage.removeItem("householdManagerGuest");
-      localStorage.removeItem("householdManagerCurrentUser");
+      localStorage.removeItem(
+        "householdManagerLoggedIn"
+      );
+
+      localStorage.removeItem(
+        "householdManagerGuest"
+      );
+
+      localStorage.removeItem(
+        "householdManagerCurrentUser"
+      );
 
       window.location.replace("login.html");
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      loadAccountDetails();
-    });
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        loadAccountDetails();
+      }
+    );
   </script>
 
 </body>
