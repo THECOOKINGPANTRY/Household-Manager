@@ -17,12 +17,99 @@ let currentShoppingCategory = "all";
    DATA
 ========================= */
 
+function getCurrentUserKey() {
+  const currentUser = JSON.parse(
+    localStorage.getItem("householdManagerCurrentUser")
+  );
+
+  if (currentUser && currentUser.email) {
+    return currentUser.email.trim().toLowerCase();
+  }
+
+  if (
+    localStorage.getItem("householdManagerGuest") === "true"
+  ) {
+    return "guest";
+  }
+
+  return null;
+}
+
+function getUserDataKey() {
+  const userKey = getCurrentUserKey();
+
+  if (!userKey) {
+    return null;
+  }
+
+  return "householdManagerData_" + userKey;
+}
+
 function getData() {
-  const saved = localStorage.getItem("householdManager");
+  const dataKey = getUserDataKey();
+
+  if (!dataKey) {
+    return JSON.parse(JSON.stringify(defaultData));
+  }
+
+  const saved = localStorage.getItem(dataKey);
 
   if (!saved) {
-    const freshData = JSON.parse(JSON.stringify(defaultData));
-    localStorage.setItem("householdManager", JSON.stringify(freshData));
+    /*
+      Migrate old data from the previous global storage key
+      to the currently logged-in user's storage.
+    */
+    const oldSaved = localStorage.getItem("householdManager");
+
+    if (oldSaved) {
+      try {
+        const oldData = JSON.parse(oldSaved);
+
+        const migratedData = {
+          shopping: Array.isArray(oldData.shopping)
+            ? oldData.shopping
+            : [],
+
+          tasks: Array.isArray(oldData.tasks)
+            ? oldData.tasks
+            : [],
+
+          events: Array.isArray(oldData.events)
+            ? oldData.events
+            : [],
+
+          spending: Array.isArray(oldData.spending)
+            ? oldData.spending
+            : [],
+
+          settings: {
+            ...defaultData.settings,
+            ...(oldData.settings || {})
+          }
+        };
+
+        localStorage.setItem(
+          dataKey,
+          JSON.stringify(migratedData)
+        );
+
+        return migratedData;
+      } catch (error) {
+        console.error(
+          "Could not migrate old household data:",
+          error
+        );
+      }
+    }
+
+    const freshData =
+      JSON.parse(JSON.stringify(defaultData));
+
+    localStorage.setItem(
+      dataKey,
+      JSON.stringify(freshData)
+    );
+
     return freshData;
   }
 
@@ -30,28 +117,56 @@ function getData() {
     const data = JSON.parse(saved);
 
     return {
-      shopping: Array.isArray(data.shopping) ? data.shopping : [],
-      tasks: Array.isArray(data.tasks) ? data.tasks : [],
-      events: Array.isArray(data.events) ? data.events : [],
-      spending: Array.isArray(data.spending) ? data.spending : [],
+      shopping: Array.isArray(data.shopping)
+        ? data.shopping
+        : [],
+
+      tasks: Array.isArray(data.tasks)
+        ? data.tasks
+        : [],
+
+      events: Array.isArray(data.events)
+        ? data.events
+        : [],
+
+      spending: Array.isArray(data.spending)
+        ? data.spending
+        : [],
+
       settings: {
         ...defaultData.settings,
         ...(data.settings || {})
       }
     };
   } catch (error) {
-    const freshData = JSON.parse(JSON.stringify(defaultData));
-    localStorage.setItem("householdManager", JSON.stringify(freshData));
+    const freshData =
+      JSON.parse(JSON.stringify(defaultData));
+
+    localStorage.setItem(
+      dataKey,
+      JSON.stringify(freshData)
+    );
+
     return freshData;
   }
 }
 
 function saveData(data) {
-  localStorage.setItem("householdManager", JSON.stringify(data));
+  const dataKey = getUserDataKey();
+
+  if (!dataKey) {
+    return;
+  }
+
+  localStorage.setItem(
+    dataKey,
+    JSON.stringify(data)
+  );
 }
 
 function createId() {
-  return Date.now().toString() + Math.random().toString(16).slice(2);
+  return Date.now().toString() +
+    Math.random().toString(16).slice(2);
 }
 
 function escapeHTML(value) {
@@ -64,19 +179,33 @@ function getTodayString() {
   const today = new Date();
 
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(
+    today.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    today.getDate()
+  ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
 
 function getTomorrowString() {
   const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  tomorrow.setDate(
+    tomorrow.getDate() + 1
+  );
 
   const year = tomorrow.getFullYear();
-  const month = String(tomorrow.getMonth() + 1).padStart(2, "0");
-  const day = String(tomorrow.getDate()).padStart(2, "0");
+
+  const month = String(
+    tomorrow.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    tomorrow.getDate()
+  ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
@@ -88,37 +217,51 @@ function getTomorrowString() {
 function setFutureDateMinimum(input) {
   if (!input) return;
 
-  input.min = getTodayString();
+  input.min = getTomorrowString();
 }
 
 function isValidFutureDate(dateString) {
   if (!dateString) return true;
 
-  return dateString >= getTodayString();
+  return dateString > getTodayString();
 }
 
 function setupFutureDateInputs() {
-  document.querySelectorAll('input[type="date"]').forEach(input => {
-    setFutureDateMinimum(input);
+  document
+    .querySelectorAll('input[type="date"]')
+    .forEach(input => {
+      setFutureDateMinimum(input);
 
-    input.addEventListener("change", function () {
-      if (!this.value) return;
+      input.addEventListener(
+        "change",
+        function () {
+          if (!this.value) return;
 
-      if (!isValidFutureDate(this.value)) {
-        alert("Please select today or a future date.");
-        this.value = "";
-      }
+          if (!isValidFutureDate(this.value)) {
+            alert(
+              "Please select a date from tomorrow onwards."
+            );
+
+            this.value = "";
+          }
+        }
+      );
     });
-  });
 }
 
-function validateFutureDate(dateString, label = "Date") {
+function validateFutureDate(
+  dateString,
+  label = "Date"
+) {
   if (!dateString) {
     return true;
   }
 
   if (!isValidFutureDate(dateString)) {
-    alert(`${label} cannot be in the past.`);
+    alert(
+      `${label} must be tomorrow or a future date.`
+    );
+
     return false;
   }
 
@@ -128,26 +271,34 @@ function validateFutureDate(dateString, label = "Date") {
 function formatDate(date) {
   if (!date) return "";
 
-  const parsed = new Date(date + "T00:00:00");
+  const parsed =
+    new Date(date + "T00:00:00");
 
   if (isNaN(parsed.getTime())) {
     return date;
   }
 
-  return parsed.toLocaleDateString("en-AU", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
+  return parsed.toLocaleDateString(
+    "en-AU",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }
+  );
 }
 
 function formatMoney(amount) {
   const data = getData();
 
-  return new Intl.NumberFormat("en-AU", {
-    style: "currency",
-    currency: data.settings.currency || "AUD"
-  }).format(Number(amount) || 0);
+  return new Intl.NumberFormat(
+    "en-AU",
+    {
+      style: "currency",
+      currency:
+        data.settings.currency || "AUD"
+    }
+  ).format(Number(amount) || 0);
 }
 
 /* =========================
@@ -156,30 +307,43 @@ function formatMoney(amount) {
 
 function setActiveNavigation() {
   const currentPage =
-    window.location.pathname.split("/").pop() || "index.html";
+    window.location.pathname
+      .split("/")
+      .pop() || "index.html";
 
-  document.querySelectorAll("[data-page]").forEach(link => {
-    if (link.getAttribute("data-page") === currentPage) {
-      link.classList.add("active");
-    }
-  });
+  document
+    .querySelectorAll("[data-page]")
+    .forEach(link => {
+      if (
+        link.getAttribute("data-page") ===
+        currentPage
+      ) {
+        link.classList.add("active");
+      }
+    });
 }
 
 function updateHouseholdName() {
   const data = getData();
 
-  document.querySelectorAll(".household-name").forEach(element => {
-    element.textContent = data.settings.householdName;
-  });
+  document
+    .querySelectorAll(".household-name")
+    .forEach(element => {
+      element.textContent =
+        data.settings.householdName;
+    });
 }
 
 function openSheet(id) {
-  const sheet = document.getElementById(id);
+  const sheet =
+    document.getElementById(id);
 
   if (!sheet) return;
 
   sheet.classList.add("open");
-  document.body.classList.add("sheet-open");
+  document.body.classList.add(
+    "sheet-open"
+  );
 
   setTimeout(() => {
     setFutureDateMinimumsInSheet(sheet);
@@ -187,44 +351,72 @@ function openSheet(id) {
 }
 
 function closeSheet(id) {
-  const sheet = document.getElementById(id);
+  const sheet =
+    document.getElementById(id);
 
   if (!sheet) return;
 
   sheet.classList.remove("open");
-  document.body.classList.remove("sheet-open");
+  document.body.classList.remove(
+    "sheet-open"
+  );
 }
 
-function setFutureDateMinimumsInSheet(sheet) {
+function setFutureDateMinimumsInSheet(
+  sheet
+) {
   if (!sheet) return;
 
-  sheet.querySelectorAll('input[type="date"]').forEach(input => {
-    setFutureDateMinimum(input);
-  });
+  sheet
+    .querySelectorAll('input[type="date"]')
+    .forEach(input => {
+      setFutureDateMinimum(input);
+    });
 }
 
 function setupSheets() {
-  document.querySelectorAll(".sheet-overlay").forEach(overlay => {
-    overlay.addEventListener("click", event => {
-      if (event.target === overlay) {
-        overlay.classList.remove("open");
-        document.body.classList.remove("sheet-open");
-      }
+  document
+    .querySelectorAll(".sheet-overlay")
+    .forEach(overlay => {
+      overlay.addEventListener(
+        "click",
+        event => {
+          if (
+            event.target === overlay
+          ) {
+            overlay.classList.remove(
+              "open"
+            );
+
+            document.body.classList.remove(
+              "sheet-open"
+            );
+          }
+        }
+      );
     });
-  });
 
   document
-    .querySelectorAll(".sheet-close, [data-close-sheet]")
+    .querySelectorAll(
+      ".sheet-close, [data-close-sheet]"
+    )
     .forEach(button => {
-      button.addEventListener("click", () => {
-        const sheetId =
-          button.getAttribute("data-close-sheet") ||
-          button.closest(".sheet-overlay")?.id;
+      button.addEventListener(
+        "click",
+        () => {
+          const sheetId =
+            button.getAttribute(
+              "data-close-sheet"
+            ) ||
+            button.closest(
+              ".sheet-overlay"
+            )?.id;
 
-        if (sheetId) {
-          closeSheet(sheetId);
+          if (sheetId) {
+            closeSheet(sheetId);
+          }
         }
-      });
+      );
     });
 }
 
@@ -233,32 +425,53 @@ function setupSheets() {
 ========================= */
 
 function addShoppingItem(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
-  const nameElement = document.getElementById("shoppingName");
-  const quantityElement = document.getElementById("shoppingQuantity");
-  const categoryElement = document.getElementById("shoppingCategory");
+  const nameElement =
+    document.getElementById(
+      "shoppingName"
+    );
+
+  const quantityElement =
+    document.getElementById(
+      "shoppingQuantity"
+    );
+
+  const categoryElement =
+    document.getElementById(
+      "shoppingCategory"
+    );
 
   if (!nameElement) {
-    console.error("Shopping name input could not be found.");
+    console.error(
+      "Shopping name input could not be found."
+    );
+
     return false;
   }
 
-  const name = nameElement.value.trim();
+  const name =
+    nameElement.value.trim();
 
   const quantity = quantityElement
     ? quantityElement.value.trim()
     : "1";
 
   const category = categoryElement
-    ? categoryElement.value || "Groceries"
+    ? categoryElement.value ||
+      "Groceries"
     : "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
     nameElement.focus();
+
     return false;
   }
 
@@ -281,7 +494,8 @@ function addShoppingItem(event) {
   }
 
   if (categoryElement) {
-    categoryElement.value = "Groceries";
+    categoryElement.value =
+      "Groceries";
   }
 
   closeSheet("shoppingSheet");
@@ -298,36 +512,49 @@ function addTaskShoppingItem(event) {
 }
 
 function addDashboardShopping(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("dashboardShoppingName");
+    document.getElementById(
+      "dashboardShoppingName"
+    );
 
   const quantityElement =
-    document.getElementById("dashboardShoppingQuantity");
+    document.getElementById(
+      "dashboardShoppingQuantity"
+    );
 
   const categoryElement =
-    document.getElementById("dashboardShoppingCategory");
+    document.getElementById(
+      "dashboardShoppingCategory"
+    );
 
   if (!nameElement) {
     return false;
   }
 
-  const name = nameElement.value.trim();
+  const name =
+    nameElement.value.trim();
 
   const quantity = quantityElement
     ? quantityElement.value.trim()
     : "1";
 
   const category = categoryElement
-    ? categoryElement.value || "Groceries"
+    ? categoryElement.value ||
+      "Groceries"
     : "Groceries";
 
   if (!name) {
     alert("Please enter an item.");
     nameElement.focus();
+
     return false;
   }
 
@@ -350,10 +577,13 @@ function addDashboardShopping(event) {
   }
 
   if (categoryElement) {
-    categoryElement.value = "Groceries";
+    categoryElement.value =
+      "Groceries";
   }
 
-  closeSheet("dashboardShoppingSheet");
+  closeSheet(
+    "dashboardShoppingSheet"
+  );
 
   renderShopping();
   loadDashboard();
@@ -366,12 +596,15 @@ function toggleShoppingItem(id) {
   const data = getData();
 
   const item = data.shopping.find(
-    item => String(item.id) === String(id)
+    item =>
+      String(item.id) ===
+      String(id)
   );
 
   if (!item) return;
 
-  item.completed = !item.completed;
+  item.completed =
+    !item.completed;
 
   saveData(data);
 
@@ -383,9 +616,12 @@ function toggleShoppingItem(id) {
 function deleteShoppingItem(id) {
   const data = getData();
 
-  data.shopping = data.shopping.filter(
-    item => String(item.id) !== String(id)
-  );
+  data.shopping =
+    data.shopping.filter(
+      item =>
+        String(item.id) !==
+        String(id)
+    );
 
   saveData(data);
 
@@ -402,13 +638,21 @@ function toggleShopping(id) {
   toggleShoppingItem(id);
 }
 
-function filterShopping(filter, button) {
-  currentShoppingFilter = filter;
+function filterShopping(
+  filter,
+  button
+) {
+  currentShoppingFilter =
+    filter;
 
   document
-    .querySelectorAll(".shopping-filters .filter-button")
+    .querySelectorAll(
+      ".shopping-filters .filter-button"
+    )
     .forEach(item => {
-      item.classList.remove("active");
+      item.classList.remove(
+        "active"
+      );
     });
 
   if (button) {
@@ -418,13 +662,21 @@ function filterShopping(filter, button) {
   renderShopping();
 }
 
-function filterShoppingCategory(category, button) {
-  currentShoppingCategory = category;
+function filterShoppingCategory(
+  category,
+  button
+) {
+  currentShoppingCategory =
+    category;
 
   document
-    .querySelectorAll(".category-button")
+    .querySelectorAll(
+      ".category-button"
+    )
     .forEach(item => {
-      item.classList.remove("active");
+      item.classList.remove(
+        "active"
+      );
     });
 
   if (button) {
@@ -434,105 +686,173 @@ function filterShoppingCategory(category, button) {
   renderShopping();
 }
 
-function getShoppingCategoryIcon(category) {
+function getShoppingCategoryIcon(
+  category
+) {
   const icons = {
-    Groceries: "shopping_dark_thin.png",
-    Household: "home_dark_thin.png",
-    Cleaning: "checkbox_dark_thin.png",
-    Bathroom: "home_dark_thin.png",
-    Pet: "checkbox_dark_thin.png",
-    Other: "shopping_dark_thin.png"
+    Groceries:
+      "shopping_dark_thin.png",
+
+    Household:
+      "home_dark_thin.png",
+
+    Cleaning:
+      "checkbox_dark_thin.png",
+
+    Bathroom:
+      "home_dark_thin.png",
+
+    Pet:
+      "checkbox_dark_thin.png",
+
+    Other:
+      "shopping_dark_thin.png"
   };
 
-  return icons[category] || "shopping_dark_thin.png";
+  return (
+    icons[category] ||
+    "shopping_dark_thin.png"
+  );
 }
 
 function renderShopping() {
   const data = getData();
 
-  const items = Array.isArray(data.shopping)
-    ? data.shopping
-    : [];
+  const items =
+    Array.isArray(data.shopping)
+      ? data.shopping
+      : [];
 
-  const list = document.getElementById("shoppingList");
+  const list =
+    document.getElementById(
+      "shoppingList"
+    );
 
   const remainingCount =
-    document.getElementById("shoppingRemainingCount");
+    document.getElementById(
+      "shoppingRemainingCount"
+    );
 
   const totalCount =
-    document.getElementById("shoppingTotalCount");
+    document.getElementById(
+      "shoppingTotalCount"
+    );
 
   const completedCount =
-    document.getElementById("shoppingCompletedCount");
+    document.getElementById(
+      "shoppingCompletedCount"
+    );
 
   const visibleCount =
-    document.getElementById("visibleShoppingCount");
+    document.getElementById(
+      "visibleShoppingCount"
+    );
 
   const sectionTitle =
-    document.getElementById("shoppingSectionTitle");
+    document.getElementById(
+      "shoppingSectionTitle"
+    );
 
   const clearButton =
-    document.getElementById("clearCompletedButton");
+    document.getElementById(
+      "clearCompletedButton"
+    );
 
   const total = items.length;
 
-  const completed = items.filter(
-    item => item.completed
-  ).length;
+  const completed =
+    items.filter(
+      item => item.completed
+    ).length;
 
-  const remaining = total - completed;
+  const remaining =
+    total - completed;
 
   if (remainingCount) {
-    remainingCount.textContent = remaining;
+    remainingCount.textContent =
+      remaining;
   }
 
   if (totalCount) {
-    totalCount.textContent = total;
+    totalCount.textContent =
+      total;
   }
 
   if (completedCount) {
-    completedCount.textContent = completed;
+    completedCount.textContent =
+      completed;
   }
 
-  let filteredItems = [...items];
+  let filteredItems =
+    [...items];
 
-  if (currentShoppingFilter === "remaining") {
-    filteredItems = filteredItems.filter(
-      item => !item.completed
-    );
+  if (
+    currentShoppingFilter ===
+    "remaining"
+  ) {
+    filteredItems =
+      filteredItems.filter(
+        item => !item.completed
+      );
   }
 
-  if (currentShoppingFilter === "completed") {
-    filteredItems = filteredItems.filter(
-      item => item.completed
-    );
+  if (
+    currentShoppingFilter ===
+    "completed"
+  ) {
+    filteredItems =
+      filteredItems.filter(
+        item => item.completed
+      );
   }
 
-  if (currentShoppingCategory !== "all") {
-    filteredItems = filteredItems.filter(
-      item => item.category === currentShoppingCategory
-    );
+  if (
+    currentShoppingCategory !==
+    "all"
+  ) {
+    filteredItems =
+      filteredItems.filter(
+        item =>
+          item.category ===
+          currentShoppingCategory
+      );
   }
 
   if (visibleCount) {
-    visibleCount.textContent = filteredItems.length;
+    visibleCount.textContent =
+      filteredItems.length;
   }
 
   if (sectionTitle) {
-    if (currentShoppingFilter === "remaining") {
-      sectionTitle.textContent = "Items to Buy";
-    } else if (currentShoppingFilter === "completed") {
-      sectionTitle.textContent = "Completed Items";
-    } else if (currentShoppingCategory !== "all") {
-      sectionTitle.textContent = currentShoppingCategory;
+    if (
+      currentShoppingFilter ===
+      "remaining"
+    ) {
+      sectionTitle.textContent =
+        "Items to Buy";
+    } else if (
+      currentShoppingFilter ===
+      "completed"
+    ) {
+      sectionTitle.textContent =
+        "Completed Items";
+    } else if (
+      currentShoppingCategory !==
+      "all"
+    ) {
+      sectionTitle.textContent =
+        currentShoppingCategory;
     } else {
-      sectionTitle.textContent = "Shopping List";
+      sectionTitle.textContent =
+        "Shopping List";
     }
   }
 
   if (clearButton) {
     clearButton.style.display =
-      completed > 0 ? "block" : "none";
+      completed > 0
+        ? "block"
+        : "none";
   }
 
   if (!list) return;
@@ -541,9 +861,16 @@ function renderShopping() {
     list.innerHTML = `
       <div class="shopping-empty">
         <div class="shopping-empty-icon">
-          <img src="shopping_dark_thin.png" alt="">
+          <img
+            src="shopping_dark_thin.png"
+            alt=""
+          >
         </div>
-        <div class="shopping-empty-title">Nothing here yet</div>
+
+        <div class="shopping-empty-title">
+          Nothing here yet
+        </div>
+
         <div class="shopping-empty-text">
           Add something your household needs.
         </div>
@@ -553,76 +880,123 @@ function renderShopping() {
     return;
   }
 
-  list.innerHTML = filteredItems
-    .map(item => {
-      const icon = getShoppingCategoryIcon(item.category);
+  list.innerHTML =
+    filteredItems
+      .map(item => {
+        const icon =
+          getShoppingCategoryIcon(
+            item.category
+          );
 
-      return `
-        <div class="shopping-card ${item.completed ? "completed" : ""}">
-          <button
-            type="button"
-            class="shopping-checkbox ${item.completed ? "checked" : ""}"
-            onclick="toggleShoppingItem('${item.id}')"
-            aria-label="Complete ${escapeHTML(item.name)}"
-          >
-            ${item.completed ? "✓" : ""}
-          </button>
+        return `
+          <div class="shopping-card ${
+            item.completed
+              ? "completed"
+              : ""
+          }">
 
-          <div class="shopping-item-content">
-            <div class="shopping-item-name">
-              ${escapeHTML(item.name)}
+            <button
+              type="button"
+              class="shopping-checkbox ${
+                item.completed
+                  ? "checked"
+                  : ""
+              }"
+              onclick="toggleShoppingItem('${item.id}')"
+              aria-label="Complete ${escapeHTML(
+                item.name
+              )}"
+            >
+              ${
+                item.completed
+                  ? "✓"
+                  : ""
+              }
+            </button>
+
+            <div class="shopping-item-content">
+
+              <div class="shopping-item-name">
+                ${escapeHTML(
+                  item.name
+                )}
+              </div>
+
+              <div class="shopping-item-details">
+
+                <span class="shopping-item-detail">
+                  ${escapeHTML(
+                    item.quantity ||
+                      "1"
+                  )}
+                </span>
+
+                <span class="shopping-item-dot">
+                  •
+                </span>
+
+                <span class="shopping-category-badge">
+
+                  <img
+                    src="${icon}"
+                    alt=""
+                    class="shopping-category-icon"
+                  >
+
+                  <span>
+                    ${escapeHTML(
+                      item.category ||
+                        "Other"
+                    )}
+                  </span>
+
+                </span>
+
+              </div>
+
             </div>
 
-            <div class="shopping-item-details">
-              <span class="shopping-item-detail">
-                ${escapeHTML(item.quantity || "1")}
-              </span>
+            <button
+              type="button"
+              class="shopping-delete"
+              onclick="deleteShoppingItem('${item.id}')"
+              aria-label="Delete ${escapeHTML(
+                item.name
+              )}"
+            >
+              ×
+            </button>
 
-              <span class="shopping-item-dot">•</span>
-
-              <span class="shopping-category-badge">
-                <img
-                  src="${icon}"
-                  alt=""
-                  class="shopping-category-icon"
-                >
-                <span>${escapeHTML(item.category || "Other")}</span>
-              </span>
-            </div>
           </div>
-
-          <button
-            type="button"
-            class="shopping-delete"
-            onclick="deleteShoppingItem('${item.id}')"
-            aria-label="Delete ${escapeHTML(item.name)}"
-          >
-            ×
-          </button>
-        </div>
-      `;
-    })
-    .join("");
+        `;
+      })
+      .join("");
 }
 
 function clearCompletedShopping() {
   const data = getData();
 
-  const completed = data.shopping.filter(
-    item => item.completed
-  ).length;
+  const completed =
+    data.shopping.filter(
+      item => item.completed
+    ).length;
 
   if (completed === 0) return;
 
   const confirmed = confirm(
-    `Remove ${completed} completed shopping item${completed === 1 ? "" : "s"}?`
+    `Remove ${completed} completed shopping item${
+      completed === 1
+        ? ""
+        : "s"
+    }?`
   );
 
   if (!confirmed) return;
 
-  data.shopping = data.shopping.filter(
-    item => !item.completed
-  );
+  data.shopping =
+    data.shopping.filter(
+      item => !item.completed
+    );
 
   saveData(data);
 
@@ -631,14 +1005,20 @@ function clearCompletedShopping() {
   updateToday();
 }
 
-function updateClearCompletedButton(count) {
+function updateClearCompletedButton(
+  count
+) {
   const button =
-    document.getElementById("clearCompletedButton");
+    document.getElementById(
+      "clearCompletedButton"
+    );
 
   if (!button) return;
 
   button.style.display =
-    count > 0 ? "block" : "none";
+    count > 0
+      ? "block"
+      : "none";
 }
 
 /* =========================
@@ -646,19 +1026,40 @@ function updateClearCompletedButton(count) {
 ========================= */
 
 function addTask(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
-  const nameElement = document.getElementById("taskName");
-  const personElement = document.getElementById("taskPerson");
-  const dueElement = document.getElementById("taskDue");
+  const nameElement =
+    document.getElementById(
+      "taskName"
+    );
+
+  const personElement =
+    document.getElementById(
+      "taskPerson"
+    );
+
+  const dueElement =
+    document.getElementById(
+      "taskDue"
+    );
+
   const priorityElement =
-    document.getElementById("taskPriority");
+    document.getElementById(
+      "taskPriority"
+    );
 
-  if (!nameElement) return false;
+  if (!nameElement) {
+    return false;
+  }
 
-  const name = nameElement.value.trim();
+  const name =
+    nameElement.value.trim();
 
   const person = personElement
     ? personElement.value.trim()
@@ -668,20 +1069,29 @@ function addTask(event) {
     ? dueElement.value
     : "";
 
-  const priority = priorityElement
-    ? priorityElement.value || "Medium"
-    : "Medium";
+  const priority =
+    priorityElement
+      ? priorityElement.value ||
+        "Medium"
+      : "Medium";
 
   if (!name) {
     alert("Please enter a task.");
     nameElement.focus();
+
     return false;
   }
 
-  if (!validateFutureDate(due, "Task date")) {
+  if (
+    !validateFutureDate(
+      due,
+      "Task date"
+    )
+  ) {
     if (dueElement) {
       dueElement.focus();
     }
+
     return false;
   }
 
@@ -690,7 +1100,8 @@ function addTask(event) {
   data.tasks.push({
     id: createId(),
     name,
-    person: person || "Anyone",
+    person:
+      person || "Anyone",
     due,
     priority,
     completed: false
@@ -709,7 +1120,8 @@ function addTask(event) {
   }
 
   if (priorityElement) {
-    priorityElement.value = "Medium";
+    priorityElement.value =
+      "Medium";
   }
 
   closeSheet("taskSheet");
@@ -722,25 +1134,40 @@ function addTask(event) {
 }
 
 function addDashboardTask(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("dashboardTaskName");
+    document.getElementById(
+      "dashboardTaskName"
+    );
 
   const personElement =
-    document.getElementById("dashboardTaskPerson");
+    document.getElementById(
+      "dashboardTaskPerson"
+    );
 
   const dueElement =
-    document.getElementById("dashboardTaskDue");
+    document.getElementById(
+      "dashboardTaskDue"
+    );
 
   const priorityElement =
-    document.getElementById("dashboardTaskPriority");
+    document.getElementById(
+      "dashboardTaskPriority"
+    );
 
-  if (!nameElement) return false;
+  if (!nameElement) {
+    return false;
+  }
 
-  const name = nameElement.value.trim();
+  const name =
+    nameElement.value.trim();
 
   const person = personElement
     ? personElement.value.trim()
@@ -750,20 +1177,29 @@ function addDashboardTask(event) {
     ? dueElement.value
     : "";
 
-  const priority = priorityElement
-    ? priorityElement.value || "Medium"
-    : "Medium";
+  const priority =
+    priorityElement
+      ? priorityElement.value ||
+        "Medium"
+      : "Medium";
 
   if (!name) {
     alert("Please enter a task.");
     nameElement.focus();
+
     return false;
   }
 
-  if (!validateFutureDate(due, "Task date")) {
+  if (
+    !validateFutureDate(
+      due,
+      "Task date"
+    )
+  ) {
     if (dueElement) {
       dueElement.focus();
     }
+
     return false;
   }
 
@@ -772,7 +1208,8 @@ function addDashboardTask(event) {
   data.tasks.push({
     id: createId(),
     name,
-    person: person || "Anyone",
+    person:
+      person || "Anyone",
     due,
     priority,
     completed: false
@@ -791,10 +1228,13 @@ function addDashboardTask(event) {
   }
 
   if (priorityElement) {
-    priorityElement.value = "Medium";
+    priorityElement.value =
+      "Medium";
   }
 
-  closeSheet("dashboardTaskSheet");
+  closeSheet(
+    "dashboardTaskSheet"
+  );
 
   loadDashboard();
   updateToday();
@@ -807,12 +1247,15 @@ function toggleTask(id) {
   const data = getData();
 
   const task = data.tasks.find(
-    task => String(task.id) === String(id)
+    task =>
+      String(task.id) ===
+      String(id)
   );
 
   if (!task) return;
 
-  task.completed = !task.completed;
+  task.completed =
+    !task.completed;
 
   saveData(data);
 
@@ -824,9 +1267,12 @@ function toggleTask(id) {
 function deleteTask(id) {
   const data = getData();
 
-  data.tasks = data.tasks.filter(
-    task => String(task.id) !== String(id)
-  );
+  data.tasks =
+    data.tasks.filter(
+      task =>
+        String(task.id) !==
+        String(id)
+    );
 
   saveData(data);
 
@@ -835,40 +1281,65 @@ function deleteTask(id) {
   updateToday();
 }
 
-function filterTasks(filter, button) {
-  currentTaskFilter = filter;
+function filterTasks(
+  filter,
+  button
+) {
+  currentTaskFilter =
+    filter;
 
   document
-    .querySelectorAll(".filter-button")
+    .querySelectorAll(
+      ".filter-button"
+    )
     .forEach(item => {
-      item.classList.remove("active");
+      item.classList.remove(
+        "active"
+      );
     });
 
   if (button) {
-    button.classList.add("active");
+    button.classList.add(
+      "active"
+    );
   }
 
   renderTasks();
 }
 
 function isToday(task) {
-  return task.due === getTodayString();
+  return (
+    task.due ===
+    getTodayString()
+  );
 }
 
 function isOverdue(task) {
-  if (!task.due || task.completed) {
+  if (
+    !task.due ||
+    task.completed
+  ) {
     return false;
   }
 
-  return task.due < getTodayString();
+  return (
+    task.due <
+    getTodayString()
+  );
 }
 
 function isUpcoming(task) {
-  if (!task.due || task.completed) {
+  if (
+    !task.due ||
+    task.completed
+  ) {
     return false;
   }
 
-  return task.due > getTodayString();
+  return (
+    task.due >
+    getTodayString()
+  );
 }
 
 function getTaskDateLabel(task) {
@@ -876,27 +1347,40 @@ function getTaskDateLabel(task) {
     return "No due date";
   }
 
-  if (task.due === getTodayString()) {
+  if (
+    task.due ===
+    getTodayString()
+  ) {
     return "Today";
   }
 
-  if (task.due === getTomorrowString()) {
+  if (
+    task.due ===
+    getTomorrowString()
+  ) {
     return "Tomorrow";
   }
 
   if (isOverdue(task)) {
-    return "Overdue · " + formatDate(task.due);
+    return (
+      "Overdue · " +
+      formatDate(task.due)
+    );
   }
 
-  return "Due " + formatDate(task.due);
+  return (
+    "Due " +
+    formatDate(task.due)
+  );
 }
 
 function createTaskHTML(task) {
-  const dateClass = isOverdue(task)
-    ? "overdue"
-    : isToday(task)
-    ? "due-today"
-    : "";
+  const dateClass =
+    isOverdue(task)
+      ? "overdue"
+      : isToday(task)
+      ? "due-today"
+      : "";
 
   const priorityClass =
     task.priority === "High"
@@ -906,45 +1390,77 @@ function createTaskHTML(task) {
       : "";
 
   return `
-    <div class="task-card ${task.completed ? "completed" : ""} ${dateClass}">
+    <div class="task-card ${
+      task.completed
+        ? "completed"
+        : ""
+    } ${dateClass}">
+
       <input
         class="task-checkbox"
         type="checkbox"
-        ${task.completed ? "checked" : ""}
+        ${
+          task.completed
+            ? "checked"
+            : ""
+        }
         onchange="toggleTask('${task.id}')"
-        aria-label="Complete ${escapeHTML(task.name)}"
+        aria-label="Complete ${escapeHTML(
+          task.name
+        )}"
       >
 
       <div class="task-content">
+
         <div class="task-name">
-          ${escapeHTML(task.name)}
+          ${escapeHTML(
+            task.name
+          )}
         </div>
 
         <div class="task-details">
-          <span class="task-detail">
-            ${escapeHTML(task.person || "Anyone")}
-          </span>
-
-          <span class="task-detail-dot">•</span>
 
           <span class="task-detail">
-            ${escapeHTML(getTaskDateLabel(task))}
+            ${escapeHTML(
+              task.person ||
+                "Anyone"
+            )}
           </span>
+
+          <span class="task-detail-dot">
+            •
+          </span>
+
+          <span class="task-detail">
+            ${escapeHTML(
+              getTaskDateLabel(
+                task
+              )
+            )}
+          </span>
+
         </div>
+
       </div>
 
       <span class="task-priority ${priorityClass}">
-        ${escapeHTML(task.priority || "Medium")}
+        ${escapeHTML(
+          task.priority ||
+            "Medium"
+        )}
       </span>
 
       <button
         class="task-delete"
         type="button"
         onclick="deleteTask('${task.id}')"
-        aria-label="Delete ${escapeHTML(task.name)}"
+        aria-label="Delete ${escapeHTML(
+          task.name
+        )}"
       >
         ×
       </button>
+
     </div>
   `;
 }
@@ -960,128 +1476,184 @@ function renderTaskList(
   if (tasks.length === 0) {
     container.innerHTML = `
       <div class="task-empty">
-        <div class="task-empty-icon">✓</div>
-        <div class="task-empty-title">${emptyTitle}</div>
-        <div class="task-empty-text">${emptyText}</div>
+
+        <div class="task-empty-icon">
+          ✓
+        </div>
+
+        <div class="task-empty-title">
+          ${emptyTitle}
+        </div>
+
+        <div class="task-empty-text">
+          ${emptyText}
+        </div>
+
       </div>
     `;
 
     return;
   }
 
-  container.innerHTML = tasks
-    .map(task => createTaskHTML(task))
-    .join("");
+  container.innerHTML =
+    tasks
+      .map(task =>
+        createTaskHTML(task)
+      )
+      .join("");
 }
 
 function updateTaskProgress(data) {
-  const total = data.tasks.length;
+  const total =
+    data.tasks.length;
 
-  const completed = data.tasks.filter(
-    task => task.completed
-  ).length;
+  const completed =
+    data.tasks.filter(
+      task => task.completed
+    ).length;
 
-  const active = total - completed;
+  const active =
+    total - completed;
 
   const percentage =
     total === 0
       ? 0
-      : Math.round((completed / total) * 100);
+      : Math.round(
+          (completed / total) *
+            100
+        );
 
   const completedElement =
-    document.getElementById("taskProgressCompleted");
+    document.getElementById(
+      "taskProgressCompleted"
+    );
 
   const totalElement =
-    document.getElementById("taskProgressTotal");
+    document.getElementById(
+      "taskProgressTotal"
+    );
 
   const percentElement =
-    document.getElementById("taskProgressPercent");
+    document.getElementById(
+      "taskProgressPercent"
+    );
 
   const fillElement =
-    document.getElementById("taskProgressFill");
+    document.getElementById(
+      "taskProgressFill"
+    );
 
   const messageElement =
-    document.getElementById("taskProgressMessage");
+    document.getElementById(
+      "taskProgressMessage"
+    );
 
   if (completedElement) {
-    completedElement.textContent = completed;
+    completedElement.textContent =
+      completed;
   }
 
   if (totalElement) {
-    totalElement.textContent = total;
+    totalElement.textContent =
+      total;
   }
 
   if (percentElement) {
-    percentElement.textContent = percentage + "%";
+    percentElement.textContent =
+      percentage + "%";
   }
 
   if (fillElement) {
-    fillElement.style.width = percentage + "%";
+    fillElement.style.width =
+      percentage + "%";
   }
 
   if (messageElement) {
     if (total === 0) {
       messageElement.textContent =
         "Add your first task to get started.";
-    } else if (percentage === 100) {
+    } else if (
+      percentage === 100
+    ) {
       messageElement.textContent =
         "Everything is done. Great work!";
-    } else if (percentage >= 75) {
+    } else if (
+      percentage >= 75
+    ) {
       messageElement.textContent =
         "Almost there. Keep going!";
-    } else if (percentage >= 50) {
+    } else if (
+      percentage >= 50
+    ) {
       messageElement.textContent =
         "You're making good progress.";
     } else {
       messageElement.textContent =
         active +
         " task" +
-        (active === 1 ? "" : "s") +
+        (active === 1
+          ? ""
+          : "s") +
         " still to go.";
     }
   }
 }
 
 function updateTaskSummary(data) {
-  const active = data.tasks.filter(
-    task => !task.completed
-  ).length;
+  const active =
+    data.tasks.filter(
+      task => !task.completed
+    ).length;
 
-  const completed = data.tasks.filter(
-    task => task.completed
-  ).length;
+  const completed =
+    data.tasks.filter(
+      task => task.completed
+    ).length;
 
-  const highPriority = data.tasks.filter(
-    task =>
-      !task.completed &&
-      task.priority === "High"
-  ).length;
+  const highPriority =
+    data.tasks.filter(
+      task =>
+        !task.completed &&
+        task.priority ===
+          "High"
+    ).length;
 
   const activeElement =
-    document.getElementById("taskCount");
+    document.getElementById(
+      "taskCount"
+    );
 
   const completedElement =
-    document.getElementById("completedTaskCount");
+    document.getElementById(
+      "completedTaskCount"
+    );
 
   const highElement =
-    document.getElementById("highPriorityCount");
+    document.getElementById(
+      "highPriorityCount"
+    );
 
   if (activeElement) {
-    activeElement.textContent = active;
+    activeElement.textContent =
+      active;
   }
 
   if (completedElement) {
-    completedElement.textContent = completed;
+    completedElement.textContent =
+      completed;
   }
 
   if (highElement) {
-    highElement.textContent = highPriority;
+    highElement.textContent =
+      highPriority;
   }
 }
 
 function renderTasks() {
   const mainContainer =
-    document.getElementById("taskList");
+    document.getElementById(
+      "taskList"
+    );
 
   if (!mainContainer) return;
 
@@ -1091,47 +1663,69 @@ function renderTasks() {
   updateTaskSummary(data);
 
   const todayContainer =
-    document.getElementById("todayTaskList");
+    document.getElementById(
+      "todayTaskList"
+    );
 
   const upcomingContainer =
-    document.getElementById("upcomingTaskList");
+    document.getElementById(
+      "upcomingTaskList"
+    );
 
   const todaySection =
-    document.getElementById("todayTaskSection");
+    document.getElementById(
+      "todayTaskSection"
+    );
 
   const upcomingSection =
-    document.getElementById("upcomingTaskSection");
+    document.getElementById(
+      "upcomingTaskSection"
+    );
 
   const todayCount =
-    document.getElementById("todayTaskSectionCount");
+    document.getElementById(
+      "todayTaskSectionCount"
+    );
 
   const upcomingCount =
-    document.getElementById("upcomingTaskSectionCount");
+    document.getElementById(
+      "upcomingTaskSectionCount"
+    );
 
-  const activeTasks = data.tasks.filter(
-    task => !task.completed
-  );
+  const activeTasks =
+    data.tasks.filter(
+      task => !task.completed
+    );
 
-  const todayTasks = activeTasks.filter(
-    task => isToday(task)
-  );
+  const todayTasks =
+    activeTasks.filter(
+      task => isToday(task)
+    );
 
-  const upcomingTasks = activeTasks
-    .filter(task => isUpcoming(task))
-    .sort((a, b) => {
-      if (!a.due) return 1;
-      if (!b.due) return -1;
+  const upcomingTasks =
+    activeTasks
+      .filter(task =>
+        isUpcoming(task)
+      )
+      .sort((a, b) => {
+        if (!a.due) return 1;
+        if (!b.due) return -1;
 
-      return new Date(a.due) - new Date(b.due);
-    })
-    .slice(0, 5);
+        return (
+          new Date(a.due) -
+          new Date(b.due)
+        );
+      })
+      .slice(0, 5);
 
   if (todayCount) {
-    todayCount.textContent = todayTasks.length;
+    todayCount.textContent =
+      todayTasks.length;
   }
 
   if (upcomingCount) {
-    upcomingCount.textContent = upcomingTasks.length;
+    upcomingCount.textContent =
+      upcomingTasks.length;
   }
 
   renderTaskList(
@@ -1149,24 +1743,36 @@ function renderTasks() {
   );
 
   const title =
-    document.getElementById("mainTaskTitle");
+    document.getElementById(
+      "mainTaskTitle"
+    );
 
-  if (currentTaskFilter === "today") {
+  if (
+    currentTaskFilter ===
+    "today"
+  ) {
     if (title) {
-      title.textContent = "Today's Tasks";
+      title.textContent =
+        "Today's Tasks";
     }
 
     if (todaySection) {
-      todaySection.classList.add("hidden");
+      todaySection.classList.add(
+        "hidden"
+      );
     }
 
     if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
+      upcomingSection.classList.add(
+        "hidden"
+      );
     }
 
     renderTaskList(
       mainContainer,
-      data.tasks.filter(task => isToday(task)),
+      data.tasks.filter(
+        task => isToday(task)
+      ),
       "No tasks today",
       "You don't have any tasks due today."
     );
@@ -1174,22 +1780,32 @@ function renderTasks() {
     return;
   }
 
-  if (currentTaskFilter === "active") {
+  if (
+    currentTaskFilter ===
+    "active"
+  ) {
     if (title) {
-      title.textContent = "Active Tasks";
+      title.textContent =
+        "Active Tasks";
     }
 
     if (todaySection) {
-      todaySection.classList.add("hidden");
+      todaySection.classList.add(
+        "hidden"
+      );
     }
 
     if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
+      upcomingSection.classList.add(
+        "hidden"
+      );
     }
 
     renderTaskList(
       mainContainer,
-      data.tasks.filter(task => !task.completed),
+      data.tasks.filter(
+        task => !task.completed
+      ),
       "No active tasks",
       "Everything is completed."
     );
@@ -1197,22 +1813,32 @@ function renderTasks() {
     return;
   }
 
-  if (currentTaskFilter === "completed") {
+  if (
+    currentTaskFilter ===
+    "completed"
+  ) {
     if (title) {
-      title.textContent = "Completed Tasks";
+      title.textContent =
+        "Completed Tasks";
     }
 
     if (todaySection) {
-      todaySection.classList.add("hidden");
+      todaySection.classList.add(
+        "hidden"
+      );
     }
 
     if (upcomingSection) {
-      upcomingSection.classList.add("hidden");
+      upcomingSection.classList.add(
+        "hidden"
+      );
     }
 
     renderTaskList(
       mainContainer,
-      data.tasks.filter(task => task.completed),
+      data.tasks.filter(
+        task => task.completed
+      ),
       "No completed tasks",
       "Completed tasks will appear here."
     );
@@ -1221,28 +1847,46 @@ function renderTasks() {
   }
 
   if (title) {
-    title.textContent = "All Tasks";
+    title.textContent =
+      "All Tasks";
   }
 
   if (todaySection) {
-    todaySection.classList.remove("hidden");
+    todaySection.classList.remove(
+      "hidden"
+    );
   }
 
   if (upcomingSection) {
-    upcomingSection.classList.remove("hidden");
+    upcomingSection.classList.remove(
+      "hidden"
+    );
   }
 
-  const allTasks = [...data.tasks].sort((a, b) => {
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1;
-    }
+  const allTasks =
+    [...data.tasks].sort(
+      (a, b) => {
+        if (
+          a.completed !==
+          b.completed
+        ) {
+          return a.completed
+            ? 1
+            : -1;
+        }
 
-    if (!a.due && !b.due) return 0;
-    if (!a.due) return 1;
-    if (!b.due) return -1;
+        if (!a.due && !b.due)
+          return 0;
 
-    return new Date(a.due) - new Date(b.due);
-  });
+        if (!a.due) return 1;
+        if (!b.due) return -1;
+
+        return (
+          new Date(a.due) -
+          new Date(b.due)
+        );
+      }
+    );
 
   renderTaskList(
     mainContainer,
@@ -1257,41 +1901,73 @@ function renderTasks() {
 ========================= */
 
 function addEvent(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("eventName");
+    document.getElementById(
+      "eventName"
+    );
 
   const dateElement =
-    document.getElementById("eventDate");
+    document.getElementById(
+      "eventDate"
+    );
 
   const timeElement =
-    document.getElementById("eventTime");
+    document.getElementById(
+      "eventTime"
+    );
 
   const locationElement =
-    document.getElementById("eventLocation");
+    document.getElementById(
+      "eventLocation"
+    );
 
-  if (!nameElement || !dateElement) {
+  if (
+    !nameElement ||
+    !dateElement
+  ) {
     return false;
   }
 
-  const name = nameElement.value.trim();
-  const date = dateElement.value;
-  const time = timeElement ? timeElement.value : "";
+  const name =
+    nameElement.value.trim();
 
-  const location = locationElement
-    ? locationElement.value.trim()
-    : "";
+  const date =
+    dateElement.value;
+
+  const time =
+    timeElement
+      ? timeElement.value
+      : "";
+
+  const location =
+    locationElement
+      ? locationElement.value.trim()
+      : "";
 
   if (!name || !date) {
-    alert("Please enter an event name and date.");
+    alert(
+      "Please enter an event name and date."
+    );
+
     return false;
   }
 
-  if (!validateFutureDate(date, "Event date")) {
+  if (
+    !validateFutureDate(
+      date,
+      "Event date"
+    )
+  ) {
     dateElement.focus();
+
     return false;
   }
 
@@ -1327,41 +2003,73 @@ function addEvent(event) {
 }
 
 function addDashboardEvent(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("dashboardEventName");
+    document.getElementById(
+      "dashboardEventName"
+    );
 
   const dateElement =
-    document.getElementById("dashboardEventDate");
+    document.getElementById(
+      "dashboardEventDate"
+    );
 
   const timeElement =
-    document.getElementById("dashboardEventTime");
+    document.getElementById(
+      "dashboardEventTime"
+    );
 
   const locationElement =
-    document.getElementById("dashboardEventLocation");
+    document.getElementById(
+      "dashboardEventLocation"
+    );
 
-  if (!nameElement || !dateElement) {
+  if (
+    !nameElement ||
+    !dateElement
+  ) {
     return false;
   }
 
-  const name = nameElement.value.trim();
-  const date = dateElement.value;
-  const time = timeElement ? timeElement.value : "";
+  const name =
+    nameElement.value.trim();
 
-  const location = locationElement
-    ? locationElement.value.trim()
-    : "";
+  const date =
+    dateElement.value;
+
+  const time =
+    timeElement
+      ? timeElement.value
+      : "";
+
+  const location =
+    locationElement
+      ? locationElement.value.trim()
+      : "";
 
   if (!name || !date) {
-    alert("Please enter an event name and date.");
+    alert(
+      "Please enter an event name and date."
+    );
+
     return false;
   }
 
-  if (!validateFutureDate(date, "Event date")) {
+  if (
+    !validateFutureDate(
+      date,
+      "Event date"
+    )
+  ) {
     dateElement.focus();
+
     return false;
   }
 
@@ -1388,7 +2096,9 @@ function addDashboardEvent(event) {
     locationElement.value = "";
   }
 
-  closeSheet("dashboardEventSheet");
+  closeSheet(
+    "dashboardEventSheet"
+  );
 
   renderEvents();
   loadDashboard();
@@ -1399,9 +2109,12 @@ function addDashboardEvent(event) {
 function deleteEvent(id) {
   const data = getData();
 
-  data.events = data.events.filter(
-    event => String(event.id) !== String(id)
-  );
+  data.events =
+    data.events.filter(
+      event =>
+        String(event.id) !==
+        String(id)
+    );
 
   saveData(data);
 
@@ -1411,69 +2124,118 @@ function deleteEvent(id) {
 
 function renderEvents() {
   const container =
-    document.getElementById("eventList");
+    document.getElementById(
+      "eventList"
+    );
 
   if (!container) return;
 
   const data = getData();
 
-  const events = [...data.events]
-    .filter(event => isValidFutureDate(event.date))
-    .sort((a, b) => {
-      const dateA = new Date(
-        `${a.date}T${a.time || "00:00"}`
-      );
+  const events =
+    [...data.events]
+      .filter(event =>
+        isValidFutureDate(
+          event.date
+        )
+      )
+      .sort((a, b) => {
+        const dateA =
+          new Date(
+            `${a.date}T${
+              a.time || "00:00"
+            }`
+          );
 
-      const dateB = new Date(
-        `${b.date}T${b.time || "00:00"}`
-      );
+        const dateB =
+          new Date(
+            `${b.date}T${
+              b.time || "00:00"
+            }`
+          );
 
-      return dateA - dateB;
-    });
+        return dateA - dateB;
+      });
 
   if (events.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
+
         <div class="empty-icon">
-          <img src="calendar_dark_thin.png" alt="">
+          <img
+            src="calendar_dark_thin.png"
+            alt=""
+          >
         </div>
-        <div class="empty-title">No upcoming events</div>
+
+        <div class="empty-title">
+          No upcoming events
+        </div>
+
         <div class="empty-text">
           Add an event to your household calendar.
         </div>
+
       </div>
     `;
 
     return;
   }
 
-  container.innerHTML = events
-    .map(event => `
-      <div class="data-row">
-        <div class="data-main">
-          <div>
-            <div class="data-name">
-              ${escapeHTML(event.name)}
+  container.innerHTML =
+    events
+      .map(event => `
+        <div class="data-row">
+
+          <div class="data-main">
+
+            <div>
+
+              <div class="data-name">
+                ${escapeHTML(
+                  event.name
+                )}
+              </div>
+
+              <div class="data-info">
+                ${formatDate(
+                  event.date
+                )}
+
+                ${
+                  event.time
+                    ? " · " +
+                      escapeHTML(
+                        event.time
+                      )
+                    : ""
+                }
+
+                ${
+                  event.location
+                    ? " · " +
+                      escapeHTML(
+                        event.location
+                      )
+                    : ""
+                }
+              </div>
+
             </div>
 
-            <div class="data-info">
-              ${formatDate(event.date)}
-              ${event.time ? " · " + escapeHTML(event.time) : ""}
-              ${event.location ? " · " + escapeHTML(event.location) : ""}
-            </div>
           </div>
-        </div>
 
-        <button
-          class="btn btn-danger btn-small"
-          type="button"
-          onclick="deleteEvent('${event.id}')"
-        >
-          Delete
-        </button>
-      </div>
-    `)
-    .join("");
+          <button
+            class="btn btn-danger btn-small"
+            type="button"
+            onclick="deleteEvent('${event.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+      `)
+      .join("");
 }
 
 /* =========================
@@ -1481,40 +2243,92 @@ function renderEvents() {
 ========================= */
 
 function addExpense(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("expenseName");
+    document.getElementById(
+      "expenseName"
+    );
 
   const amountElement =
-    document.getElementById("expenseAmount");
+    document.getElementById(
+      "expenseAmount"
+    );
 
   const categoryElement =
-    document.getElementById("expenseCategory");
+    document.getElementById(
+      "expenseCategory"
+    );
 
   const dateElement =
-    document.getElementById("expenseDate");
+    document.getElementById(
+      "expenseDate"
+    );
 
-  if (!nameElement || !amountElement || !categoryElement) {
+  if (
+    !nameElement ||
+    !amountElement ||
+    !categoryElement
+  ) {
     return false;
   }
 
-  const name = nameElement.value.trim();
-  const amount = parseFloat(amountElement.value);
-  const category = categoryElement.value;
-  const date = dateElement ? dateElement.value : "";
+  const name =
+    nameElement.value.trim();
 
-  if (!name || isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid expense.");
+  const amount =
+    parseFloat(
+      amountElement.value
+    );
+
+  const category =
+    categoryElement.value;
+
+  const date =
+    dateElement
+      ? dateElement.value
+      : "";
+
+  if (
+    !name ||
+    isNaN(amount) ||
+    amount <= 0
+  ) {
+    alert(
+      "Please enter a valid expense."
+    );
+
     return false;
   }
 
-  if (!validateFutureDate(date, "Expense date")) {
+  if (!date) {
+    alert(
+      "Please select an expense date."
+    );
+
     if (dateElement) {
       dateElement.focus();
     }
+
+    return false;
+  }
+
+  if (
+    !validateFutureDate(
+      date,
+      "Expense date"
+    )
+  ) {
+    if (dateElement) {
+      dateElement.focus();
+    }
+
     return false;
   }
 
@@ -1525,7 +2339,7 @@ function addExpense(event) {
     name,
     amount,
     category,
-    date: date || getTodayString()
+    date
   });
 
   saveData(data);
@@ -1546,40 +2360,92 @@ function addExpense(event) {
 }
 
 function addDashboardExpense(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const nameElement =
-    document.getElementById("dashboardExpenseName");
+    document.getElementById(
+      "dashboardExpenseName"
+    );
 
   const amountElement =
-    document.getElementById("dashboardExpenseAmount");
+    document.getElementById(
+      "dashboardExpenseAmount"
+    );
 
   const categoryElement =
-    document.getElementById("dashboardExpenseCategory");
+    document.getElementById(
+      "dashboardExpenseCategory"
+    );
 
   const dateElement =
-    document.getElementById("dashboardExpenseDate");
+    document.getElementById(
+      "dashboardExpenseDate"
+    );
 
-  if (!nameElement || !amountElement || !categoryElement) {
+  if (
+    !nameElement ||
+    !amountElement ||
+    !categoryElement
+  ) {
     return false;
   }
 
-  const name = nameElement.value.trim();
-  const amount = parseFloat(amountElement.value);
-  const category = categoryElement.value;
-  const date = dateElement ? dateElement.value : "";
+  const name =
+    nameElement.value.trim();
 
-  if (!name || isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid expense.");
+  const amount =
+    parseFloat(
+      amountElement.value
+    );
+
+  const category =
+    categoryElement.value;
+
+  const date =
+    dateElement
+      ? dateElement.value
+      : "";
+
+  if (
+    !name ||
+    isNaN(amount) ||
+    amount <= 0
+  ) {
+    alert(
+      "Please enter a valid expense."
+    );
+
     return false;
   }
 
-  if (!validateFutureDate(date, "Expense date")) {
+  if (!date) {
+    alert(
+      "Please select an expense date."
+    );
+
     if (dateElement) {
       dateElement.focus();
     }
+
+    return false;
+  }
+
+  if (
+    !validateFutureDate(
+      date,
+      "Expense date"
+    )
+  ) {
+    if (dateElement) {
+      dateElement.focus();
+    }
+
     return false;
   }
 
@@ -1590,7 +2456,7 @@ function addDashboardExpense(event) {
     name,
     amount,
     category,
-    date: date || getTodayString()
+    date
   });
 
   saveData(data);
@@ -1602,7 +2468,9 @@ function addDashboardExpense(event) {
     dateElement.value = "";
   }
 
-  closeSheet("dashboardExpenseSheet");
+  closeSheet(
+    "dashboardExpenseSheet"
+  );
 
   renderSpending();
   loadDashboard();
@@ -1613,9 +2481,12 @@ function addDashboardExpense(event) {
 function deleteExpense(id) {
   const data = getData();
 
-  data.spending = data.spending.filter(
-    expense => String(expense.id) !== String(id)
-  );
+  data.spending =
+    data.spending.filter(
+      expense =>
+        String(expense.id) !==
+        String(id)
+    );
 
   saveData(data);
 
@@ -1625,113 +2496,168 @@ function deleteExpense(id) {
 
 function renderSpending() {
   const container =
-    document.getElementById("spendingList");
+    document.getElementById(
+      "spendingList"
+    );
 
   if (!container) return;
 
   const data = getData();
 
-  const total = data.spending.reduce(
-    (sum, expense) =>
-      sum + Number(expense.amount),
-    0
-  );
-
-  const now = new Date();
-
-  const thisMonth = data.spending
-    .filter(expense => {
-      const date = new Date(
-        expense.date + "T00:00:00"
-      );
-
-      return (
-        date.getMonth() === now.getMonth() &&
-        date.getFullYear() === now.getFullYear()
-      );
-    })
-    .reduce(
+  const total =
+    data.spending.reduce(
       (sum, expense) =>
-        sum + Number(expense.amount),
+        sum +
+        Number(expense.amount),
       0
     );
 
-  const average = data.spending.length
-    ? total / data.spending.length
-    : 0;
+  const now = new Date();
+
+  const thisMonth =
+    data.spending
+      .filter(expense => {
+        const date =
+          new Date(
+            expense.date +
+              "T00:00:00"
+          );
+
+        return (
+          date.getMonth() ===
+            now.getMonth() &&
+          date.getFullYear() ===
+            now.getFullYear()
+        );
+      })
+      .reduce(
+        (sum, expense) =>
+          sum +
+          Number(
+            expense.amount
+          ),
+        0
+      );
+
+  const average =
+    data.spending.length
+      ? total /
+        data.spending.length
+      : 0;
 
   const totalElement =
-    document.getElementById("totalSpending");
+    document.getElementById(
+      "totalSpending"
+    );
 
   const monthElement =
-    document.getElementById("monthSpending");
+    document.getElementById(
+      "monthSpending"
+    );
 
   const averageElement =
-    document.getElementById("averageSpending");
+    document.getElementById(
+      "averageSpending"
+    );
 
   if (totalElement) {
-    totalElement.textContent = formatMoney(total);
+    totalElement.textContent =
+      formatMoney(total);
   }
 
   if (monthElement) {
-    monthElement.textContent = formatMoney(thisMonth);
+    monthElement.textContent =
+      formatMoney(thisMonth);
   }
 
   if (averageElement) {
-    averageElement.textContent = formatMoney(average);
+    averageElement.textContent =
+      formatMoney(average);
   }
 
-  if (data.spending.length === 0) {
+  if (
+    data.spending.length ===
+    0
+  ) {
     container.innerHTML = `
       <div class="empty-state">
+
         <div class="empty-icon">
-          <img src="wallet_dark_thin.png" alt="">
+          <img
+            src="wallet_dark_thin.png"
+            alt=""
+          >
         </div>
-        <div class="empty-title">No spending recorded</div>
+
+        <div class="empty-title">
+          No spending recorded
+        </div>
+
         <div class="empty-text">
           Add your first household expense.
         </div>
+
       </div>
     `;
 
     return;
   }
 
-  const expenses = [...data.spending].reverse();
+  const expenses =
+    [...data.spending].reverse();
 
-  container.innerHTML = expenses
-    .map(expense => `
-      <div class="data-row">
-        <div class="data-main">
-          <div>
-            <div class="data-name">
-              ${escapeHTML(expense.name)}
+  container.innerHTML =
+    expenses
+      .map(expense => `
+        <div class="data-row">
+
+          <div class="data-main">
+
+            <div>
+
+              <div class="data-name">
+                ${escapeHTML(
+                  expense.name
+                )}
+              </div>
+
+              <div class="expense-category">
+                ${escapeHTML(
+                  expense.category
+                )}
+
+                ·
+
+                ${formatDate(
+                  expense.date
+                )}
+              </div>
+
             </div>
 
-            <div class="expense-category">
-              ${escapeHTML(expense.category)}
-              ·
-              ${formatDate(expense.date)}
-            </div>
           </div>
-        </div>
 
-        <div class="data-actions">
-          <span class="expense-amount">
-            ${formatMoney(expense.amount)}
-          </span>
+          <div class="data-actions">
 
-          <button
-            class="btn btn-danger btn-small"
-            type="button"
-            onclick="deleteExpense('${expense.id}')"
-          >
-            Delete
-          </button>
+            <span class="expense-amount">
+              ${formatMoney(
+                expense.amount
+              )}
+            </span>
+
+            <button
+              class="btn btn-danger btn-small"
+              type="button"
+              onclick="deleteExpense('${expense.id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
         </div>
-      </div>
-    `)
-    .join("");
+      `)
+      .join("");
 }
 
 /* =========================
@@ -1742,7 +2668,9 @@ function loadSettings() {
   const data = getData();
 
   const nameInput =
-    document.getElementById("householdName");
+    document.getElementById(
+      "householdName"
+    );
 
   if (nameInput) {
     nameInput.value =
@@ -1750,7 +2678,9 @@ function loadSettings() {
   }
 
   const currencyInput =
-    document.getElementById("currency");
+    document.getElementById(
+      "currency"
+    );
 
   if (currencyInput) {
     currencyInput.value =
@@ -1759,24 +2689,38 @@ function loadSettings() {
 }
 
 function saveSettings(event) {
-  if (event && typeof event.preventDefault === "function") {
+  if (
+    event &&
+    typeof event.preventDefault ===
+      "function"
+  ) {
     event.preventDefault();
   }
 
   const data = getData();
 
   const nameInput =
-    document.getElementById("householdName");
+    document.getElementById(
+      "householdName"
+    );
 
   const currencyInput =
-    document.getElementById("currency");
+    document.getElementById(
+      "currency"
+    );
 
-  if (!nameInput || !currencyInput) {
+  if (
+    !nameInput ||
+    !currencyInput
+  ) {
     return false;
   }
 
-  const name = nameInput.value.trim();
-  const currency = currencyInput.value;
+  const name =
+    nameInput.value.trim();
+
+  const currency =
+    currencyInput.value;
 
   data.settings.householdName =
     name || "My Household";
@@ -1796,13 +2740,22 @@ function saveSettings(event) {
 }
 
 function resetData() {
-  const confirmed = confirm(
-    "Are you sure you want to delete all Household Manager data?"
-  );
+  const confirmed =
+    confirm(
+      "Are you sure you want to delete all Household Manager data for this account?"
+    );
 
   if (!confirmed) return;
 
-  localStorage.removeItem("householdManager");
+  const dataKey =
+    getUserDataKey();
+
+  if (dataKey) {
+    localStorage.removeItem(
+      dataKey
+    );
+  }
+
   window.location.reload();
 }
 
@@ -1813,35 +2766,51 @@ function resetData() {
 function updateToday() {
   const data = getData();
 
-  const today = new Date();
-  const todayString = getTodayString();
+  const today =
+    new Date();
 
-  const todayTasks = data.tasks.filter(
-    task =>
-      !task.completed &&
-      task.due === todayString
-  ).length;
+  const todayString =
+    getTodayString();
 
-  const shoppingItems = data.shopping.filter(
-    item => !item.completed
-  ).length;
+  const todayTasks =
+    data.tasks.filter(
+      task =>
+        !task.completed &&
+        task.due ===
+          todayString
+    ).length;
+
+  const shoppingItems =
+    data.shopping.filter(
+      item =>
+        !item.completed
+    ).length;
 
   const todayDateElement =
-    document.getElementById("todayDate");
+    document.getElementById(
+      "todayDate"
+    );
 
   const todayTaskElement =
-    document.getElementById("todayTaskCount");
+    document.getElementById(
+      "todayTaskCount"
+    );
 
   const todayShoppingElement =
-    document.getElementById("todayShoppingCount");
+    document.getElementById(
+      "todayShoppingCount"
+    );
 
   if (todayDateElement) {
     todayDateElement.textContent =
-      today.toLocaleDateString("en-AU", {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-      });
+      today.toLocaleDateString(
+        "en-AU",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
+      );
   }
 
   if (todayTaskElement) {
@@ -1858,46 +2827,65 @@ function updateToday() {
 function loadDashboard() {
   const data = getData();
 
-  const taskCount = data.tasks.filter(
-    task => !task.completed
-  ).length;
+  const taskCount =
+    data.tasks.filter(
+      task => !task.completed
+    ).length;
 
-  const shoppingCount = data.shopping.filter(
-    item => !item.completed
-  ).length;
+  const shoppingCount =
+    data.shopping.filter(
+      item => !item.completed
+    ).length;
 
-  const eventCount = data.events.filter(
-    event => isValidFutureDate(event.date)
-  ).length;
+  const eventCount =
+    data.events.filter(
+      event =>
+        isValidFutureDate(
+          event.date
+        )
+    ).length;
 
-  const spending = data.spending.reduce(
-    (sum, expense) =>
-      sum + Number(expense.amount),
-    0
-  );
+  const spending =
+    data.spending.reduce(
+      (sum, expense) =>
+        sum +
+        Number(expense.amount),
+      0
+    );
 
   const taskElement =
-    document.getElementById("dashboardTasks");
+    document.getElementById(
+      "dashboardTasks"
+    );
 
   const shoppingElement =
-    document.getElementById("dashboardShopping");
+    document.getElementById(
+      "dashboardShopping"
+    );
 
   const eventElement =
-    document.getElementById("dashboardEvents");
+    document.getElementById(
+      "dashboardEvents"
+    );
 
   const spendingElement =
-    document.getElementById("dashboardSpending");
+    document.getElementById(
+      "dashboardSpending"
+    );
 
   if (taskElement) {
-    taskElement.textContent = taskCount;
+    taskElement.textContent =
+      taskCount;
   }
 
   if (shoppingElement) {
-    shoppingElement.textContent = shoppingCount;
+    shoppingElement.textContent =
+      shoppingCount;
   }
 
   if (eventElement) {
-    eventElement.textContent = eventCount;
+    eventElement.textContent =
+      eventCount;
   }
 
   if (spendingElement) {
@@ -1906,87 +2894,143 @@ function loadDashboard() {
   }
 
   const taskList =
-    document.getElementById("dashboardTaskList");
+    document.getElementById(
+      "dashboardTaskList"
+    );
 
   if (taskList) {
-    const tasks = data.tasks
-      .filter(task => !task.completed)
-      .slice(0, 4);
+    const tasks =
+      data.tasks
+        .filter(
+          task =>
+            !task.completed
+        )
+        .slice(0, 4);
 
     if (tasks.length === 0) {
       taskList.innerHTML = `
         <div class="list-item">
-          <span>No outstanding tasks</span>
+          <span>
+            No outstanding tasks
+          </span>
         </div>
       `;
     } else {
-      taskList.innerHTML = tasks
-        .map(task => `
-          <div class="list-item">
-            <div class="item-left">
-              <div>
-                <div class="item-title">
-                  ${escapeHTML(task.name)}
+      taskList.innerHTML =
+        tasks
+          .map(task => `
+            <div class="list-item">
+
+              <div class="item-left">
+
+                <div>
+
+                  <div class="item-title">
+                    ${escapeHTML(
+                      task.name
+                    )}
+                  </div>
+
+                  <div class="item-meta">
+                    ${escapeHTML(
+                      task.person ||
+                        "Anyone"
+                    )}
+                  </div>
+
                 </div>
 
-                <div class="item-meta">
-                  ${escapeHTML(task.person || "Anyone")}
-                </div>
               </div>
-            </div>
 
-            <span class="badge ${task.priority === "High" ? "yellow" : ""}">
-              ${escapeHTML(task.priority || "Medium")}
-            </span>
-          </div>
-        `)
-        .join("");
+              <span class="badge ${
+                task.priority ===
+                "High"
+                  ? "yellow"
+                  : ""
+              }">
+                ${escapeHTML(
+                  task.priority ||
+                    "Medium"
+                )}
+              </span>
+
+            </div>
+          `)
+          .join("");
     }
   }
 
   const eventList =
-    document.getElementById("dashboardEventList");
+    document.getElementById(
+      "dashboardEventList"
+    );
 
   if (eventList) {
-    const events = [...data.events]
-      .filter(event => isValidFutureDate(event.date))
-      .sort((a, b) => {
-        const dateA = new Date(
-          `${a.date}T${a.time || "00:00"}`
-        );
+    const events =
+      [...data.events]
+        .filter(event =>
+          isValidFutureDate(
+            event.date
+          )
+        )
+        .sort((a, b) => {
+          const dateA =
+            new Date(
+              `${a.date}T${
+                a.time ||
+                "00:00"
+              }`
+            );
 
-        const dateB = new Date(
-          `${b.date}T${b.time || "00:00"}`
-        );
+          const dateB =
+            new Date(
+              `${b.date}T${
+                b.time ||
+                "00:00"
+              }`
+            );
 
-        return dateA - dateB;
-      })
-      .slice(0, 4);
+          return dateA - dateB;
+        })
+        .slice(0, 4);
 
     if (events.length === 0) {
       eventList.innerHTML = `
         <div class="list-item">
-          <span>No upcoming events</span>
+          <span>
+            No upcoming events
+          </span>
         </div>
       `;
     } else {
-      eventList.innerHTML = events
-        .map(event => `
-          <div class="list-item">
-            <div class="item-left">
-              <div>
-                <div class="item-title">
-                  ${escapeHTML(event.name)}
+      eventList.innerHTML =
+        events
+          .map(event => `
+            <div class="list-item">
+
+              <div class="item-left">
+
+                <div>
+
+                  <div class="item-title">
+                    ${escapeHTML(
+                      event.name
+                    )}
+                  </div>
+
+                  <div class="item-meta">
+                    ${formatDate(
+                      event.date
+                    )}
+                  </div>
+
                 </div>
 
-                <div class="item-meta">
-                  ${formatDate(event.date)}
-                </div>
               </div>
+
             </div>
-          </div>
-        `)
-        .join("");
+          `)
+          .join("");
     }
   }
 }
@@ -1997,46 +3041,79 @@ function loadDashboard() {
 
 function setupForms() {
   const forms = [
-    ["shoppingForm", addShoppingItem],
-    ["dashboardShoppingForm", addDashboardShopping],
-    ["taskForm", addTask],
-    ["dashboardTaskForm", addDashboardTask],
-    ["eventForm", addEvent],
-    ["dashboardEventForm", addDashboardEvent],
-    ["expenseForm", addExpense],
-    ["dashboardExpenseForm", addDashboardExpense]
+    [
+      "shoppingForm",
+      addShoppingItem
+    ],
+    [
+      "dashboardShoppingForm",
+      addDashboardShopping
+    ],
+    [
+      "taskForm",
+      addTask
+    ],
+    [
+      "dashboardTaskForm",
+      addDashboardTask
+    ],
+    [
+      "eventForm",
+      addEvent
+    ],
+    [
+      "dashboardEventForm",
+      addDashboardEvent
+    ],
+    [
+      "expenseForm",
+      addExpense
+    ],
+    [
+      "dashboardExpenseForm",
+      addDashboardExpense
+    ]
   ];
 
-  forms.forEach(([id, handler]) => {
-    const form = document.getElementById(id);
+  forms.forEach(
+    ([id, handler]) => {
+      const form =
+        document.getElementById(id);
 
-    if (!form) return;
+      if (!form) return;
 
-    form.addEventListener("submit", event => {
-      event.preventDefault();
-      handler(event);
-    });
-  });
+      form.addEventListener(
+        "submit",
+        event => {
+          event.preventDefault();
+          handler(event);
+        }
+      );
+    }
+  );
 }
 
 /* =========================
    INITIALIZATION
 ========================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-  setActiveNavigation();
-  updateHouseholdName();
-  loadSettings();
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+    setActiveNavigation();
+    updateHouseholdName();
+    loadSettings();
 
-  loadDashboard();
-  updateToday();
+    loadDashboard();
+    updateToday();
 
-  renderShopping();
-  renderTasks();
-  renderEvents();
-  renderSpending();
+    renderShopping();
+    renderTasks();
+    renderEvents();
+    renderSpending();
 
-  setupSheets();
-  setupForms();
-  setupFutureDateInputs();
-});
+    setupSheets();
+    setupForms();
+    setupFutureDateInputs();
+  }
+);
