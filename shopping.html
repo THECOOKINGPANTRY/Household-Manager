@@ -10,372 +10,455 @@
 </head>
 
 <body>
-<div class="app">
+  <div class="app">
+    <main class="main">
 
-  <main class="main">
+      <div class="mobile-topbar">
+        <div class="mobile-brand">
+          <img src="House_Manager_Logo.png" alt="Household Manager">
 
-    <div class="mobile-topbar">
-      <div class="mobile-brand">
-        <img src="House_Manager_Logo.png" alt="Household Manager">
-        <div>
-          <div class="mobile-brand-name">Household Manager</div>
-          <div class="mobile-brand-subtitle household-name">My Household</div>
+          <div>
+            <div class="mobile-brand-name">Household Manager</div>
+            <div class="mobile-brand-subtitle household-name">My Household</div>
+          </div>
         </div>
+
+        <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.4 1.4-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-2v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.4-1.4.06-.06A1.7 1.7 0 0 0 9.46 15a1.7 1.7 0 0 0-1.56-1.03H7v-2h.9A1.7 1.7 0 0 0 9.46 11a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.4-1.4.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.43 6.5V6h2v.5A1.7 1.7 0 0 0 16.46 8a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.4 1.4-.06.06A1.7 1.7 0 0 0 19.4 11c.2.58.75.97 1.36.97H21v2h-.24c-.61 0-1.16.39-1.36 1.03Z"></path>
+          </svg>
+        </a>
       </div>
 
-      <a href="settings.html" class="mobile-top-action" aria-label="Settings">⚙</a>
-    </div>
+      <header class="page-header">
+        <div class="eyebrow">HOUSEHOLD</div>
 
-    <header class="page-header">
-      <div class="eyebrow">HOUSEHOLD</div>
-      <h1 class="page-title">Shopping</h1>
-      <p class="page-subtitle">
-        Keep track of everything your household needs.
-      </p>
-    </header>
+        <h1 class="page-title">Shopping</h1>
 
-    <!-- SHOPPING SUMMARY -->
-    <section class="shopping-summary">
+        <p class="page-subtitle">
+          Keep track of everything your household needs.
+        </p>
+      </header>
 
-      <div class="shopping-summary-main">
+      <section class="shopping-summary">
 
-        <div>
-          <div class="shopping-summary-label">
-            Items to buy
+        <div class="shopping-summary-main">
+
+          <div>
+            <div class="shopping-summary-label">
+              Items to buy
+            </div>
+
+            <div
+              class="shopping-summary-number"
+              id="shoppingRemainingCount"
+            >
+              0
+            </div>
           </div>
 
-          <div
-            class="shopping-summary-number"
-            id="shoppingRemainingCount"
-          >
-            0
-          </div>
-        </div>
-
-        <div class="shopping-summary-icon">
-          🛒
-        </div>
-
-      </div>
-
-      <div class="shopping-summary-stats">
-
-        <div class="shopping-summary-stat">
-          <span>Total</span>
-          <strong id="shoppingTotalCount">0</strong>
-        </div>
-
-        <div class="shopping-summary-divider"></div>
-
-        <div class="shopping-summary-stat">
-          <span>Completed</span>
-          <strong id="shoppingCompletedCount">0</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ADD ITEM -->
-    <button
-      type="button"
-      class="mobile-add-button"
-      onclick="openSheet('shoppingSheet')"
-    >
-      <span>+</span>
-      Add Shopping Item
-    </button>
-
-    <!-- STATUS FILTERS -->
-    <section class="shopping-filters">
-
-      <button
-        type="button"
-        class="filter-button active"
-        onclick="filterShopping('all', this)"
-      >
-        All
-      </button>
-
-      <button
-        type="button"
-        class="filter-button"
-        onclick="filterShopping('remaining', this)"
-      >
-        Remaining
-      </button>
-
-      <button
-        type="button"
-        class="filter-button"
-        onclick="filterShopping('completed', this)"
-      >
-        Completed
-      </button>
-
-    </section>
-
-    <!-- CATEGORY FILTERS -->
-    <div class="category-scroll">
-
-      <button
-        type="button"
-        class="category-button active"
-        onclick="filterShoppingCategory('all', this)"
-      >
-        All
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Groceries', this)"
-      >
-        🥦 Groceries
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Household', this)"
-      >
-        🏠 Household
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Cleaning', this)"
-      >
-        🧽 Cleaning
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Bathroom', this)"
-      >
-        🧴 Bathroom
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Pet', this)"
-      >
-        🐾 Pet
-      </button>
-
-      <button
-        type="button"
-        class="category-button"
-        onclick="filterShoppingCategory('Other', this)"
-      >
-        📦 Other
-      </button>
-
-    </div>
-
-    <!-- SHOPPING LIST -->
-    <section class="shopping-section">
-
-      <div class="shopping-section-heading">
-
-        <div>
-          <div
-            class="shopping-section-title"
-            id="shoppingSectionTitle"
-          >
-            Shopping List
+          <div class="shopping-summary-icon">
+            <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="9" cy="20" r="1"></circle>
+              <circle cx="18" cy="20" r="1"></circle>
+              <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+            </svg>
           </div>
 
-          <div class="shopping-section-subtitle">
-            Things your household needs
-          </div>
         </div>
 
-        <span
-          class="shopping-section-count"
-          id="visibleShoppingCount"
-        >
-          0
+        <div class="shopping-summary-stats">
+
+          <div class="shopping-summary-stat">
+            <span>Total</span>
+            <strong id="shoppingTotalCount">0</strong>
+          </div>
+
+          <div class="shopping-summary-divider"></div>
+
+          <div class="shopping-summary-stat">
+            <span>Completed</span>
+            <strong id="shoppingCompletedCount">0</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <button
+        type="button"
+        class="mobile-add-button"
+        onclick="openSheet('shoppingSheet')"
+      >
+        <span class="button-icon" aria-hidden="true">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
         </span>
 
+        <span>Add Shopping Item</span>
+      </button>
+
+      <section class="shopping-filters">
+
+        <button
+          type="button"
+          class="filter-button active"
+          onclick="filterShopping('all', this)"
+        >
+          All
+        </button>
+
+        <button
+          type="button"
+          class="filter-button"
+          onclick="filterShopping('remaining', this)"
+        >
+          Remaining
+        </button>
+
+        <button
+          type="button"
+          class="filter-button"
+          onclick="filterShopping('completed', this)"
+        >
+          Completed
+        </button>
+
+      </section>
+
+      <div class="category-scroll">
+
+        <button
+          type="button"
+          class="category-button active"
+          onclick="filterShoppingCategory('all', this)"
+        >
+          All
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Groceries', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 9h12l-1 11H7L6 9Z"></path>
+            <path d="M9 9a3 3 0 0 1 6 0"></path>
+            <path d="M4 9h16"></path>
+          </svg>
+          <span>Groceries</span>
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Household', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m3 11 9-8 9 8"></path>
+            <path d="M5 10v10h14V10"></path>
+            <path d="M9 20v-6h6v6"></path>
+          </svg>
+          <span>Household</span>
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Cleaning', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 3h6"></path>
+            <path d="M10 3v4l-3 4v9h10v-9l-3-4V3"></path>
+            <path d="M7 11h10"></path>
+          </svg>
+          <span>Cleaning</span>
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Bathroom', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12h16"></path>
+            <path d="M5 12v3a5 5 0 0 0 5 5h4a5 5 0 0 0 5-5v-3"></path>
+            <path d="M6 12V6a3 3 0 0 1 5.8-1"></path>
+            <path d="M6 20v1"></path>
+            <path d="M18 20v1"></path>
+          </svg>
+          <span>Bathroom</span>
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Pet', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 18c-2.5 0-5 1.2-5 3h10c0-1.8-2.5-3-5-3Z"></path>
+            <circle cx="7.5" cy="10" r="2"></circle>
+            <circle cx="16.5" cy="10" r="2"></circle>
+            <circle cx="9.5" cy="6" r="2"></circle>
+            <circle cx="14.5" cy="6" r="2"></circle>
+          </svg>
+          <span>Pet</span>
+        </button>
+
+        <button
+          type="button"
+          class="category-button"
+          onclick="filterShoppingCategory('Other', this)"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16v13H4z"></path>
+            <path d="M8 7V5h8v2"></path>
+            <path d="M4 11h16"></path>
+          </svg>
+          <span>Other</span>
+        </button>
+
       </div>
 
-      <div
-        class="shopping-list"
-        id="shoppingList"
-      ></div>
+      <section class="shopping-section">
 
-    </section>
+        <div class="shopping-section-heading">
 
-    <!-- CLEAR COMPLETED -->
-    <button
-      type="button"
-      class="clear-completed-button"
-      id="clearCompletedButton"
-      onclick="clearCompletedShopping()"
-    >
-      Clear Completed
-    </button>
+          <div>
+            <div
+              class="shopping-section-title"
+              id="shoppingSectionTitle"
+            >
+              Shopping List
+            </div>
 
-  </main>
-</div>
+            <div class="shopping-section-subtitle">
+              Things your household needs
+            </div>
+          </div>
 
+          <span
+            class="shopping-section-count"
+            id="visibleShoppingCount"
+          >
+            0
+          </span>
 
-<!-- ADD SHOPPING SHEET -->
-<div
-  class="sheet-overlay"
-  id="shoppingSheet"
->
-
-  <div class="sheet">
-
-    <div class="sheet-handle"></div>
-
-    <div class="sheet-header">
-
-      <div>
-        <div class="sheet-title">
-          Add Shopping Item
         </div>
 
-        <div class="sheet-subtitle">
-          Add something your household needs.
-        </div>
-      </div>
+        <div
+          class="shopping-list"
+          id="shoppingList"
+        ></div>
+
+      </section>
 
       <button
         type="button"
-        class="sheet-close"
-        onclick="closeSheet('shoppingSheet')"
+        class="clear-completed-button"
+        id="clearCompletedButton"
+        onclick="clearCompletedShopping()"
       >
-        ×
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M8 6V4h8v2"></path>
+          <path d="M19 6l-1 15H6L5 6"></path>
+          <path d="M10 11v6"></path>
+          <path d="M14 11v6"></path>
+        </svg>
+        <span>Clear Completed</span>
       </button>
 
-    </div>
+    </main>
+  </div>
 
-    <!-- ITEM -->
-    <div class="form-group">
+  <div
+    class="sheet-overlay"
+    id="shoppingSheet"
+  >
+    <div class="sheet">
 
-      <label
-        class="form-label"
-        for="shoppingName"
-      >
-        Item
-      </label>
+      <div class="sheet-handle"></div>
 
-      <input
-        id="shoppingName"
-        class="form-control"
-        type="text"
-        placeholder="e.g. Milk"
-        autocomplete="off"
-      >
+      <div class="sheet-header">
 
-    </div>
+        <div>
+          <div class="sheet-title">
+            Add Shopping Item
+          </div>
 
+          <div class="sheet-subtitle">
+            Add something your household needs.
+          </div>
+        </div>
 
-    <!-- QUANTITY + CATEGORY -->
-    <div class="form-row">
+        <button
+          type="button"
+          class="sheet-close"
+          onclick="closeSheet('shoppingSheet')"
+          aria-label="Close"
+        >
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12"></path>
+            <path d="m18 6-12 12"></path>
+          </svg>
+        </button>
+
+      </div>
 
       <div class="form-group">
 
         <label
           class="form-label"
-          for="shoppingQuantity"
+          for="shoppingName"
         >
-          Quantity
+          Item
         </label>
 
         <input
-          id="shoppingQuantity"
+          id="shoppingName"
           class="form-control"
           type="text"
-          placeholder="e.g. 2"
+          placeholder="e.g. Milk"
           autocomplete="off"
         >
 
       </div>
 
+      <div class="form-row">
 
-      <div class="form-group">
+        <div class="form-group">
 
-        <label
-          class="form-label"
-          for="shoppingCategory"
-        >
-          Category
-        </label>
+          <label
+            class="form-label"
+            for="shoppingQuantity"
+          >
+            Quantity
+          </label>
 
-        <select
-          id="shoppingCategory"
-          class="form-control"
-        >
-          <option value="Groceries">Groceries</option>
-          <option value="Household">Household</option>
-          <option value="Cleaning">Cleaning</option>
-          <option value="Bathroom">Bathroom</option>
-          <option value="Pet">Pet</option>
-          <option value="Other">Other</option>
-        </select>
+          <input
+            id="shoppingQuantity"
+            class="form-control"
+            type="text"
+            placeholder="e.g. 2"
+            autocomplete="off"
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label
+            class="form-label"
+            for="shoppingCategory"
+          >
+            Category
+          </label>
+
+          <select
+            id="shoppingCategory"
+            class="form-control"
+          >
+            <option value="Groceries">Groceries</option>
+            <option value="Household">Household</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Bathroom">Bathroom</option>
+            <option value="Pet">Pet</option>
+            <option value="Other">Other</option>
+          </select>
+
+        </div>
 
       </div>
 
+      <button
+        type="button"
+        class="btn btn-primary btn-large"
+        id="addShoppingItemButton"
+        onclick="addShoppingItem(event)"
+      >
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+        <span>Add Item</span>
+      </button>
+
     </div>
-
-
-    <!-- ADD ITEM BUTTON -->
-    <button
-      type="button"
-      class="btn btn-primary btn-large"
-      id="addShoppingItemButton"
-      onclick="addShoppingItem(event)"
-    >
-      Add Item
-    </button>
-
   </div>
-</div>
 
+  <nav class="mobile-header">
 
-<!-- MOBILE NAVIGATION -->
-<nav class="mobile-header">
+    <a href="index.html" data-page="index.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m3 11 9-8 9 8"></path>
+          <path d="M5 10v10h14V10"></path>
+          <path d="M9 20v-6h6v6"></path>
+        </svg>
+      </span>
+      <span>Home</span>
+    </a>
 
-  <a href="index.html" data-page="index.html">
-    <span class="mobile-icon">⌂</span>
-    <span>Home</span>
-  </a>
+    <a href="shopping.html" data-page="shopping.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1"></circle>
+          <circle cx="18" cy="20" r="1"></circle>
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"></path>
+        </svg>
+      </span>
+      <span>Shopping</span>
+    </a>
 
-  <a href="shopping.html" data-page="shopping.html">
-    <span class="mobile-icon">🛒</span>
-    <span>Shopping</span>
-  </a>
+    <a href="tasks.html" data-page="tasks.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m8 12 2.5 2.5L16 9"></path>
+        </svg>
+      </span>
+      <span>Tasks</span>
+    </a>
 
-  <a href="tasks.html" data-page="tasks.html">
-    <span class="mobile-icon">✓</span>
-    <span>Tasks</span>
-  </a>
+    <a href="events.html" data-page="events.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+          <path d="M16 2v4"></path>
+          <path d="M8 2v4"></path>
+          <path d="M3 9h18"></path>
+        </svg>
+      </span>
+      <span>Events</span>
+    </a>
 
-  <a href="events.html" data-page="events.html">
-    <span class="mobile-icon">📅</span>
-    <span>Events</span>
-  </a>
+    <a href="spending.html" data-page="spending.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16v13H4z"></path>
+          <path d="M16 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"></path>
+          <path d="M20 12h-5a2 2 0 0 0 0 4h5"></path>
+        </svg>
+      </span>
+      <span>Spending</span>
+    </a>
 
-  <a href="spending.html" data-page="spending.html">
-    <span class="mobile-icon">💰</span>
-    <span>Spending</span>
-  </a>
+    <a href="settings.html" data-page="settings.html">
+      <span class="mobile-icon">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.4 1.4-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-2v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.4-1.4.06-.06A1.7 1.7 0 0 0 9.46 15a1.7 1.7 0 0 0-1.56-1.03H7v-2h.9A1.7 1.7 0 0 0 9.46 11a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.4-1.4.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 13.43 6.5V6h2v.5A1.7 1.7 0 0 0 16.46 8a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.4 1.4-.06.06A1.7 1.7 0 0 0 19.4 11c.2.58.75.97 1.36.97H21v2h-.24c-.61 0-1.16.39-1.36 1.03Z"></path>
+        </svg>
+      </span>
+      <span>Settings</span>
+    </a>
 
-  <a href="settings.html" data-page="settings.html">
-    <span class="mobile-icon">⚙</span>
-    <span>Settings</span>
-  </a>
+  </nav>
 
-</nav>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
