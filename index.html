@@ -1,1 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Household Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="House_Manager_Logo.png" alt="Household Manager">
+            <div class="brand-name">
+                Household Manager
+            </div>
+        </div>
+
+        <nav class="nav">
+
+            <a href="index.html" data-page="index.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="shopping.html" data-page="shopping.html">
+                <span class="nav-icon">🛒</span>
+                Shopping
+            </a>
+
+            <a href="tasks.html" data-page="tasks.html">
+                <span class="nav-icon">✓</span>
+                Tasks
+            </a>
+
+            <a href="events.html" data-page="events.html">
+                <span class="nav-icon">📅</span>
+                Events
+            </a>
+
+            <a href="spending.html" data-page="spending.html">
+                <span class="nav-icon">💰</span>
+                Spending
+            </a>
+
+            <a href="settings.html" data-page="settings.html">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            Household Manager
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <header class="page-header">
+
+            <div>
+                <h1 class="page-title">
+                    Good afternoon
+                </h1>
+
+                <p class="page-subtitle">
+                    Here's what's happening in
+                    <strong class="household-name">
+                        My Household
+                    </strong>.
+                </p>
+            </div>
+
+            <a href="settings.html" class="btn btn-primary">
+                ⚙ Settings
+            </a>
+
+        </header>
+
+
+        <!-- STATS -->
+
+        <section class="dashboard-grid">
+
+            <div class="card yellow stat-card">
+                <div class="stat-label">
+                    Outstanding Tasks
+                </div>
+
+                <div class="stat-number" id="dashboardTasks">
+                    0
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-label">
+                    Shopping Items
+                </div>
+
+                <div class="stat-number" id="dashboardShopping">
+                    0
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-label">
+                    Upcoming Events
+                </div>
+
+                <div class="stat-number" id="dashboardEvents">
+                    0
+                </div>
+            </div>
+
+            <div class="card dark stat-card">
+                <div class="stat-label">
+                    Total Spending
+                </div>
+
+                <div class="stat-number" id="dashboardSpending">
+                    $0.00
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- LOWER CONTENT -->
+
+        <section class="dashboard-columns">
+
+            <div class="card">
+
+                <div class="card-title">
+                    Outstanding Tasks
+                </div>
+
+                <div
+                    class="section-list"
+                    id="dashboardTaskList"
+                ></div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Upcoming Events
+                </div>
+
+                <div
+                    class="section-list"
+                    id="dashboardEventList"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+        <span class="mobile-icon">⌂</span>
+        Home
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+        <span class="mobile-icon">🛒</span>
+        Shopping
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+        <span class="mobile-icon">✓</span>
+        Tasks
+    </a>
+
+    <a href="events.html" data-page="events.html">
+        <span class="mobile-icon">📅</span>
+        Events
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+        <span class="mobile-icon">💰</span>
+        Spending
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+        <span class="mobile-icon">⚙</span>
+        Settings
+    </a>
+
+</nav>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
