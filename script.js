@@ -17,10 +17,18 @@ let currentShoppingCategory = "all";
    DATA
 ========================= */
 
+function getCurrentUser() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("householdManagerCurrentUser")
+    );
+  } catch (error) {
+    return null;
+  }
+}
+
 function getCurrentUserKey() {
-  const currentUser = JSON.parse(
-    localStorage.getItem("householdManagerCurrentUser")
-  );
+  const currentUser = getCurrentUser();
 
   if (currentUser && currentUser.email) {
     return currentUser.email.trim().toLowerCase();
@@ -42,51 +50,64 @@ function getUserDataKey() {
     return null;
   }
 
-  return "householdManagerData_" + userKey;
+  return (
+    "householdManagerData_" +
+    encodeURIComponent(userKey)
+  );
+}
+
+function createDefaultData() {
+  return JSON.parse(
+    JSON.stringify(defaultData)
+  );
+}
+
+function normaliseData(data) {
+  return {
+    shopping: Array.isArray(data?.shopping)
+      ? data.shopping
+      : [],
+
+    tasks: Array.isArray(data?.tasks)
+      ? data.tasks
+      : [],
+
+    events: Array.isArray(data?.events)
+      ? data.events
+      : [],
+
+    spending: Array.isArray(data?.spending)
+      ? data.spending
+      : [],
+
+    settings: {
+      ...defaultData.settings,
+      ...(data?.settings || {})
+    }
+  };
 }
 
 function getData() {
   const dataKey = getUserDataKey();
 
   if (!dataKey) {
-    return JSON.parse(JSON.stringify(defaultData));
+    return createDefaultData();
   }
 
   const saved = localStorage.getItem(dataKey);
 
   if (!saved) {
-    /*
-      Migrate old data from the previous global storage key
-      to the currently logged-in user's storage.
-    */
-    const oldSaved = localStorage.getItem("householdManager");
+    const oldSaved =
+      localStorage.getItem(
+        "householdManager"
+      );
 
     if (oldSaved) {
       try {
-        const oldData = JSON.parse(oldSaved);
-
-        const migratedData = {
-          shopping: Array.isArray(oldData.shopping)
-            ? oldData.shopping
-            : [],
-
-          tasks: Array.isArray(oldData.tasks)
-            ? oldData.tasks
-            : [],
-
-          events: Array.isArray(oldData.events)
-            ? oldData.events
-            : [],
-
-          spending: Array.isArray(oldData.spending)
-            ? oldData.spending
-            : [],
-
-          settings: {
-            ...defaultData.settings,
-            ...(oldData.settings || {})
-          }
-        };
+        const migratedData =
+          normaliseData(
+            JSON.parse(oldSaved)
+          );
 
         localStorage.setItem(
           dataKey,
@@ -103,7 +124,7 @@ function getData() {
     }
 
     const freshData =
-      JSON.parse(JSON.stringify(defaultData));
+      createDefaultData();
 
     localStorage.setItem(
       dataKey,
@@ -114,33 +135,12 @@ function getData() {
   }
 
   try {
-    const data = JSON.parse(saved);
-
-    return {
-      shopping: Array.isArray(data.shopping)
-        ? data.shopping
-        : [],
-
-      tasks: Array.isArray(data.tasks)
-        ? data.tasks
-        : [],
-
-      events: Array.isArray(data.events)
-        ? data.events
-        : [],
-
-      spending: Array.isArray(data.spending)
-        ? data.spending
-        : [],
-
-      settings: {
-        ...defaultData.settings,
-        ...(data.settings || {})
-      }
-    };
+    return normaliseData(
+      JSON.parse(saved)
+    );
   } catch (error) {
     const freshData =
-      JSON.parse(JSON.stringify(defaultData));
+      createDefaultData();
 
     localStorage.setItem(
       dataKey,
@@ -160,52 +160,71 @@ function saveData(data) {
 
   localStorage.setItem(
     dataKey,
-    JSON.stringify(data)
+    JSON.stringify(
+      normaliseData(data)
+    )
   );
 }
 
 function createId() {
-  return Date.now().toString() +
-    Math.random().toString(16).slice(2);
+  return (
+    Date.now().toString() +
+    Math.random()
+      .toString(16)
+      .slice(2)
+  );
 }
 
 function escapeHTML(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    value ?? "";
+
   return div.innerHTML;
 }
 
 function getTodayString() {
-  const today = new Date();
+  const today =
+    new Date();
 
-  const year = today.getFullYear();
-  const month = String(
-    today.getMonth() + 1
-  ).padStart(2, "0");
+  const year =
+    today.getFullYear();
 
-  const day = String(
-    today.getDate()
-  ).padStart(2, "0");
+  const month =
+    String(
+      today.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      today.getDate()
+    ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
 
 function getTomorrowString() {
-  const tomorrow = new Date();
+  const tomorrow =
+    new Date();
 
   tomorrow.setDate(
     tomorrow.getDate() + 1
   );
 
-  const year = tomorrow.getFullYear();
+  const year =
+    tomorrow.getFullYear();
 
-  const month = String(
-    tomorrow.getMonth() + 1
-  ).padStart(2, "0");
+  const month =
+    String(
+      tomorrow.getMonth() + 1
+    ).padStart(2, "0");
 
-  const day = String(
-    tomorrow.getDate()
-  ).padStart(2, "0");
+  const day =
+    String(
+      tomorrow.getDate()
+    ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
@@ -217,18 +236,24 @@ function getTomorrowString() {
 function setFutureDateMinimum(input) {
   if (!input) return;
 
-  input.min = getTomorrowString();
+  input.min =
+    getTomorrowString();
 }
 
 function isValidFutureDate(dateString) {
   if (!dateString) return true;
 
-  return dateString > getTodayString();
+  return (
+    dateString >
+    getTodayString()
+  );
 }
 
 function setupFutureDateInputs() {
   document
-    .querySelectorAll('input[type="date"]')
+    .querySelectorAll(
+      'input[type="date"]'
+    )
     .forEach(input => {
       setFutureDateMinimum(input);
 
@@ -237,7 +262,11 @@ function setupFutureDateInputs() {
         function () {
           if (!this.value) return;
 
-          if (!isValidFutureDate(this.value)) {
+          if (
+            !isValidFutureDate(
+              this.value
+            )
+          ) {
             alert(
               "Please select a date from tomorrow onwards."
             );
@@ -257,7 +286,11 @@ function validateFutureDate(
     return true;
   }
 
-  if (!isValidFutureDate(dateString)) {
+  if (
+    !isValidFutureDate(
+      dateString
+    )
+  ) {
     alert(
       `${label} must be tomorrow or a future date.`
     );
@@ -272,9 +305,15 @@ function formatDate(date) {
   if (!date) return "";
 
   const parsed =
-    new Date(date + "T00:00:00");
+    new Date(
+      date + "T00:00:00"
+    );
 
-  if (isNaN(parsed.getTime())) {
+  if (
+    isNaN(
+      parsed.getTime()
+    )
+  ) {
     return date;
   }
 
@@ -289,16 +328,20 @@ function formatDate(date) {
 }
 
 function formatMoney(amount) {
-  const data = getData();
+  const data =
+    getData();
 
   return new Intl.NumberFormat(
     "en-AU",
     {
       style: "currency",
       currency:
-        data.settings.currency || "AUD"
+        data.settings.currency ||
+        "AUD"
     }
-  ).format(Number(amount) || 0);
+  ).format(
+    Number(amount) || 0
+  );
 }
 
 /* =========================
@@ -309,25 +352,34 @@ function setActiveNavigation() {
   const currentPage =
     window.location.pathname
       .split("/")
-      .pop() || "index.html";
+      .pop() ||
+    "index.html";
 
   document
-    .querySelectorAll("[data-page]")
+    .querySelectorAll(
+      "[data-page]"
+    )
     .forEach(link => {
       if (
-        link.getAttribute("data-page") ===
-        currentPage
+        link.getAttribute(
+          "data-page"
+        ) === currentPage
       ) {
-        link.classList.add("active");
+        link.classList.add(
+          "active"
+        );
       }
     });
 }
 
 function updateHouseholdName() {
-  const data = getData();
+  const data =
+    getData();
 
   document
-    .querySelectorAll(".household-name")
+    .querySelectorAll(
+      ".household-name"
+    )
     .forEach(element => {
       element.textContent =
         data.settings.householdName;
@@ -341,12 +393,15 @@ function openSheet(id) {
   if (!sheet) return;
 
   sheet.classList.add("open");
+
   document.body.classList.add(
     "sheet-open"
   );
 
   setTimeout(() => {
-    setFutureDateMinimumsInSheet(sheet);
+    setFutureDateMinimumsInSheet(
+      sheet
+    );
   }, 0);
 }
 
@@ -356,7 +411,10 @@ function closeSheet(id) {
 
   if (!sheet) return;
 
-  sheet.classList.remove("open");
+  sheet.classList.remove(
+    "open"
+  );
+
   document.body.classList.remove(
     "sheet-open"
   );
@@ -368,21 +426,28 @@ function setFutureDateMinimumsInSheet(
   if (!sheet) return;
 
   sheet
-    .querySelectorAll('input[type="date"]')
+    .querySelectorAll(
+      'input[type="date"]'
+    )
     .forEach(input => {
-      setFutureDateMinimum(input);
+      setFutureDateMinimum(
+        input
+      );
     });
 }
 
 function setupSheets() {
   document
-    .querySelectorAll(".sheet-overlay")
+    .querySelectorAll(
+      ".sheet-overlay"
+    )
     .forEach(overlay => {
       overlay.addEventListener(
         "click",
         event => {
           if (
-            event.target === overlay
+            event.target ===
+            overlay
           ) {
             overlay.classList.remove(
               "open"
@@ -413,7 +478,9 @@ function setupSheets() {
             )?.id;
 
           if (sheetId) {
-            closeSheet(sheetId);
+            closeSheet(
+              sheetId
+            );
           }
         }
       );
@@ -459,29 +526,36 @@ function addShoppingItem(event) {
   const name =
     nameElement.value.trim();
 
-  const quantity = quantityElement
-    ? quantityElement.value.trim()
-    : "1";
+  const quantity =
+    quantityElement
+      ? quantityElement.value.trim()
+      : "1";
 
-  const category = categoryElement
-    ? categoryElement.value ||
-      "Groceries"
-    : "Groceries";
+  const category =
+    categoryElement
+      ? categoryElement.value ||
+        "Groceries"
+      : "Groceries";
 
   if (!name) {
-    alert("Please enter an item.");
+    alert(
+      "Please enter an item."
+    );
+
     nameElement.focus();
 
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.shopping.push({
     id: createId(),
-    name: name,
-    quantity: quantity || "1",
-    category: category,
+    name,
+    quantity:
+      quantity || "1",
+    category,
     completed: false
   });
 
@@ -490,7 +564,8 @@ function addShoppingItem(event) {
   nameElement.value = "";
 
   if (quantityElement) {
-    quantityElement.value = "";
+    quantityElement.value =
+      "";
   }
 
   if (categoryElement) {
@@ -498,7 +573,9 @@ function addShoppingItem(event) {
       "Groceries";
   }
 
-  closeSheet("shoppingSheet");
+  closeSheet(
+    "shoppingSheet"
+  );
 
   renderShopping();
   loadDashboard();
@@ -507,11 +584,17 @@ function addShoppingItem(event) {
   return false;
 }
 
-function addTaskShoppingItem(event) {
-  return addShoppingItem(event);
+function addTaskShoppingItem(
+  event
+) {
+  return addShoppingItem(
+    event
+  );
 }
 
-function addDashboardShopping(event) {
+function addDashboardShopping(
+  event
+) {
   if (
     event &&
     typeof event.preventDefault ===
@@ -542,29 +625,36 @@ function addDashboardShopping(event) {
   const name =
     nameElement.value.trim();
 
-  const quantity = quantityElement
-    ? quantityElement.value.trim()
-    : "1";
+  const quantity =
+    quantityElement
+      ? quantityElement.value.trim()
+      : "1";
 
-  const category = categoryElement
-    ? categoryElement.value ||
-      "Groceries"
-    : "Groceries";
+  const category =
+    categoryElement
+      ? categoryElement.value ||
+        "Groceries"
+      : "Groceries";
 
   if (!name) {
-    alert("Please enter an item.");
+    alert(
+      "Please enter an item."
+    );
+
     nameElement.focus();
 
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.shopping.push({
     id: createId(),
-    name: name,
-    quantity: quantity || "1",
-    category: category,
+    name,
+    quantity:
+      quantity || "1",
+    category,
     completed: false
   });
 
@@ -573,7 +663,8 @@ function addDashboardShopping(event) {
   nameElement.value = "";
 
   if (quantityElement) {
-    quantityElement.value = "";
+    quantityElement.value =
+      "";
   }
 
   if (categoryElement) {
@@ -593,13 +684,15 @@ function addDashboardShopping(event) {
 }
 
 function toggleShoppingItem(id) {
-  const data = getData();
+  const data =
+    getData();
 
-  const item = data.shopping.find(
-    item =>
-      String(item.id) ===
-      String(id)
-  );
+  const item =
+    data.shopping.find(
+      item =>
+        String(item.id) ===
+        String(id)
+    );
 
   if (!item) return;
 
@@ -614,7 +707,8 @@ function toggleShoppingItem(id) {
 }
 
 function deleteShoppingItem(id) {
-  const data = getData();
+  const data =
+    getData();
 
   data.shopping =
     data.shopping.filter(
@@ -656,7 +750,9 @@ function filterShopping(
     });
 
   if (button) {
-    button.classList.add("active");
+    button.classList.add(
+      "active"
+    );
   }
 
   renderShopping();
@@ -680,7 +776,9 @@ function filterShoppingCategory(
     });
 
   if (button) {
-    button.classList.add("active");
+    button.classList.add(
+      "active"
+    );
   }
 
   renderShopping();
@@ -691,7 +789,7 @@ function getShoppingCategoryIcon(
 ) {
   const icons = {
     Groceries:
-      "shopping_dark_thin.png",
+      "food_dark_thin.png",
 
     Household:
       "home_dark_thin.png",
@@ -703,23 +801,26 @@ function getShoppingCategoryIcon(
       "home_dark_thin.png",
 
     Pet:
-      "checkbox_dark_thin.png",
+      "people_dark_thin.png",
 
     Other:
-      "shopping_dark_thin.png"
+      "more_dark_thin.png"
   };
 
   return (
     icons[category] ||
-    "shopping_dark_thin.png"
+    "more_dark_thin.png"
   );
 }
 
 function renderShopping() {
-  const data = getData();
+  const data =
+    getData();
 
   const items =
-    Array.isArray(data.shopping)
+    Array.isArray(
+      data.shopping
+    )
       ? data.shopping
       : [];
 
@@ -758,7 +859,8 @@ function renderShopping() {
       "clearCompletedButton"
     );
 
-  const total = items.length;
+  const total =
+    items.length;
 
   const completed =
     items.filter(
@@ -792,7 +894,8 @@ function renderShopping() {
   ) {
     filteredItems =
       filteredItems.filter(
-        item => !item.completed
+        item =>
+          !item.completed
       );
   }
 
@@ -802,7 +905,8 @@ function renderShopping() {
   ) {
     filteredItems =
       filteredItems.filter(
-        item => item.completed
+        item =>
+          item.completed
       );
   }
 
@@ -857,7 +961,10 @@ function renderShopping() {
 
   if (!list) return;
 
-  if (filteredItems.length === 0) {
+  if (
+    filteredItems.length ===
+    0
+  ) {
     list.innerHTML = `
       <div class="shopping-empty">
         <div class="shopping-empty-icon">
@@ -974,28 +1081,34 @@ function renderShopping() {
 }
 
 function clearCompletedShopping() {
-  const data = getData();
+  const data =
+    getData();
 
   const completed =
     data.shopping.filter(
-      item => item.completed
+      item =>
+        item.completed
     ).length;
 
-  if (completed === 0) return;
+  if (completed === 0) {
+    return;
+  }
 
-  const confirmed = confirm(
-    `Remove ${completed} completed shopping item${
-      completed === 1
-        ? ""
-        : "s"
-    }?`
-  );
+  const confirmed =
+    confirm(
+      `Remove ${completed} completed shopping item${
+        completed === 1
+          ? ""
+          : "s"
+      }?`
+    );
 
   if (!confirmed) return;
 
   data.shopping =
     data.shopping.filter(
-      item => !item.completed
+      item =>
+        !item.completed
     );
 
   saveData(data);
@@ -1061,13 +1174,15 @@ function addTask(event) {
   const name =
     nameElement.value.trim();
 
-  const person = personElement
-    ? personElement.value.trim()
-    : "";
+  const person =
+    personElement
+      ? personElement.value.trim()
+      : "";
 
-  const due = dueElement
-    ? dueElement.value
-    : "";
+  const due =
+    dueElement
+      ? dueElement.value
+      : "";
 
   const priority =
     priorityElement
@@ -1076,7 +1191,10 @@ function addTask(event) {
       : "Medium";
 
   if (!name) {
-    alert("Please enter a task.");
+    alert(
+      "Please enter a task."
+    );
+
     nameElement.focus();
 
     return false;
@@ -1095,7 +1213,8 @@ function addTask(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.tasks.push({
     id: createId(),
@@ -1124,7 +1243,9 @@ function addTask(event) {
       "Medium";
   }
 
-  closeSheet("taskSheet");
+  closeSheet(
+    "taskSheet"
+  );
 
   renderTasks();
   loadDashboard();
@@ -1133,7 +1254,9 @@ function addTask(event) {
   return false;
 }
 
-function addDashboardTask(event) {
+function addDashboardTask(
+  event
+) {
   if (
     event &&
     typeof event.preventDefault ===
@@ -1169,13 +1292,15 @@ function addDashboardTask(event) {
   const name =
     nameElement.value.trim();
 
-  const person = personElement
-    ? personElement.value.trim()
-    : "";
+  const person =
+    personElement
+      ? personElement.value.trim()
+      : "";
 
-  const due = dueElement
-    ? dueElement.value
-    : "";
+  const due =
+    dueElement
+      ? dueElement.value
+      : "";
 
   const priority =
     priorityElement
@@ -1184,7 +1309,10 @@ function addDashboardTask(event) {
       : "Medium";
 
   if (!name) {
-    alert("Please enter a task.");
+    alert(
+      "Please enter a task."
+    );
+
     nameElement.focus();
 
     return false;
@@ -1203,7 +1331,8 @@ function addDashboardTask(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.tasks.push({
     id: createId(),
@@ -1244,13 +1373,15 @@ function addDashboardTask(event) {
 }
 
 function toggleTask(id) {
-  const data = getData();
+  const data =
+    getData();
 
-  const task = data.tasks.find(
-    task =>
-      String(task.id) ===
-      String(id)
-  );
+  const task =
+    data.tasks.find(
+      task =>
+        String(task.id) ===
+        String(id)
+    );
 
   if (!task) return;
 
@@ -1265,7 +1396,8 @@ function toggleTask(id) {
 }
 
 function deleteTask(id) {
-  const data = getData();
+  const data =
+    getData();
 
   data.tasks =
     data.tasks.filter(
@@ -1342,7 +1474,9 @@ function isUpcoming(task) {
   );
 }
 
-function getTaskDateLabel(task) {
+function getTaskDateLabel(
+  task
+) {
   if (!task.due) {
     return "No due date";
   }
@@ -1364,17 +1498,23 @@ function getTaskDateLabel(task) {
   if (isOverdue(task)) {
     return (
       "Overdue · " +
-      formatDate(task.due)
+      formatDate(
+        task.due
+      )
     );
   }
 
   return (
     "Due " +
-    formatDate(task.due)
+    formatDate(
+      task.due
+    )
   );
 }
 
-function createTaskHTML(task) {
+function createTaskHTML(
+  task
+) {
   const dateClass =
     isOverdue(task)
       ? "overdue"
@@ -1498,18 +1638,23 @@ function renderTaskList(
   container.innerHTML =
     tasks
       .map(task =>
-        createTaskHTML(task)
+        createTaskHTML(
+          task
+        )
       )
       .join("");
 }
 
-function updateTaskProgress(data) {
+function updateTaskProgress(
+  data
+) {
   const total =
     data.tasks.length;
 
   const completed =
     data.tasks.filter(
-      task => task.completed
+      task =>
+        task.completed
     ).length;
 
   const active =
@@ -1519,7 +1664,8 @@ function updateTaskProgress(data) {
     total === 0
       ? 0
       : Math.round(
-          (completed / total) *
+          (completed /
+            total) *
             100
         );
 
@@ -1599,15 +1745,19 @@ function updateTaskProgress(data) {
   }
 }
 
-function updateTaskSummary(data) {
+function updateTaskSummary(
+  data
+) {
   const active =
     data.tasks.filter(
-      task => !task.completed
+      task =>
+        !task.completed
     ).length;
 
   const completed =
     data.tasks.filter(
-      task => task.completed
+      task =>
+        task.completed
     ).length;
 
   const highPriority =
@@ -1655,12 +1805,20 @@ function renderTasks() {
       "taskList"
     );
 
-  if (!mainContainer) return;
+  if (!mainContainer) {
+    return;
+  }
 
-  const data = getData();
+  const data =
+    getData();
 
-  updateTaskProgress(data);
-  updateTaskSummary(data);
+  updateTaskProgress(
+    data
+  );
+
+  updateTaskSummary(
+    data
+  );
 
   const todayContainer =
     document.getElementById(
@@ -1694,12 +1852,14 @@ function renderTasks() {
 
   const activeTasks =
     data.tasks.filter(
-      task => !task.completed
+      task =>
+        !task.completed
     );
 
   const todayTasks =
     activeTasks.filter(
-      task => isToday(task)
+      task =>
+        isToday(task)
     );
 
   const upcomingTasks =
@@ -1771,7 +1931,8 @@ function renderTasks() {
     renderTaskList(
       mainContainer,
       data.tasks.filter(
-        task => isToday(task)
+        task =>
+          isToday(task)
       ),
       "No tasks today",
       "You don't have any tasks due today."
@@ -1804,7 +1965,8 @@ function renderTasks() {
     renderTaskList(
       mainContainer,
       data.tasks.filter(
-        task => !task.completed
+        task =>
+          !task.completed
       ),
       "No active tasks",
       "Everything is completed."
@@ -1837,7 +1999,8 @@ function renderTasks() {
     renderTaskList(
       mainContainer,
       data.tasks.filter(
-        task => task.completed
+        task =>
+          task.completed
       ),
       "No completed tasks",
       "Completed tasks will appear here."
@@ -1875,8 +2038,12 @@ function renderTasks() {
             : -1;
         }
 
-        if (!a.due && !b.due)
+        if (
+          !a.due &&
+          !b.due
+        ) {
           return 0;
+        }
 
         if (!a.due) return 1;
         if (!b.due) return -1;
@@ -1971,7 +2138,8 @@ function addEvent(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.events.push({
     id: createId(),
@@ -1994,7 +2162,9 @@ function addEvent(event) {
     locationElement.value = "";
   }
 
-  closeSheet("eventSheet");
+  closeSheet(
+    "eventSheet"
+  );
 
   renderEvents();
   loadDashboard();
@@ -2002,7 +2172,9 @@ function addEvent(event) {
   return false;
 }
 
-function addDashboardEvent(event) {
+function addDashboardEvent(
+  event
+) {
   if (
     event &&
     typeof event.preventDefault ===
@@ -2073,7 +2245,8 @@ function addDashboardEvent(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.events.push({
     id: createId(),
@@ -2107,7 +2280,8 @@ function addDashboardEvent(event) {
 }
 
 function deleteEvent(id) {
-  const data = getData();
+  const data =
+    getData();
 
   data.events =
     data.events.filter(
@@ -2128,9 +2302,12 @@ function renderEvents() {
       "eventList"
     );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
-  const data = getData();
+  const data =
+    getData();
 
   const events =
     [...data.events]
@@ -2143,14 +2320,16 @@ function renderEvents() {
         const dateA =
           new Date(
             `${a.date}T${
-              a.time || "00:00"
+              a.time ||
+              "00:00"
             }`
           );
 
         const dateB =
           new Date(
             `${b.date}T${
-              b.time || "00:00"
+              b.time ||
+              "00:00"
             }`
           );
 
@@ -2332,7 +2511,8 @@ function addExpense(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.spending.push({
     id: createId(),
@@ -2351,7 +2531,9 @@ function addExpense(event) {
     dateElement.value = "";
   }
 
-  closeSheet("expenseSheet");
+  closeSheet(
+    "expenseSheet"
+  );
 
   renderSpending();
   loadDashboard();
@@ -2359,7 +2541,9 @@ function addExpense(event) {
   return false;
 }
 
-function addDashboardExpense(event) {
+function addDashboardExpense(
+  event
+) {
   if (
     event &&
     typeof event.preventDefault ===
@@ -2449,7 +2633,8 @@ function addDashboardExpense(event) {
     return false;
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   data.spending.push({
     id: createId(),
@@ -2479,7 +2664,8 @@ function addDashboardExpense(event) {
 }
 
 function deleteExpense(id) {
-  const data = getData();
+  const data =
+    getData();
 
   data.spending =
     data.spending.filter(
@@ -2500,19 +2686,25 @@ function renderSpending() {
       "spendingList"
     );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
-  const data = getData();
+  const data =
+    getData();
 
   const total =
     data.spending.reduce(
       (sum, expense) =>
         sum +
-        Number(expense.amount),
+        Number(
+          expense.amount
+        ),
       0
     );
 
-  const now = new Date();
+  const now =
+    new Date();
 
   const thisMonth =
     data.spending
@@ -2567,12 +2759,16 @@ function renderSpending() {
 
   if (monthElement) {
     monthElement.textContent =
-      formatMoney(thisMonth);
+      formatMoney(
+        thisMonth
+      );
   }
 
   if (averageElement) {
     averageElement.textContent =
-      formatMoney(average);
+      formatMoney(
+        average
+      );
   }
 
   if (
@@ -2604,7 +2800,8 @@ function renderSpending() {
   }
 
   const expenses =
-    [...data.spending].reverse();
+    [...data.spending]
+      .reverse();
 
   container.innerHTML =
     expenses
@@ -2665,7 +2862,8 @@ function renderSpending() {
 ========================= */
 
 function loadSettings() {
-  const data = getData();
+  const data =
+    getData();
 
   const nameInput =
     document.getElementById(
@@ -2697,7 +2895,8 @@ function saveSettings(event) {
     event.preventDefault();
   }
 
-  const data = getData();
+  const data =
+    getData();
 
   const nameInput =
     document.getElementById(
@@ -2734,7 +2933,9 @@ function saveSettings(event) {
   loadDashboard();
   renderSpending();
 
-  alert("Settings saved.");
+  alert(
+    "Settings saved."
+  );
 
   return false;
 }
@@ -2745,7 +2946,9 @@ function resetData() {
       "Are you sure you want to delete all Household Manager data for this account?"
     );
 
-  if (!confirmed) return;
+  if (!confirmed) {
+    return;
+  }
 
   const dataKey =
     getUserDataKey();
@@ -2764,7 +2967,8 @@ function resetData() {
 ========================= */
 
 function updateToday() {
-  const data = getData();
+  const data =
+    getData();
 
   const today =
     new Date();
@@ -2825,16 +3029,19 @@ function updateToday() {
 }
 
 function loadDashboard() {
-  const data = getData();
+  const data =
+    getData();
 
   const taskCount =
     data.tasks.filter(
-      task => !task.completed
+      task =>
+        !task.completed
     ).length;
 
   const shoppingCount =
     data.shopping.filter(
-      item => !item.completed
+      item =>
+        !item.completed
     ).length;
 
   const eventCount =
@@ -2849,7 +3056,9 @@ function loadDashboard() {
     data.spending.reduce(
       (sum, expense) =>
         sum +
-        Number(expense.amount),
+        Number(
+          expense.amount
+        ),
       0
     );
 
@@ -2890,7 +3099,9 @@ function loadDashboard() {
 
   if (spendingElement) {
     spendingElement.textContent =
-      formatMoney(spending);
+      formatMoney(
+        spending
+      );
   }
 
   const taskList =
@@ -3078,7 +3289,9 @@ function setupForms() {
   forms.forEach(
     ([id, handler]) => {
       const form =
-        document.getElementById(id);
+        document.getElementById(
+          id
+        );
 
       if (!form) return;
 
