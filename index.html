@@ -7,98 +7,564 @@
   <title>Household Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 <div class="app">
 
   <main class="main">
+
     <div class="mobile-topbar">
       <div class="mobile-brand">
         <img src="House_Manager_Logo.png" alt="Household Manager">
-        <span class="mobile-brand-name">Household Manager</span>
+        <div>
+          <div class="mobile-brand-name">Household Manager</div>
+          <div class="mobile-brand-subtitle household-name">My Household</div>
+        </div>
       </div>
-      <a href="settings.html" class="mobile-top-action" aria-label="Settings">⚙</a>
+
+      <a href="settings.html" class="mobile-top-action" aria-label="Settings">
+        ⚙
+      </a>
     </div>
 
     <header class="page-header">
       <div>
-        <h1 class="page-title">Good afternoon</h1>
+        <div class="eyebrow">HOME</div>
+        <h1 class="page-title">Good afternoon 👋</h1>
         <p class="page-subtitle">
-          Here's what's happening in <strong class="household-name">My Household</strong>.
+          Here's what's happening around the house.
         </p>
       </div>
     </header>
 
+    <!-- STATS -->
     <section class="dashboard-grid">
-      <div class="card yellow stat-card">
-        <div class="stat-icon">✓</div>
-        <div class="stat-label">Tasks</div>
-        <div class="stat-number" id="dashboardTasks">0</div>
+
+      <a href="tasks.html" class="card yellow stat-card">
+        <div class="stat-top">
+          <div class="stat-icon">✓</div>
+          <span class="stat-arrow">→</span>
+        </div>
+
+        <div>
+          <div class="stat-label">Outstanding Tasks</div>
+          <div class="stat-number" id="dashboardTasks">0</div>
+        </div>
+      </a>
+
+      <a href="shopping.html" class="card stat-card">
+        <div class="stat-top">
+          <div class="stat-icon">🛒</div>
+          <span class="stat-arrow">→</span>
+        </div>
+
+        <div>
+          <div class="stat-label">Shopping Items</div>
+          <div class="stat-number" id="dashboardShopping">0</div>
+        </div>
+      </a>
+
+      <a href="events.html" class="card stat-card">
+        <div class="stat-top">
+          <div class="stat-icon">📅</div>
+          <span class="stat-arrow">→</span>
+        </div>
+
+        <div>
+          <div class="stat-label">Upcoming Events</div>
+          <div class="stat-number" id="dashboardEvents">0</div>
+        </div>
+      </a>
+
+      <a href="spending.html" class="card dark stat-card">
+        <div class="stat-top">
+          <div class="stat-icon">💰</div>
+          <span class="stat-arrow">→</span>
+        </div>
+
+        <div>
+          <div class="stat-label">Total Spending</div>
+          <div class="stat-number" id="dashboardSpending">$0.00</div>
+        </div>
+      </a>
+
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <div class="section-title">Quick Actions</div>
+          <div class="section-subtitle">Get things done faster.</div>
+        </div>
       </div>
 
-      <div class="card stat-card">
-        <div class="stat-icon">🛒</div>
-        <div class="stat-label">Shopping</div>
-        <div class="stat-number" id="dashboardShopping">0</div>
-      </div>
+      <div class="quick-actions">
 
-      <div class="card stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-label">Events</div>
-        <div class="stat-number" id="dashboardEvents">0</div>
-      </div>
+        <button
+          class="quick-action yellow-action"
+          onclick="openSheet('dashboardTaskSheet')"
+        >
+          <span class="quick-action-icon">✓</span>
+          <span>Add Task</span>
+        </button>
 
-      <div class="card dark stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-label">Spending</div>
-        <div class="stat-number" id="dashboardSpending">$0.00</div>
+        <button
+          class="quick-action"
+          onclick="openSheet('dashboardShoppingSheet')"
+        >
+          <span class="quick-action-icon">🛒</span>
+          <span>Add Shopping</span>
+        </button>
+
+        <button
+          class="quick-action"
+          onclick="openSheet('dashboardEventSheet')"
+        >
+          <span class="quick-action-icon">📅</span>
+          <span>Add Event</span>
+        </button>
+
+        <button
+          class="quick-action"
+          onclick="openSheet('dashboardExpenseSheet')"
+        >
+          <span class="quick-action-icon">💰</span>
+          <span>Add Expense</span>
+        </button>
+
       </div>
     </section>
 
-    <section class="dashboard-columns">
-      <div class="card">
-        <div class="card-heading-row">
-          <div class="card-title">Outstanding Tasks</div>
-          <a href="tasks.html" class="text-link">View all</a>
+    <!-- TODAY -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <div class="section-title">Today</div>
+          <div class="section-subtitle" id="todayDate">Today</div>
         </div>
-        <div class="section-list" id="dashboardTaskList"></div>
       </div>
 
-      <div class="card">
-        <div class="card-heading-row">
-          <div class="card-title">Upcoming Events</div>
-          <a href="events.html" class="text-link">View all</a>
+      <div class="today-card">
+
+        <div class="today-item">
+          <div class="today-item-icon">✓</div>
+          <div class="today-item-content">
+            <span class="today-item-label">Tasks to finish</span>
+            <strong id="todayTaskCount">0</strong>
+          </div>
         </div>
-        <div class="section-list" id="dashboardEventList"></div>
+
+        <div class="today-divider"></div>
+
+        <div class="today-item">
+          <div class="today-item-icon">🛒</div>
+          <div class="today-item-content">
+            <span class="today-item-label">Shopping items</span>
+            <strong id="todayShoppingCount">0</strong>
+          </div>
+        </div>
+
       </div>
     </section>
+
+    <!-- TASKS -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <div class="section-title">Outstanding Tasks</div>
+          <div class="section-subtitle">Things that still need doing.</div>
+        </div>
+
+        <a href="tasks.html" class="text-link">View all</a>
+      </div>
+
+      <div class="section-list" id="dashboardTaskList"></div>
+
+    </section>
+
+    <!-- EVENTS -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <div class="section-title">Upcoming Events</div>
+          <div class="section-subtitle">What's coming up.</div>
+        </div>
+
+        <a href="events.html" class="text-link">View all</a>
+      </div>
+
+      <div class="section-list" id="dashboardEventList"></div>
+
+    </section>
+
   </main>
 </div>
 
+
+<!-- DASHBOARD TASK SHEET -->
+<div class="sheet-overlay" id="dashboardTaskSheet">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Task</div>
+        <div class="sheet-subtitle">
+          Create a new household task.
+        </div>
+      </div>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('dashboardTaskSheet')"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Task</label>
+
+      <input
+        id="dashboardTaskName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Clean the kitchen"
+      >
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Assigned To</label>
+
+      <input
+        id="dashboardTaskPerson"
+        class="form-control"
+        type="text"
+        placeholder="e.g. James"
+      >
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+
+        <input
+          id="dashboardTaskDue"
+          class="form-control"
+          type="date"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+
+        <select
+          id="dashboardTaskPriority"
+          class="form-control"
+        >
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addDashboardTask()"
+    >
+      Add Task
+    </button>
+
+  </div>
+</div>
+
+
+<!-- DASHBOARD SHOPPING SHEET -->
+<div class="sheet-overlay" id="dashboardShoppingSheet">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Shopping Item</div>
+        <div class="sheet-subtitle">
+          Add something to your shopping list.
+        </div>
+      </div>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('dashboardShoppingSheet')"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Item</label>
+
+      <input
+        id="dashboardShoppingName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Milk"
+      >
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label class="form-label">Quantity</label>
+
+        <input
+          id="dashboardShoppingQuantity"
+          class="form-control"
+          type="text"
+          placeholder="1"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+
+        <select
+          id="dashboardShoppingCategory"
+          class="form-control"
+        >
+          <option>Groceries</option>
+          <option>Household</option>
+          <option>Cleaning</option>
+          <option>Bathroom</option>
+          <option>Pet</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addDashboardShopping()"
+    >
+      Add to Shopping List
+    </button>
+
+  </div>
+</div>
+
+
+<!-- DASHBOARD EVENT SHEET -->
+<div class="sheet-overlay" id="dashboardEventSheet">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Event</div>
+        <div class="sheet-subtitle">
+          Add an important household date.
+        </div>
+      </div>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('dashboardEventSheet')"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Event Name</label>
+
+      <input
+        id="dashboardEventName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Family dinner"
+      >
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Location</label>
+
+      <input
+        id="dashboardEventLocation"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Home"
+      >
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+
+        <input
+          id="dashboardEventDate"
+          class="form-control"
+          type="date"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Time</label>
+
+        <input
+          id="dashboardEventTime"
+          class="form-control"
+          type="time"
+        >
+      </div>
+
+    </div>
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addDashboardEvent()"
+    >
+      Add Event
+    </button>
+
+  </div>
+</div>
+
+
+<!-- DASHBOARD EXPENSE SHEET -->
+<div class="sheet-overlay" id="dashboardExpenseSheet">
+
+  <div class="sheet">
+
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Expense</div>
+        <div class="sheet-subtitle">
+          Record a household expense.
+        </div>
+      </div>
+
+      <button
+        class="sheet-close"
+        onclick="closeSheet('dashboardExpenseSheet')"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Expense</label>
+
+      <input
+        id="dashboardExpenseName"
+        class="form-control"
+        type="text"
+        placeholder="e.g. Weekly groceries"
+      >
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+
+        <input
+          id="dashboardExpenseAmount"
+          class="form-control"
+          type="number"
+          step="0.01"
+          min="0"
+          placeholder="0.00"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+
+        <select
+          id="dashboardExpenseCategory"
+          class="form-control"
+        >
+          <option>Groceries</option>
+          <option>Bills</option>
+          <option>Transport</option>
+          <option>Entertainment</option>
+          <option>Home</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Date</label>
+
+      <input
+        id="dashboardExpenseDate"
+        class="form-control"
+        type="date"
+      >
+    </div>
+
+    <button
+      class="btn btn-primary btn-large"
+      onclick="addDashboardExpense()"
+    >
+      Add Expense
+    </button>
+
+  </div>
+</div>
+
+
 <nav class="mobile-header">
+
   <a href="index.html" data-page="index.html">
     <span class="mobile-icon">⌂</span>
     <span>Home</span>
   </a>
+
   <a href="shopping.html" data-page="shopping.html">
     <span class="mobile-icon">🛒</span>
     <span>Shopping</span>
   </a>
+
   <a href="tasks.html" data-page="tasks.html">
     <span class="mobile-icon">✓</span>
     <span>Tasks</span>
   </a>
+
   <a href="events.html" data-page="events.html">
     <span class="mobile-icon">📅</span>
     <span>Events</span>
   </a>
+
   <a href="spending.html" data-page="spending.html">
     <span class="mobile-icon">💰</span>
     <span>Spending</span>
   </a>
+
   <a href="settings.html" data-page="settings.html">
     <span class="mobile-icon">⚙</span>
     <span>Settings</span>
   </a>
+
 </nav>
 
 <script src="script.js"></script>
