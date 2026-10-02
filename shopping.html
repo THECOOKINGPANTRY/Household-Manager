@@ -1,199 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Shopping | Household Manager</title>
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#333533">
+  <title>Shopping | Household Manager</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="app">
+  <main class="main">
 
-    <aside class="sidebar">
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <img src="House_Manager_Logo.png" alt="Household Manager">
+        <span class="mobile-brand-name">Household Manager</span>
+      </div>
+      <a href="settings.html" class="mobile-top-action">⚙</a>
+    </div>
 
-        <div class="brand">
-            <img src="House_Manager_Logo.png" alt="Household Manager">
-            <div class="brand-name">Household Manager</div>
-        </div>
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Shopping</h1>
+        <p class="page-subtitle">Keep track of everything your household needs.</p>
+      </div>
+    </header>
 
-        <nav class="nav">
+    <button class="mobile-add-button" onclick="openSheet('shoppingSheet')">
+      <span>+</span> Add Item
+    </button>
 
-            <a href="index.html" data-page="index.html">
-                <span class="nav-icon">⌂</span>
-                Dashboard
-            </a>
+    <section class="quick-summary">
+      <div class="mini-summary">
+        <span>Items</span>
+        <strong id="shoppingCount">0</strong>
+      </div>
+      <div class="mini-summary">
+        <span>Remaining</span>
+        <strong id="shoppingRemaining">0</strong>
+      </div>
+    </section>
 
-            <a href="shopping.html" data-page="shopping.html">
-                <span class="nav-icon">🛒</span>
-                Shopping
-            </a>
+    <section class="data-list" id="shoppingList"></section>
 
-            <a href="tasks.html" data-page="tasks.html">
-                <span class="nav-icon">✓</span>
-                Tasks
-            </a>
-
-            <a href="events.html" data-page="events.html">
-                <span class="nav-icon">📅</span>
-                Events
-            </a>
-
-            <a href="spending.html" data-page="spending.html">
-                <span class="nav-icon">💰</span>
-                Spending
-            </a>
-
-            <a href="settings.html" data-page="settings.html">
-                <span class="nav-icon">⚙</span>
-                Settings
-            </a>
-
-        </nav>
-
-    </aside>
-
-
-    <main class="main">
-
-        <header class="page-header">
-
-            <div>
-                <h1 class="page-title">Shopping</h1>
-
-                <p class="page-subtitle">
-                    Keep track of everything your household needs.
-                </p>
-            </div>
-
-        </header>
-
-
-        <section class="card form-card">
-
-            <div class="card-title">
-                Add Shopping Item
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label class="form-label">
-                        Item
-                    </label>
-
-                    <input
-                        id="shoppingName"
-                        class="form-control"
-                        type="text"
-                        placeholder="e.g. Milk"
-                    >
-                </div>
-
-
-                <div class="form-group">
-                    <label class="form-label">
-                        Quantity
-                    </label>
-
-                    <input
-                        id="shoppingQuantity"
-                        class="form-control"
-                        type="text"
-                        placeholder="e.g. 2"
-                    >
-                </div>
-
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Category
-                    </label>
-
-                    <select
-                        id="shoppingCategory"
-                        class="form-control"
-                    >
-                        <option>Groceries</option>
-                        <option>Household</option>
-                        <option>Cleaning</option>
-                        <option>Bathroom</option>
-                        <option>Pet</option>
-                        <option>Other</option>
-                    </select>
-
-                </div>
-
-                <div class="form-group" style="justify-content:end">
-
-                    <button
-                        class="btn btn-primary"
-                        onclick="addShoppingItem()"
-                    >
-                        + Add Item
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <section>
-
-            <div
-                class="data-list"
-                id="shoppingList"
-            ></div>
-
-        </section>
-
-    </main>
-
+  </main>
 </div>
 
+<div class="sheet-overlay" id="shoppingSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title">Add Shopping Item</div>
+        <div class="sheet-subtitle">Add something to your household list.</div>
+      </div>
+      <button class="sheet-close" onclick="closeSheet('shoppingSheet')">×</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Item</label>
+      <input id="shoppingName" class="form-control" type="text" placeholder="e.g. Milk">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Quantity</label>
+        <input id="shoppingQuantity" class="form-control" type="text" placeholder="1">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select id="shoppingCategory" class="form-control">
+          <option>Groceries</option>
+          <option>Household</option>
+          <option>Cleaning</option>
+          <option>Bathroom</option>
+          <option>Pet</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-large" onclick="addShoppingItem(); closeSheet('shoppingSheet')">
+      Add to Shopping List
+    </button>
+  </div>
+</div>
 
 <nav class="mobile-header">
-
-    <a href="index.html" data-page="index.html">
-        <span class="mobile-icon">⌂</span>
-        Home
-    </a>
-
-    <a href="shopping.html" data-page="shopping.html">
-        <span class="mobile-icon">🛒</span>
-        Shopping
-    </a>
-
-    <a href="tasks.html" data-page="tasks.html">
-        <span class="mobile-icon">✓</span>
-        Tasks
-    </a>
-
-    <a href="events.html" data-page="events.html">
-        <span class="mobile-icon">📅</span>
-        Events
-    </a>
-
-    <a href="spending.html" data-page="spending.html">
-        <span class="mobile-icon">💰</span>
-        Spending
-    </a>
-
-    <a href="settings.html" data-page="settings.html">
-        <span class="mobile-icon">⚙</span>
-        Settings
-    </a>
-
+  <a href="index.html" data-page="index.html"><span class="mobile-icon">⌂</span><span>Home</span></a>
+  <a href="shopping.html" data-page="shopping.html"><span class="mobile-icon">🛒</span><span>Shopping</span></a>
+  <a href="tasks.html" data-page="tasks.html"><span class="mobile-icon">✓</span><span>Tasks</span></a>
+  <a href="events.html" data-page="events.html"><span class="mobile-icon">📅</span><span>Events</span></a>
+  <a href="spending.html" data-page="spending.html"><span class="mobile-icon">💰</span><span>Spending</span></a>
+  <a href="settings.html" data-page="settings.html"><span class="mobile-icon">⚙</span><span>Settings</span></a>
 </nav>
 
-
 <script src="script.js"></script>
-
 </body>
 </html>
