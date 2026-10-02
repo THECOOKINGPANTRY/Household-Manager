@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#333533">
   <title>Shopping | Household Manager</title>
   <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
 </head>
 
 <body>
@@ -18,7 +30,9 @@
           <img src="House_Manager_Logo.png" alt="Household Manager">
 
           <div>
-            <div class="mobile-brand-name">Household Manager</div>
+            <div class="mobile-brand-name">
+              Household Manager
+            </div>
 
             <div class="mobile-brand-subtitle household-name">
               My Household
