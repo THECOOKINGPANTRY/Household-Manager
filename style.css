@@ -16,7 +16,7 @@
 }
 
 /* ================================
-RESET
+   RESET
 ================================ */
 
 * {
@@ -35,6 +35,7 @@ body {
   color: var(--deep-dark);
   min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 
 button,
@@ -61,7 +62,7 @@ img {
 }
 
 /* ================================
-PNG ICON SYSTEM
+   PNG ICON SYSTEM
 ================================ */
 
 .mobile-top-action img,
@@ -180,7 +181,7 @@ PNG ICON SYSTEM
 }
 
 /* ================================
-MAIN MOBILE LAYOUT
+   MAIN MOBILE LAYOUT
 ================================ */
 
 .sidebar {
@@ -242,7 +243,7 @@ MAIN MOBILE LAYOUT
 }
 
 /* ================================
-PAGE HEADERS
+   PAGE HEADERS
 ================================ */
 
 .page-header {
@@ -272,7 +273,7 @@ PAGE HEADERS
 }
 
 /* ================================
-CARDS
+   CARDS
 ================================ */
 
 .card {
@@ -305,7 +306,7 @@ CARDS
 }
 
 /* ================================
-BUTTONS
+   BUTTONS
 ================================ */
 
 .btn {
@@ -375,7 +376,7 @@ BUTTONS
 }
 
 /* ================================
-LINKS
+   LINKS
 ================================ */
 
 .text-link {
@@ -387,7 +388,7 @@ LINKS
 }
 
 /* ================================
-DASHBOARD
+   DASHBOARD
 ================================ */
 
 .dashboard-grid {
@@ -578,7 +579,7 @@ DASHBOARD
 }
 
 /* ================================
-GENERAL LISTS
+   GENERAL LISTS
 ================================ */
 
 .section-list {
@@ -624,6 +625,15 @@ GENERAL LISTS
   width: 17px;
   height: 17px;
   object-fit: contain;
+}
+
+.dashboard-list-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: var(--supporting);
+  display: block;
+  flex-shrink: 0;
 }
 
 .item-title {
@@ -688,7 +698,7 @@ GENERAL LISTS
 }
 
 /* ================================
-CHECKBOX
+   CHECKBOX
 ================================ */
 
 .check {
@@ -721,7 +731,7 @@ CHECKBOX
 }
 
 /* ================================
-BADGES
+   BADGES
 ================================ */
 
 .badge {
@@ -743,7 +753,7 @@ BADGES
 }
 
 /* ================================
-EMPTY STATES
+   EMPTY STATES
 ================================ */
 
 .empty-state {
@@ -781,7 +791,7 @@ EMPTY STATES
 }
 
 /* ================================
-FILTERS
+   FILTERS
 ================================ */
 
 .task-filters,
@@ -817,7 +827,7 @@ FILTERS
 }
 
 /* ================================
-TASKS
+   TASKS
 ================================ */
 
 .task-progress-card {
@@ -1095,6 +1105,18 @@ TASKS
   flex-shrink: 0;
 }
 
+.task-delete .icon,
+.task-delete img,
+.shopping-delete .icon,
+.shopping-delete img,
+.event-delete .icon,
+.event-delete img {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  display: block;
+}
+
 .task-empty {
   background: var(--supporting);
   border-radius: 16px;
@@ -1137,7 +1159,7 @@ TASKS
 }
 
 /* ================================
-SHOPPING
+   SHOPPING
 ================================ */
 
 .shopping-summary {
@@ -1449,7 +1471,7 @@ SHOPPING
 }
 
 /* ================================
-SPENDING
+   SPENDING
 ================================ */
 
 .spending-summary {
@@ -1491,7 +1513,7 @@ SPENDING
 }
 
 /* ================================
-FORMS
+   FORMS
 ================================ */
 
 .form-group {
@@ -1540,7 +1562,7 @@ textarea.form-control {
 }
 
 /* ================================
-SETTINGS
+   SETTINGS
 ================================ */
 
 .settings-grid {
@@ -1587,7 +1609,7 @@ SETTINGS
 }
 
 /* ================================
-EVENTS
+   EVENTS
 ================================ */
 
 .event-overview {
@@ -1865,7 +1887,7 @@ EVENTS
 }
 
 /* ================================
-BOTTOM SHEETS
+   BOTTOM SHEETS
 ================================ */
 
 .sheet-overlay {
@@ -1945,7 +1967,7 @@ BOTTOM SHEETS
 }
 
 /* ================================
-MOBILE BOTTOM NAV
+   MOBILE BOTTOM NAV
 ================================ */
 
 .mobile-header {
@@ -1993,7 +2015,7 @@ MOBILE BOTTOM NAV
 }
 
 /* ================================
-SHEET / BODY STATES
+   SHEET / BODY STATES
 ================================ */
 
 body.sheet-open {
@@ -2001,7 +2023,7 @@ body.sheet-open {
 }
 
 /* ================================
-RESPONSIVE
+   RESPONSIVE
 ================================ */
 
 @media (max-width: 370px) {
