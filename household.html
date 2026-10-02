@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household Manager - Household</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    const isLoggedIn =
+      localStorage.getItem("householdManagerLoggedIn") === "true";
+
+    const isGuest =
+      localStorage.getItem("householdManagerGuest") === "true";
+
+    if (!isLoggedIn && !isGuest) {
+      window.location.replace("login.html");
+    }
+  </script>
+
+  <style>
+    .household-hero {
+      background: var(--deep-dark);
+      color: var(--background);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .household-hero .eyebrow {
+      color: var(--main);
+      margin-bottom: 5px;
+    }
+
+    .household-hero h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .household-hero p {
+      margin: 7px 0 0;
+      color: var(--supporting);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .household-card {
+      background: var(--supporting);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .household-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .household-card-header h3 {
+      margin: 0;
+      font-size: 14px;
+      color: var(--deep-dark);
+    }
+
+    .household-card-header span {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .household-field {
+      margin-bottom: 12px;
+    }
+
+    .household-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .household-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--deep-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .household-field input,
+    .household-field select {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid rgba(36, 36, 35, 0.12);
+      background: var(--background);
+      color: var(--deep-dark);
+      border-radius: 12px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .household-field input:focus,
+    .household-field select:focus {
+      border-color: var(--main);
+    }
+
+    .save-household-button {
+      width: 100%;
+      border: 0;
+      background: var(--main);
+      color: var(--deep-dark);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 14px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .household-message {
+      display: none;
+      margin-top: 9px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .household-message.show {
+      display: block;
+    }
+
+    .household-message.success {
+      color: var(--success);
+    }
+
+    .household-message.error {
+      color: var(--danger);
+    }
+
+    .members-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: var(--background);
+      border-radius: 14px;
+      padding: 11px;
+    }
+
+    .member-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--main);
+      color: var(--deep-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .member-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .member-name {
+      color: var(--deep-dark);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .member-email {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .member-role {
+      background: var(--supporting);
+      color: var(--deep-dark);
+      border-radius: 8px;
+      padding: 5px 7px;
+      font-size: 7px;
+      font-weight: 900;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .empty-members {
+      background: var(--background);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .invite-box {
+      background: var(--background);
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .invite-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .invite-button {
+      width: 100%;
+      border: 0;
+      background: var(--deep-dark);
+      color: var(--background);
+      border-radius: 11px;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .household-danger {
+      background: rgba(155, 77, 77, 0.08);
+      border: 1px solid rgba(155, 77, 77, 0.18);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 90px;
+    }
+
+    .household-danger h3 {
+      margin: 0 0 5px;
+      color: var(--danger);
+      font-size: 12px;
+    }
+
+    .household-danger p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .leave-button {
+      width: 100%;
+      border: 0;
+      background: var(--danger);
+      color: var(--background);
+      border-radius: 11px;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <header class="mobile-topbar">
+      <div class="mobile-brand">
+        <img src="House_Manager_Logo.png" alt="Household Manager">
+        <div>
+          <div class="mobile-brand-name">Household Manager</div>
+          <div class="mobile-brand-subtitle household-name">My Household</div>
+        </div>
+      </div>
+
+      <a href="settings.html" class="topbar-icon">
+        <img src="settings_dark_thin.png" alt="Settings">
+      </a>
+    </header>
+
+    <main class="page-content">
+
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">HOUSEHOLD</div>
+          <h1>Our Household</h1>
+          <p>Manage your household and the people in it.</p>
+        </div>
+      </div>
+
+      <section class="household-hero">
+        <div class="eyebrow">YOUR HOME</div>
+        <h2 id="householdHeroName">My Household</h2>
+        <p id="householdHeroMembers">1 member</p>
+      </section>
+
+      <section class="household-card">
+        <div class="household-card-header">
+          <h3>Household details</h3>
+          <span>EDIT</span>
+        </div>
+
+        <div class="household-field">
+          <label for="householdNameInput">Household name</label>
+          <input
+            type="text"
+            id="householdNameInput"
+            placeholder="My Household"
+            maxlength="40"
+          >
+        </div>
+
+        <div class="household-field">
+          <label for="householdCurrencyInput">Currency</label>
+          <select id="householdCurrencyInput">
+            <option value="AUD">Australian Dollar (AUD)</option>
+            <option value="USD">US Dollar (USD)</option>
+            <option value="GBP">British Pound (GBP)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="NZD">New Zealand Dollar (NZD)</option>
+            <option value="CAD">Canadian Dollar (CAD)</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          class="save-household-button"
+          onclick="saveHouseholdDetails()"
+        >
+          Save household
+        </button>
+
+        <div id="householdMessage" class="household-message"></div>
+      </section>
+
+      <section class="household-card">
+        <div class="household-card-header">
+          <h3>Members</h3>
+          <span id="memberCount">1 MEMBER</span>
+        </div>
+
+        <div id="membersList" class="members-list"></div>
+      </section>
+
+      <section class="household-card">
+        <div class="household-card-header">
+          <h3>Invite members</h3>
+        </div>
+
+        <div class="invite-box">
+          <p>
+            Household member invitations will let other people join this
+            household and share the same tasks, shopping, events and spending.
+          </p>
+
+          <button
+            type="button"
+            class="invite-button"
+            onclick="inviteMember()"
+          >
+            Invite a member
+          </button>
+        </div>
+      </section>
+
+      <section class="household-danger">
+        <h3>Leave household</h3>
+        <p>
+          Leaving a household will remove your account from this household.
+          This feature will be available when household sharing is connected.
+        </p>
+
+        <button
+          type="button"
+          class="leave-button"
+          onclick="leaveHousehold()"
+        >
+          Leave household
+        </button>
+      </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="bottom-nav-item">
+        <img src="home_dark_thin.png" alt="Home">
+        <span>Home</span>
+      </a>
+
+      <a href="tasks.html" class="bottom-nav-item">
+        <img src="checkbox_dark_thin.png" alt="Tasks">
+        <span>Tasks</span>
+      </a>
+
+      <a href="shopping.html" class="bottom-nav-item">
+        <img src="shopping_dark_thin.png" alt="Shopping">
+        <span>Shopping</span>
+      </a>
+
+      <a href="events.html" class="bottom-nav-item">
+        <img src="calendar_dark_thin.png" alt="Events">
+        <span>Events</span>
+      </a>
+
+      <a href="household.html" class="bottom-nav-item active">
+        <img src="people_dark_thin.png" alt="Household">
+        <span>Household</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    function getCurrentUserForHousehold() {
+      try {
+        return JSON.parse(
+          localStorage.getItem("householdManagerCurrentUser")
+        );
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function getHouseholdData() {
+      try {
+        const currentUser = getCurrentUserForHousehold();
+
+        if (!currentUser || !currentUser.email) {
+          return {
+            name: "My Household",
+            currency: "AUD",
+            members: []
+          };
+        }
+
+        const key =
+          "householdManagerHousehold_" +
+          encodeURIComponent(currentUser.email.toLowerCase());
+
+        const saved = localStorage.getItem(key);
+
+        if (saved) {
+          return JSON.parse(saved);
+        }
+
+        return {
+          name: "My Household",
+          currency: "AUD",
+          members: [
+            {
+              name: currentUser.name || "You",
+              email: currentUser.email,
+              role: "Owner"
+            }
+          ]
+        };
+      } catch (error) {
+        return {
+          name: "My Household",
+          currency: "AUD",
+          members: []
+        };
+      }
+    }
+
+    function saveHouseholdData(data) {
+      const currentUser = getCurrentUserForHousehold();
+
+      if (!currentUser || !currentUser.email) return;
+
+      const key =
+        "householdManagerHousehold_" +
+        encodeURIComponent(currentUser.email.toLowerCase());
+
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function loadHouseholdScreen() {
+      const data = getHouseholdData();
+      const currentUser = getCurrentUserForHousehold();
+
+      if (
+        currentUser &&
+        currentUser.email &&
+        (!data.members || data.members.length === 0)
+      ) {
+        data.members = [
+          {
+            name: currentUser.name || "You",
+            email: currentUser.email,
+            role: "Owner"
+          }
+        ];
+
+        saveHouseholdData(data);
+      }
+
+      document.getElementById("householdNameInput").value =
+        data.name || "My Household";
+
+      document.getElementById("householdCurrencyInput").value =
+        data.currency || "AUD";
+
+      document.getElementById("householdHeroName").textContent =
+        data.name || "My Household";
+
+      const memberCount = data.members ? data.members.length : 0;
+
+      document.getElementById("householdHeroMembers").textContent =
+        memberCount === 1
+          ? "1 member"
+          : memberCount + " members";
+
+      document.getElementById("memberCount").textContent =
+        memberCount === 1
+          ? "1 MEMBER"
+          : memberCount + " MEMBERS";
+
+      renderMembers(data.members || []);
+    }
+
+    function renderMembers(members) {
+      const container = document.getElementById("membersList");
+
+      if (!members.length) {
+        container.innerHTML = `
+          <div class="empty-members">
+            No household members yet.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = members.map(function (member) {
+        const name = escapeHouseholdHTML(member.name || "Member");
+        const email = escapeHouseholdHTML(member.email || "");
+        const role = escapeHouseholdHTML(member.role || "Member");
+
+        const initials = (member.name || "M")
+          .trim()
+          .split(/\s+/)
+          .slice(0, 2)
+          .map(function (part) {
+            return part.charAt(0);
+          })
+          .join("")
+          .toUpperCase();
+
+        return `
+          <div class="member-row">
+            <div class="member-avatar">${escapeHouseholdHTML(initials)}</div>
+
+            <div class="member-info">
+              <div class="member-name">${name}</div>
+              <div class="member-email">${email}</div>
+            </div>
+
+            <div class="member-role">${role}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function saveHouseholdDetails() {
+      const nameInput =
+        document.getElementById("householdNameInput");
+
+      const currencyInput =
+        document.getElementById("householdCurrencyInput");
+
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        showHouseholdMessage(
+          "Please enter a household name.",
+          "error"
+        );
+        return;
+      }
+
+      const data = getHouseholdData();
+
+      data.name = name;
+      data.currency = currencyInput.value;
+
+      saveHouseholdData(data);
+
+      localStorage.setItem(
+        "householdManagerHouseholdName",
+        name
+      );
+
+      const currentUser = getCurrentUserForHousehold();
+
+      if (currentUser && currentUser.email) {
+        const dataKey =
+          "householdManagerData_" +
+          encodeURIComponent(currentUser.email.toLowerCase());
+
+        try {
+          const savedData = JSON.parse(
+            localStorage.getItem(dataKey)
+          );
+
+          if (savedData) {
+            savedData.settings =
+              savedData.settings || {};
+
+            savedData.settings.householdName = name;
+            savedData.settings.currency =
+              currencyInput.value;
+
+            localStorage.setItem(
+              dataKey,
+              JSON.stringify(savedData)
+            );
+          }
+        } catch (error) {
+          // Ignore invalid legacy data.
+        }
+      }
+
+      document.querySelectorAll(".household-name").forEach(function (element) {
+        element.textContent = name;
+      });
+
+      document.getElementById("householdHeroName").textContent =
+        name;
+
+      showHouseholdMessage(
+        "Household details saved.",
+        "success"
+      );
+    }
+
+    function inviteMember() {
+      showHouseholdMessage(
+        "Member invitations will be available when household sharing is connected.",
+        "error"
+      );
+    }
+
+    function leaveHousehold() {
+      const confirmed = confirm(
+        "Are you sure you want to leave this household?"
+      );
+
+      if (!confirmed) return;
+
+      showHouseholdMessage(
+        "Leaving households will be available when household sharing is connected.",
+        "error"
+      );
+    }
+
+    function showHouseholdMessage(message, type) {
+      const element =
+        document.getElementById("householdMessage");
+
+      element.textContent = message;
+      element.className =
+        "household-message show " + type;
+
+      clearTimeout(window.householdMessageTimer);
+
+      window.householdMessageTimer = setTimeout(function () {
+        element.className = "household-message";
+      }, 3500);
+    }
+
+    function escapeHouseholdHTML(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      loadHouseholdScreen();
+    });
+  </script>
+
+</body>
+</html>
