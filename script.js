@@ -843,3 +843,209 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSpending();
   setupSheets();
 });
+
+/* Add these functions to script.js */
+
+function updateToday() {
+  const data = getData();
+
+  const today = new Date();
+  const todayString = today.toISOString().split("T")[0];
+
+  const todayTasks = data.tasks.filter(
+    task => !task.completed && task.due === todayString
+  ).length;
+
+  const shoppingItems = data.shopping.filter(
+    item => !item.completed
+  ).length;
+
+  const todayDateElement = document.getElementById("todayDate");
+  const todayTaskElement = document.getElementById("todayTaskCount");
+  const todayShoppingElement = document.getElementById("todayShoppingCount");
+
+  if (todayDateElement) {
+    todayDateElement.textContent = today.toLocaleDateString("en-AU", {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    });
+  }
+
+  if (todayTaskElement) {
+    todayTaskElement.textContent = todayTasks;
+  }
+
+  if (todayShoppingElement) {
+    todayShoppingElement.textContent = shoppingItems;
+  }
+}
+
+function addDashboardTask() {
+  const name = document.getElementById("dashboardTaskName").value.trim();
+  const person = document.getElementById("dashboardTaskPerson").value.trim();
+  const due = document.getElementById("dashboardTaskDue").value;
+  const priority = document.getElementById("dashboardTaskPriority").value;
+
+  if (!name) {
+    alert("Please enter a task.");
+    return;
+  }
+
+  const data = getData();
+
+  data.tasks.push({
+    id: createId(),
+    name,
+    person: person || "Anyone",
+    due,
+    priority,
+    completed: false
+  });
+
+  saveData(data);
+
+  document.getElementById("dashboardTaskName").value = "";
+  document.getElementById("dashboardTaskPerson").value = "";
+  document.getElementById("dashboardTaskDue").value = "";
+
+  closeSheet("dashboardTaskSheet");
+
+  loadDashboard();
+  updateToday();
+}
+
+function addDashboardShopping() {
+  const name = document
+    .getElementById("dashboardShoppingName")
+    .value
+    .trim();
+
+  const quantity = document
+    .getElementById("dashboardShoppingQuantity")
+    .value
+    .trim();
+
+  const category = document
+    .getElementById("dashboardShoppingCategory")
+    .value;
+
+  if (!name) {
+    alert("Please enter an item.");
+    return;
+  }
+
+  const data = getData();
+
+  data.shopping.push({
+    id: createId(),
+    name,
+    quantity: quantity || "1",
+    category,
+    completed: false
+  });
+
+  saveData(data);
+
+  document.getElementById("dashboardShoppingName").value = "";
+  document.getElementById("dashboardShoppingQuantity").value = "";
+
+  closeSheet("dashboardShoppingSheet");
+
+  loadDashboard();
+  updateToday();
+}
+
+function addDashboardEvent() {
+  const name = document
+    .getElementById("dashboardEventName")
+    .value
+    .trim();
+
+  const date = document
+    .getElementById("dashboardEventDate")
+    .value;
+
+  const time = document
+    .getElementById("dashboardEventTime")
+    .value;
+
+  const location = document
+    .getElementById("dashboardEventLocation")
+    .value
+    .trim();
+
+  if (!name || !date) {
+    alert("Please enter an event name and date.");
+    return;
+  }
+
+  const data = getData();
+
+  data.events.push({
+    id: createId(),
+    name,
+    date,
+    time,
+    location
+  });
+
+  saveData(data);
+
+  document.getElementById("dashboardEventName").value = "";
+  document.getElementById("dashboardEventDate").value = "";
+  document.getElementById("dashboardEventTime").value = "";
+  document.getElementById("dashboardEventLocation").value = "";
+
+  closeSheet("dashboardEventSheet");
+
+  loadDashboard();
+}
+
+function addDashboardExpense() {
+  const name = document
+    .getElementById("dashboardExpenseName")
+    .value
+    .trim();
+
+  const amount = parseFloat(
+    document.getElementById("dashboardExpenseAmount").value
+  );
+
+  const category = document
+    .getElementById("dashboardExpenseCategory")
+    .value;
+
+  const date = document
+    .getElementById("dashboardExpenseDate")
+    .value;
+
+  if (!name || isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid expense.");
+    return;
+  }
+
+  const data = getData();
+
+  data.spending.push({
+    id: createId(),
+    name,
+    amount,
+    category,
+    date: date || new Date().toISOString().split("T")[0]
+  });
+
+  saveData(data);
+
+  document.getElementById("dashboardExpenseName").value = "";
+  document.getElementById("dashboardExpenseAmount").value = "";
+  document.getElementById("dashboardExpenseDate").value = "";
+
+  closeSheet("dashboardExpenseSheet");
+
+  loadDashboard();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateToday();
+});
