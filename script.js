@@ -258,19 +258,16 @@ function addDashboardShopping() {
   updateToday();
 }
 
-function toggleShopping(id) {
+function toggleShoppingItem(id) {
   const data = getData();
 
-  const item = data.shopping.find(item => item.id === id);
+  const item = data.shopping.find(item => String(item.id) === String(id));
 
-  if (!item) {
-    return;
-  }
+  if (!item) return;
 
   item.completed = !item.completed;
 
   saveData(data);
-
   renderShopping();
   loadDashboard();
   updateToday();
