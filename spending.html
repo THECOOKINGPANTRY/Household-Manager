@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Spending | Household Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <img src="House_Manager_Logo.png" alt="Household Manager">
+            <div class="brand-name">Household Manager</div>
+        </div>
+
+        <nav class="nav">
+
+            <a href="index.html" data-page="index.html">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="shopping.html" data-page="shopping.html">
+                <span class="nav-icon">🛒</span>
+                Shopping
+            </a>
+
+            <a href="tasks.html" data-page="tasks.html">
+                <span class="nav-icon">✓</span>
+                Tasks
+            </a>
+
+            <a href="events.html" data-page="events.html">
+                <span class="nav-icon">📅</span>
+                Events
+            </a>
+
+            <a href="spending.html" data-page="spending.html">
+                <span class="nav-icon">💰</span>
+                Spending
+            </a>
+
+            <a href="settings.html" data-page="settings.html">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="page-header">
+
+            <div>
+
+                <h1 class="page-title">
+                    Spending
+                </h1>
+
+                <p class="page-subtitle">
+                    Keep track of household expenses.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- SUMMARY -->
+
+        <section class="spending-summary">
+
+            <div class="card yellow">
+
+                <div class="stat-label">
+                    Total Spending
+                </div>
+
+                <div
+                    class="money"
+                    id="totalSpending"
+                >
+                    $0.00
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="stat-label">
+                    This Month
+                </div>
+
+                <div
+                    class="money"
+                    id="monthSpending"
+                >
+                    $0.00
+                </div>
+
+            </div>
+
+
+            <div class="card dark">
+
+                <div class="stat-label">
+                    Average Expense
+                </div>
+
+                <div
+                    class="money"
+                    id="averageSpending"
+                >
+                    $0.00
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ADD EXPENSE -->
+
+        <section class="card form-card">
+
+            <div class="card-title">
+                Add Expense
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Expense
+                    </label>
+
+                    <input
+                        id="expenseName"
+                        class="form-control"
+                        type="text"
+                        placeholder="e.g. Grocery shopping"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Amount
+                    </label>
+
+                    <input
+                        id="expenseAmount"
+                        class="form-control"
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Category
+                    </label>
+
+                    <select
+                        id="expenseCategory"
+                        class="form-control"
+                    >
+                        <option>Groceries</option>
+                        <option>Bills</option>
+                        <option>Transport</option>
+                        <option>Entertainment</option>
+                        <option>Home</option>
+                        <option>Other</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Date
+                    </label>
+
+                    <input
+                        id="expenseDate"
+                        class="form-control"
+                        type="date"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="addExpense()"
+                    >
+                        + Add Expense
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EXPENSE LIST -->
+
+        <section
+            class="data-list"
+            id="spendingList"
+        ></section>
+
+    </main>
+
+</div>
+
+
+<nav class="mobile-header">
+
+    <a href="index.html" data-page="index.html">
+        <span class="mobile-icon">⌂</span>
+        Home
+    </a>
+
+    <a href="shopping.html" data-page="shopping.html">
+        <span class="mobile-icon">🛒</span>
+        Shopping
+    </a>
+
+    <a href="tasks.html" data-page="tasks.html">
+        <span class="mobile-icon">✓</span>
+        Tasks
+    </a>
+
+    <a href="events.html" data-page="events.html">
+        <span class="mobile-icon">📅</span>
+        Events
+    </a>
+
+    <a href="spending.html" data-page="spending.html">
+        <span class="mobile-icon">💰</span>
+        Spending
+    </a>
+
+    <a href="settings.html" data-page="settings.html">
+        <span class="mobile-icon">⚙</span>
+        Settings
+    </a>
+
+</nav>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
